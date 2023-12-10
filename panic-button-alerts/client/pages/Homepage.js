@@ -69,5 +69,4 @@ display:'flex'
     },
   })}
 
-}
 
