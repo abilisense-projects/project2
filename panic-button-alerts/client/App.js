@@ -1,20 +1,22 @@
-import 'react-native-gesture-handler';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import EmailVartificationScreen from "./components/forgetPassword/EmailVartification";
+import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Login from './pages/LogIn';
-import ForgotPassword from './pages/ForgotPassword';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from "./components/forgetPassword/Home";
 
-const Stack = createStackNavigator();
-
-const App = () => {
+const Stack = createNativeStackNavigator();
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-        {/* <Stack.Screen name="Register" component={Register} /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName="ResetPassword">
+      <Stack.Screen name="EmailVartification" component={EmailVartificationScreen} />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
+  </NavigationContainer>
   );
-};
-export default App;
+}
+
+;
