@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
-import axios from 'axios';
+import axios from '../../services/axiosInstance';
+import validateEmail from '../../services/ValidateEmail'
+import InputField from '../../services/InputField';
+import CustomButton from '../../services/CustomButton';
 
 const EmailVartification = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSendResetEmail = async () => {
-    if (!validateEmail()) {
+    if (!validateEmail(email)) {
       setMessage('Please enter a valid email address.');
       return;
     }
 
     try {
       // Send a request to the server to initiate the password reset process
-      const response = await axios.post('YOUR_NODE_SERVER_ENDPOINT/reset-password', {
+      const response = await axios.post('/reset-password', {
         email,
       });
 
@@ -29,10 +32,7 @@ const EmailVartification = () => {
     }
   };
 
-  const validateEmail = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+
 
   return (
     <View style={styles.container}>
@@ -42,7 +42,7 @@ const EmailVartification = () => {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <Button title="Send Reset Email" onPress={handleSendResetEmail} />
+      <CustomButton label={"Send Reset Email"} onPress={handleSendResetEmail} />
       {message ? <Text style={styles.message}>{message}</Text> : null}
     </View>
   );

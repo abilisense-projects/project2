@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import axios from 'axios';
+import axios from '../../services/axiosInstance';
 import { useRoute } from '@react-navigation/native';
+import CustomButton from '../../services/CustomButton';
 
 const ResetPassword = ({ navigation }) => {
   const route = useRoute();
@@ -118,7 +119,7 @@ const ResetPassword = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       {renderValidationItem('Passwords match', validationResults.match)}
-      <Button title="Reset Password" onPress={handleResetPassword} style={styles.button} />
+      <CustomButton label={"Reset Password"} onPress={handleResetPassword}  />
 
       {isResetSuccess && (
         <View>

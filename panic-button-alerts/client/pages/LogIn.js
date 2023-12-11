@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, AsyncStorage } from 'react-native';
+import CustomButton from '../services/CustomButton';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -102,7 +103,7 @@ const Login = ({ navigation }) => {
         </Text>
       )}
       <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.forgotPassword} onPress={() => navigation.navigate('ForgotPassword')}>
+        <Text style={styles.forgotPassword} onPress={() => navigation.navigate('EmailVartification')}>
           Forgot Password?
         </Text>
         <Text style={styles.register} onPress={() => navigation.navigate('Register')}>
@@ -110,7 +111,7 @@ const Login = ({ navigation }) => {
         </Text>
       </View>
 
-      <Button title="Login" onPress={handleLogin} />
+      <CustomButton label={"Login"} onPress={handleLogin} />
     </View>
   );
 };

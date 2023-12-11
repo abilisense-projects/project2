@@ -15,5 +15,16 @@ router.post("/", async (req, res) => {
         console.log(error);
     }
 });
+router.get("/", async (req, res) => {
+    try {
+        const users = await User.find();  
+
+        res.send(users);
+    } catch (error) {
+        res.status(500).send("An error occurred");
+        console.error(error);
+    }
+});
+
 
 module.exports = router;

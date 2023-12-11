@@ -6,7 +6,7 @@ const connection = () => {
     const url = process.env.DATABASE_URL;
     logger.info("process.env.DATABASE_URL :::" + url);
 
-    mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+    mongoose.connect(url)
 
     mongoose.connection.once("open", async () => {
         logger.info("Connected to database");

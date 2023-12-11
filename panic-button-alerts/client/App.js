@@ -4,16 +4,20 @@ import EmailVartificationScreen from "./components/forgetPassword/EmailVartifica
 import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from "./components/forgetPassword/Home";
+import HomeScreen from "./pages/Homepage"
+import RegisterScreen from "./pages/RegistrScreen";
+import LoginScreen from "./pages/LogIn"
 
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-    <Stack.Navigator initialRouteName="EmailVartification">
+    <Stack.Navigator initialRouteName="Register">
       <Stack.Screen name="EmailVartification" component={EmailVartificationScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   </NavigationContainer>
   );
