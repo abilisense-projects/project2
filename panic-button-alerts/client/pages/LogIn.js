@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, AsyncStorage } from 'react-native';
-import CustomButton from '../services/CustomButton';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  AsyncStorage,
+} from "react-native";
+import CustomButton from "../services/CustomButton";
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true); // State to track email validation
   const [isPasswordValid, setIsPasswordValid] = useState(true); // State to track password validation
 
@@ -37,36 +44,36 @@ const Login = ({ navigation }) => {
       setIsEmailValid(validateEmail(email));
 
       if (!isEmailValid) {
-        console.error('Invalid email format');
+        console.error("Invalid email format");
         return;
       }
 
       // Validate password
       if (!validatePassword(password)) {
-        console.error('Invalid password format');
+        console.error("Invalid password format");
         return;
       }
 
       // Connect to MongoDB and verify user credentials
       // Replace the next line with the actual logic for connecting to MongoDB
       // const user = await usersCollection.findOne({ email, password });
-      const user = { username: 'test' }; // Example user object
+      const user = { username: "test" }; // Example user object
 
       if (!user) {
-        console.error('Invalid credentials');
+        console.error("Invalid credentials");
         return;
       }
 
       // Create JWT token
       // Replace the next line with the actual logic for creating a JWT token
       // const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      const token = 'example_token'; // Example token
+      const token = "example_token"; // Example token
 
       // Store token in local storage and navigate to the home screen
       // Replace the next line with the actual logic for storing the token
       // await AsyncStorage.setItem('token', token);
-      console.log('Login successful');
-      navigation.navigate('Home');
+      console.log("Login successful");
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error.message);
     }
@@ -85,7 +92,9 @@ const Login = ({ navigation }) => {
         }}
         value={email}
       />
-      {!isEmailValid && <Text style={styles.warningText}>Invalid email format</Text>}
+      {!isEmailValid && (
+        <Text style={styles.warningText}>Invalid email format</Text>
+      )}
       <TextInput
         style={[styles.input, !isPasswordValid && styles.invalidInput]}
         placeholder="Password"
@@ -99,14 +108,21 @@ const Login = ({ navigation }) => {
       />
       {!isPasswordValid && (
         <Text style={styles.warningText}>
-          Password must be at least 6 characters long and include at least one special character and one number.
+          Password must be at least 6 characters long and include at least one
+          special character and one number.
         </Text>
       )}
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.forgotPassword} onPress={() => navigation.navigate('EmailVartification')}>
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={styles.forgotPassword}
+          onPress={() => navigation.navigate("SendEmail")}
+        >
           Forgot Password?
         </Text>
-        <Text style={styles.register} onPress={() => navigation.navigate('Register')}>
+        <Text
+          style={styles.register}
+          onPress={() => navigation.navigate("Register")}
+        >
           Register
         </Text>
       </View>
@@ -119,39 +135,39 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     fontSize: 24,
     marginBottom: 20,
   },
   input: {
-    width: '25%',
+    width: "25%",
     height: 20,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     padding: 10,
   },
   invalidInput: {
-    borderColor: 'red',
+    borderColor: "red",
   },
   warningText: {
-    color: 'red',
+    color: "red",
     fontSize: 12,
     marginBottom: 5,
   },
   forgotPassword: {
     fontSize: 16,
-    color: 'blue',
-    textDecorationLine: 'underline',
+    color: "blue",
+    textDecorationLine: "underline",
     marginBottom: 10,
   },
   register: {
     fontSize: 16,
-    color: 'blue',
-    textDecorationLine: 'underline',
+    color: "blue",
+    textDecorationLine: "underline",
     marginLeft: 20,
   },
 });
