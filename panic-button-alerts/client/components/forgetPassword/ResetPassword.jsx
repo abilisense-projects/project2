@@ -44,7 +44,7 @@ const ResetPassword = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post('YOUR_NODE_SERVER_ENDPOINT/reset-password/reset', {
+      const response = await axios.post('/reset-password/reset', {
         email: route.params.email,
         token: route.params.token,
         password,

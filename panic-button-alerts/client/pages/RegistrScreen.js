@@ -23,13 +23,13 @@ const RegisterScreen = ({navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{paddingHorizontal: 25}}>
-        <View style={{alignItems: 'center'}}>
-          {/* <RegistrationSVG
+        {/* <View style={{alignItems: 'center'}}>
+          <RegistrationSVG
             height={300}
             width={300}
             style={{transform: [{rotate: '-5deg'}]}}
-          /> */}
-        </View>
+          />
+        </View> */}
 
         <Text
           style={{
@@ -162,7 +162,7 @@ const RegisterScreen = ({navigation}) => {
             marginBottom: 30,
           }}>
           <Text>Already registered?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('login')}>
             <Text style={{color: '#AD40AF', fontWeight: '700'}}> Login</Text>
           </TouchableOpacity>
         </View>
