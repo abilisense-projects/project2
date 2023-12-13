@@ -19,37 +19,6 @@ const connection = () => {
     });
 }
 
-
-// const connection = async () => {
-//     try {
-//         const url = process.env.DATABASE_URL||  `mongodb+srv://project1:ZHSOOL82BkOHytOk@project-1.ziu360c.mongodb.net/?retryWrites=true&w=majority`;
-//         // logger.info("process.env.DATABASE_URL :::" + url);
-//         await mongoose.connect(url);
-//         console.log("connected to database.");
-//     } catch (error) {
-//         console.error(error, "could not connect database.");
-//         process.exit(1);
-//     }
-// };
 module.exports = 
         connection
-    //     // disconnect
     
-// const disconnect = () => {
-
-//     if (!mongoose.connection) {
-//         return;
-//     }
-
-//     mongoose.disconnect();
-
-//     mongoose.once("close", async () => {
-//         console.log("Diconnected  to database");
-//     });
-
-// };
-
-// module.exports = {
-//     connection,
-//     // disconnect
-// }

@@ -5,22 +5,24 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from '../../services/axiosInstance';
 import { useRoute } from '@react-navigation/native';
 import CustomButton from '../../services/CustomButton';
+import ValidatePassword from '../../services/ValidatePassword';
 
 const ResetPassword = ({ navigation }) => {
   const route = useRoute();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [tokenVerified, setTokenVerified] = useState(false);
+  const [isResetSuccess, setIsResetSuccess] = useState(false);
+  const [resetToken, setResetToken] = useState('');
   const [validationResults, setValidationResults] = useState({
     length: false,
     number: false,
     specialChar: false,
     match: false,
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [tokenVerified, setTokenVerified] = useState(false);
-  const [isResetSuccess, setIsResetSuccess] = useState(false);
-  const [resetToken, setResetToken] = useState('');
 
   useEffect(() => {
     const verify = async () => {
@@ -39,7 +41,7 @@ const ResetPassword = ({ navigation }) => {
   const handleResetPassword = async () => {
     setMessage(null);
 
-    if (!validatePassword()) {
+    if (!validationResults) {
       return;
     }
 
@@ -62,31 +64,17 @@ const ResetPassword = ({ navigation }) => {
     }
   };
 
-  const handlePasswordChange = (text) => {
-    setPassword(text);
-    updateValidationResults(text, confirmPassword);
+  const handlePasswordChange = (password) => {
+    setPassword(password);
+    ValidationResults(password, confirmPassword);
   };
   
-  const handleConfirmPasswordChange = (text) => {
-    setConfirmPassword(text);
-    updateValidationResults(password, text);
+  const handleConfirmPasswordChange = (confirmPassword) => {
+    setConfirmPassword(confirmPassword);
+    ValidationResults(password, confirmPassword);
   };
   
-  const updateValidationResults = (password, confirmPassword) => {
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})$/;
   
-    const lengthValid = password.length >= 8;
-    const numberValid = /\d/.test(password);
-    const specialCharValid = /[!@#$%^&*]/.test(password);
-    const matchValid = password === confirmPassword;
-  
-    setValidationResults({
-      length: lengthValid,
-      number: numberValid,
-      specialChar: specialCharValid,
-      match: matchValid,
-    });
-  };
   
 
   return (
@@ -125,7 +113,7 @@ const ResetPassword = ({ navigation }) => {
         <View>
           <Text>
             Reset successfully.{' '}
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity onPress={() => navigation.navigate('login')}>
               <Text style={{ color: 'blue' }}>Login</Text>
             </TouchableOpacity>
           </Text>
