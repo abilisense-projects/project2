@@ -8,6 +8,16 @@ import {
   AsyncStorage,
 } from "react-native";
 import CustomButton from "../services/CustomButton";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  AsyncStorage,
+} from "react-native";
+import CustomButton from "../services/CustomButton";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -73,7 +83,7 @@ const Login = ({ navigation }) => {
       // Replace the next line with the actual logic for storing the token
       // await AsyncStorage.setItem('token', token);
       console.log("Login successful");
-      navigation.navigate("Home");
+      navigation.navigate("home");
     } catch (error) {
       console.error(error.message);
     }
@@ -115,13 +125,13 @@ const Login = ({ navigation }) => {
       <View style={{ flexDirection: "row" }}>
         <Text
           style={styles.forgotPassword}
-          onPress={() => navigation.navigate("SendEmail")}
+          onPress={() => navigation.navigate("sendEmail")}
         >
           Forgot Password?
         </Text>
         <Text
           style={styles.register}
-          onPress={() => navigation.navigate("Register")}
+          onPress={() => navigation.navigate("register")}
         >
           Register
         </Text>

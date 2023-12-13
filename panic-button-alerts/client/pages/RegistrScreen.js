@@ -82,15 +82,14 @@ const RegisterScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 25 }}
-      >
-        <View style={{ alignItems: "center" }}>
-          {/* <RegistrationSVG
+        style={{paddingHorizontal: 25}}>
+        {/* <View style={{alignItems: 'center'}}>
+          <RegistrationSVG
             height={300}
             width={300}
             style={{transform: [{rotate: '-5deg'}]}}
-          /> */}
-        </View>
+          />
+        </View> */}
 
         <Text
           style={{
@@ -230,8 +229,8 @@ const RegisterScreen = ({ navigation }) => {
           }}
         >
           <Text>Already registered?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("login")}>
-            <Text style={{ color: "#AD40AF", fontWeight: "700" }}> Login</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('login')}>
+            <Text style={{color: '#AD40AF', fontWeight: '700'}}> Login</Text>
           </TouchableOpacity>
         </View>
         {registrationError && (

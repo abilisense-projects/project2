@@ -1,10 +1,13 @@
 const nodemailer = require("nodemailer");
 const logger = require("../logger/logger");
+const logger = require("../logger/logger");
 
 const sendEmail = async (email, subject, text) => {
   try {
     logger.info(`${process.env.USER}=${process.env.PASS}`);
+    logger.info(`${process.env.USER}=${process.env.PASS}`);
     const transporter = nodemailer.createTransport({
+      host: process.env.HOST,
       host: process.env.HOST,
       service: process.env.SERVICE,
       auth: {
