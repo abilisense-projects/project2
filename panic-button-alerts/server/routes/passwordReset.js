@@ -4,6 +4,7 @@ const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const Joi = require("joi");
 const express = require("express");
+const logger = require("../logger/logger");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -17,7 +18,8 @@ router.post("/", async (req, res) => {
             return res.status(400).send("user with given email doesn't exist");
 
         let token = await Token.findOne({ userId: user._id });
-        if (!token) {
+        logger.info(token)
+        if (token==null) {
             token = await new Token({
                 userId: user._id,
                 token: crypto.randomBytes(32).toString("hex"),
