@@ -1,115 +1,88 @@
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image, TouchableOpacity, Text, View, } from 'react-native';
-
+import { StyleSheet, Image, TouchableOpacity, Text, View, Button, } from 'react-native';
+import axios from '../../services/axiosInstance';
 export default function Callscomp() {
     useEffect(() => {
-        getListCalls(tempobjeckt);
+        getListCalls();
     }, []);
+    // {List:[],flag:false}
     const [ListLow, setListLow] = useState([])
     const [ListMedium, setListMedium] = useState([])
     const [ListHigh, setListHigh] = useState([])
-    const ListCalls = [...ListHigh, ...ListMedium, ...ListLow]
+    const [State,setState]=useState(ListCalls)
+    const ListCalls = [...ListHigh.List, ...ListMedium.List, ...ListLow.List]
 
-function getListCalls() {
-    if (tempobjeckt.status == "high") {
+    const colorHi = {
+        backgroundImage: 'linear-gradient(220deg, rgb(255, 0, 0), rgb(255, 255, 255))'
+    };
+    const colorMed = {
+        backgroundImage: 'linear-gradient(220deg, rgb(253 95 6 / 99%), rgb(255, 255, 255))'
+    };
+    const colorLow = {
+        backgroundImage: 'linear-gradient(220deg, rgb(206 255 0 / 98%), rgb(255, 255, 255))'
+    };
 
-        setListHigh(current => [tempobjeckt, ...current])
+    async function getListCalls() {
+
+
+        try {
+            // Send a request to the server to initiate the password reset process
+            const response = await axios.get('/alert');
+            const result=response.data
+            if (result.status == "high") {
+                // ListHigh.List(
+                setListHigh(current => [result, ...current])
+            }
+            else if (result.status == "medium") {
+
+                setListMedium(current => [result, ...current])
+            }
+            else {
+
+                setListLow(current => [result, ...current])
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
-    else if (tempobjeckt.status == "medium") {
+    return (
+        <View >
+            <Text>קריאות</Text>
+            {State.map((call, index) => {
+                return (
+                    <TouchableOpacity
 
-        setListMedium(current => [tempobjeckt, ...current])
-    }
-    else {
-
-        setListLow(current => [tempobjeckt, ...current])
-    }
-    // Option if I get an array of readings
-    // function RemainingTime(t2) {
-    //     const t1 = new Date().getTime();
-    //     let ts = (t1 - t2.getTime()) / 1000;
-
-    //     var d = Math.floor(ts / (3600 * 24));
-    //     var h = Math.floor(ts % (3600 * 24) / 3600);
-    //     var m = Math.floor(ts % 3600 / 60);
-    //     var s = Math.floor(ts % 60);
-
-    //     console.log(d, h, m, s)
-
-    // }
-    // const newtemparr = temparr.sort((a, b) =>
-    //     temparSort(a, b) ? -1 : 1)
-    // function temparSort(a, b) {
-    //     if ((a.status == "high" && b.status == "high") ||
-    //         (a.status == "medium" && b.status == "medium") ||
-    //         (a.status == "low" && b.status == "low"))
-    //         if (RemainingTime(new Date(a.date_time)) < RemainingTime(new Date(b.date_time))) {
-    //             console.log(newtemparr)
-    //             return true
-    //         }
-    //         else {
-    //             console.log(newtemparr)
-    //             return false
-    //         }
-    //     if (a.status == "high" || b.status == "low") {
-    //         console.log(newtemparr)
-    //         return true
-    //     }
-    //     else {
-    //         console.log(newtemparr)
-    //         return false
-    //     }
-    // }
-
-}
-const colorHi = {
-    backgroundImage: 'linear-gradient(220deg, rgb(255, 0, 0), rgb(255, 255, 255))'
-};
-const colorMed = {
-    backgroundImage: 'linear-gradient(220deg, rgb(253 95 6 / 99%), rgb(255, 255, 255))'
-};
-const colorLow = {
-    backgroundImage: 'linear-gradient(220deg, rgb(206 255 0 / 98%), rgb(255, 255, 255))'
-};
-return (
-    <View >
-        <Text>קריאות</Text>
-        {ListCalls.map((call, index) => {
-            return (
-                <TouchableOpacity
-
-                    key={call.id}
-                    style={[styles.containerCalls, call.status == "high" ? colorHi :
-                        call.status == "medium" ? colorMed : colorLow]}
-                // onPress={() => navigation.navigate("SpecificCall")}
-                >
-                    {call.status == "high" ? <Image style={styles.img}
-                        source={{ uri: '/static/media/hi.b2fd8eed21094cc1e0ef.png' }} /> :
-                        call.status == "medium" ? <Image style={styles.img}
-                            source={{ uri: '/static/media/med.645af0b7b0645b787cb8.png' }} /> :
-                            <Image style={styles.img}
-                                source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />}
-                    <Text
-                        style={styles.text}
+                        key={call.id}
+                        style={[styles.containerCalls, call.status == "high" ? colorHi :
+                            call.status == "medium" ? colorMed : colorLow]}
+                    // onPress={() => navigation.navigate("SpecificCall")}
                     >
-                        {call.date_time}
-
-                    </Text>
-
-                    <Text
-                        style={styles.text}
-                    >
-
-                        {call.explaincall}
-                    </Text>
-
-
-                </TouchableOpacity>
-
-            )
-        })}
-    </View>
-);
+                        {call.status == "high" ? <Image style={styles.img}
+                            source={{ uri: '/static/media/hi.b2fd8eed21094cc1e0ef.png' }} /> :
+                            call.status == "medium" ? <Image style={styles.img}
+                                source={{ uri: '/static/media/med.645af0b7b0645b787cb8.png' }} /> :
+                                <Image style={styles.img}
+                                    source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />}
+                        <Text
+                            style={styles.text}
+                        >
+                            {call.date_time}
+                        </Text>
+                        <Text
+                            style={styles.text}
+                        >
+                            {call.explaincall}
+                        </Text>
+                    </TouchableOpacity>
+                )
+            })}
+            <Button onPress={() => setState(ListHigh)}>High</Button>
+            <Button  onPress={() => setState(ListMedium)}>Medium</Button>
+            <Button  onPress={() => setState(ListLow)}>Low</Button>
+            <Button onPress={() => setState(ListCalls)}>All</Button>
+        </View>
+    );
 }
 const styles = StyleSheet.create({
     container: {
