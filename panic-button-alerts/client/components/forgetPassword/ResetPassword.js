@@ -1,4 +1,3 @@
-// CommonResetPassword.js
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -40,10 +39,11 @@ const ResetPassword = ({ navigation }) => {
 
   const handleResetPassword = async () => {
     setMessage(null);
-
-    if (!validationResults) {
+    console.warn(validationResults)
+    if (!(validationResults.length||validationResults.number||validationResults.specialChar||validationResults.match)) {
       return;
     }
+    
 
     try {
       const response = await axios.post('/reset-password/reset', {
@@ -60,18 +60,18 @@ const ResetPassword = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error resetting password:', error.message);
-      setMessage('An error occurred while resetting the password.');
+      setMessage('An error occurred while resetting the password,check password again...');
     }
   };
 
   const handlePasswordChange = (password) => {
     setPassword(password);
-    ValidationResults(password, confirmPassword);
+    setValidationResults(ValidatePassword(password, confirmPassword))
   };
   
   const handleConfirmPasswordChange = (confirmPassword) => {
     setConfirmPassword(confirmPassword);
-    ValidationResults(password, confirmPassword);
+    setValidationResults(ValidatePassword(password, confirmPassword));
   };
   
   
