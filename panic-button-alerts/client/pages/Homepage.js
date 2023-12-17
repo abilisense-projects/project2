@@ -11,7 +11,7 @@ export default function Homepage() {
     }, []);
     const [Mes, setMes] = useState("")
     const [Name, setName] = useState("")
-    const Stack = createNativeStackNavigator();
+    // const Stack = createNativeStackNavigator();
     async function updatemes() {
         const time=new Date();
 
@@ -36,7 +36,7 @@ export default function Homepage() {
         <View style={styles.container}>
             <Text>{Mes}    {Name}</Text>
             <Callscomp/>
-              <Specificall/>  
+              {/* <Specificall/>   */}
             
             <StatusBar style="auto" />
         </View>

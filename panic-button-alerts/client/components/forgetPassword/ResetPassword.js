@@ -40,7 +40,7 @@ const ResetPassword = ({ navigation }) => {
   const handleResetPassword = async () => {
     setMessage(null);
     console.warn(validationResults)
-    if (!(validationResults.length||validationResults.number||validationResults.specialChar||validationResults.match)) {
+    if (!(validationResults.length&validationResults.number&validationResults.specialChar&validationResults.match)) {
       return;
     }
     
