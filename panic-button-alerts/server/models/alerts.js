@@ -1,18 +1,40 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Joi = require("joi");
 
-const alertSchema = new Schema({
-    patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient' },
-    date:{ Date},
-    distressDescription: {String},
-    status:{ String},
-    location:{String},
-    level:{ String}
+const alertsSchema = new Schema({
+   alertId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "alert"
+    },
+    patient: {
+         type: mongoose.Schema.Types.ObjectId,
+         required: true,
+          ref: 'Patient' 
+        },
+    date: {
+        type: Date,
+        default: Date.now,
+        
+    },
+    distressDescription:{
+        type: String,
+        required: true,
+    },
+    status: {
+        type: String,
+        required: true,
+    },
+    location:{
+        type: String,
+        required: true,
+    },
+    level: {
+        type: String,
+        required: true,
+    },
+})
 
-});
+const ALert = mongoose.model("alert", alertsSchema);
 
-const Alert = mongoose.model("alert", alertSchema);
-
-
-module.exports = { Alert };
+module.exports ={ALert};

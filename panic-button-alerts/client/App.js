@@ -12,12 +12,25 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="login">
-        <Stack.Screen name="sendEmail" component={SendEmailScreen} />
-        <Stack.Screen name="password-reset" component={ResetPasswordScreen} />
-        <Stack.Screen name="home" component={HomeScreen} />
-        <Stack.Screen name="register" component={RegisterScreen} />
+      <Stack.Navigator initialRouteName="home">
+
+      {/* navigation.navigate({ routeName: SCREEN, key: SCREEN_KEY_A }); */}
+      {/* initialRouteName="password-reset" */}
+        <Stack.Screen name="sendEmail" component={SendEmailScreen}  
+        />
+        <Stack.Screen name="password-reset" component={ResetPasswordScreen} 
+     />
+        <Stack.Screen name="home" component={HomeScreen}  options={{title: 'Welcome'}} 
+       />
+        <Stack.Screen name="register" component={RegisterScreen}   />
         <Stack.Screen name="login" component={LoginScreen} />
+        {/* <Drawer.Screen
+  name="Home"
+  component={HomeScreen}
+  options={{
+    title: "Home Page", //set the title of the page to 'Home page'
+  }}
+/> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
