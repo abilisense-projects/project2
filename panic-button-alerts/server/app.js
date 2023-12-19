@@ -7,7 +7,8 @@ require("dotenv").config();
 const logger = require("./logger/logger")
 const passwordReset = require("./routes/passwordReset");
 const users = require("./routes/users");
-const alerts =require("./routes//alerts");
+
+const alerts =require("./routes/alerts");
 const register= require("./routes/register");
 const HOST_NAME = process.env.HOST_NAME | "127.0.0.1";
 const PORT = process.env.PORT | 8080;

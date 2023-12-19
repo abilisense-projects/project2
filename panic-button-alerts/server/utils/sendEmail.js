@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const logger = require("../logger/logger");
 
+
 const sendEmail = async (email, subject, resetPasswordLink) => {
   try {
     logger.info(`${process.env.USER}=${process.env.PASS}`);
