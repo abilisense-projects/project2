@@ -30,4 +30,4 @@ const Patient = mongoose.model("patient", patientsSchema);
 //     return schema.validate(alert);
 // };
 
-module.exports = { Patient};
+module.exports = { Patient };
