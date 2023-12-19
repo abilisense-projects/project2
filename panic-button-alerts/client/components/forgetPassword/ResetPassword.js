@@ -6,7 +6,7 @@ import { useRoute } from '@react-navigation/native';
 import CustomButton from '../../services/CustomButton';
 import ValidatePassword from '../../services/ValidatePassword';
 
-const ResetPassword = ({ navigation }) => {
+const ResetPassword = ({   navigation }) => {
   const route = useRoute();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,12 +26,15 @@ const ResetPassword = ({ navigation }) => {
   useEffect(() => {
     const verify = async () => {
       const token = route.params?.resetToken;
+      console.log('Reset Password Token:', token);
 
       if (token) {
         setResetToken(token);
         setTokenVerified(await verifyToken(token));
+        navigation.navigate('password-reset', { email, resetToken })
       } else {
         setTokenVerified(false);
+        setMessage("token not valid")
       }
     };
     verify();
@@ -113,7 +116,7 @@ const ResetPassword = ({ navigation }) => {
         <View>
           <Text>
             Reset successfully.{' '}
-            <TouchableOpacity onPress={() => navigation.navigate('login')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={{ color: 'blue' }}>Login</Text>
             </TouchableOpacity>
           </Text>

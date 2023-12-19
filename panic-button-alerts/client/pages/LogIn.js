@@ -73,7 +73,7 @@ const Login = ({ navigation }) => {
       // Replace the next line with the actual logic for storing the token
       // await AsyncStorage.setItem('token', token);
       console.log("Login successful");
-      navigation.navigate("home");
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error.message);
     }
@@ -115,13 +115,13 @@ const Login = ({ navigation }) => {
       <View style={{ flexDirection: "row" }}>
         <Text
           style={styles.forgotPassword}
-          onPress={() => navigation.navigate("sendEmail")}
+          onPress={() => navigation.navigate("SendEmail")}
         >
           Forgot Password?
         </Text>
         <Text
           style={styles.register}
-          onPress={() => navigation.navigate("register")}
+          onPress={() => navigation.navigate("Register")}
         >
           Register
         </Text>

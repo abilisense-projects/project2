@@ -90,7 +90,7 @@ const RegisterScreen = ({ navigation }) => {
       if (response.status === 200 || response.status === 201) {
         console.log("Registration successful:", response.data);
         // Optionally, navigate to a success screen or perform other actions
-        navigation.navigate("login");
+        navigation.navigate("Login");
       } else {
         // Handle unexpected server response
         console.error("Unexpected server response:", response);
@@ -183,6 +183,12 @@ const RegisterScreen = ({ navigation }) => {
           {registrationError}
         </Text>
       )}
+       <Text
+          label={"go to login"}
+          onPress={() => navigation.navigate("Login")}
+        >
+         already register ? login!
+        </Text>
     </View>
   );
 };
