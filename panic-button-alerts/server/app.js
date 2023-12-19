@@ -7,7 +7,9 @@ require("dotenv").config();
 const logger = require("./logger/logger")
 const passwordReset = require("./routes/passwordReset");
 const users = require("./routes/users");
-const alerts =require("./routes/alerts")
+
+const alerts =require("./routes/alerts");
+const register= require("./routes/register");
 const HOST_NAME = process.env.HOST_NAME | "127.0.0.1";
 const PORT = process.env.PORT | 8080;
 const app = express();
@@ -19,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(errorMiddlware);
+app.use("/api/register",register)
 app.use("/api/users", users);
 app.use("/api/alerts", alerts);
 app.use("/api/reset-password", passwordReset);

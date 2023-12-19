@@ -35,6 +35,10 @@ const alertsSchema = new Schema({
     },
 })
 
-const ALert = mongoose.model("alert", alertsSchema);
+},{ timestamps: true });
+alertSchema.index({createdAt:1})
+const Alert = mongoose.model("alert", alertSchema);
 
-module.exports ={ALert};
+
+module.exports = { Alert };
+

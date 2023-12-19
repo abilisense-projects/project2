@@ -12,12 +12,14 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="home">
-        <Stack.Screen name="sendEmail" component={SendEmailScreen} />
-        <Stack.Screen name="password-reset" component={ResetPasswordScreen} />
-        <Stack.Screen name="home" component={HomeScreen} />
-        <Stack.Screen name="register" component={RegisterScreen} />
-        <Stack.Screen name="login" component={LoginScreen} />
+
+      <Stack.Navigator initialRouteName="Register">
+        <Stack.Screen name="SendEmail" component={SendEmailScreen} />
+        <Stack.Screen name="Password-reset" component={ResetPasswordScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

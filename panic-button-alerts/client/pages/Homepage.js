@@ -9,9 +9,9 @@ export default function Homepage() {
         updatemes();
 
     }, []);
+
     const [Mes, setMes] = useState(" ")
     const [Name, setName] = useState("Malka")
-    
     async function updatemes() {
         const time = new Date();
 
@@ -36,7 +36,6 @@ export default function Homepage() {
             <Text>{Mes} {Name}</Text>
             <Alertscomp />
             {/* <Specificall /> */}
-
             <StatusBar style="auto" />
         </View>
     );
