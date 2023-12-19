@@ -10,8 +10,8 @@ const alertSchema = new Schema({
     location:{String},
     level:{ String}
 
-});
-
+},{ timestamps: true });
+alertSchema.index({createdAt:1})
 const Alert = mongoose.model("alert", alertSchema);
 
 
