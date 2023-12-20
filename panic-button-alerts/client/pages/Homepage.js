@@ -17,7 +17,15 @@ export default function Homepage({ navigation }) {
 
     async function updatemes() {
         const time = new Date();
+        const time = new Date();
 
+
+        const hour = time.getHours()
+        if (hour < 13) {
+            setMes("Good morning!")
+        }
+        else if (hour < 18) {
+            return "Good after noon";
 
         const hour = time.getHours()
         if (hour < 13) {
@@ -28,8 +36,14 @@ export default function Homepage({ navigation }) {
         }
         else if (hour < 23) {
             return "Good evening";
+        else if (hour < 23) {
+            return "Good evening";
         }
         else {
+            return "Good night";
+
+        }
+    }
             return "Good night";
 
         }

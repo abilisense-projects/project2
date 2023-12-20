@@ -11,10 +11,24 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:lastAlert", async (req, res) => {
+router.get("/:lastAlertID", async (req, res) => {
     try {
         
-        res.send(" ");
+        Alert.findById(lastAlertID, (err, targetItem) => {       
+            // Find documents that came after the target item based on the createdAt timestamp
+            Alert.find({ createdAt: { $gt: targetItem.createdAt } })
+              .sort({ createdAt: 1 }) // Sort in ascending order based on the createdAt timestamp
+              .exec((err, result) => {
+                if (err) {
+                  console.error('Error finding documents:', err);
+                  // Handle the error appropriately, such as sending an error response
+                  return;
+                }    
+                res.send(result);   
+                console.log(result);
+              });
+          });
+          
     } catch (error) {
         res.status(500).send("An error occurred");
         console.error(error);

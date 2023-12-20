@@ -15,7 +15,6 @@ const alertsSchema = new Schema({
     date: {
         type: Date,
         default: Date.now,
-        
     },
     distressDescription:{
         type: String,
@@ -33,8 +32,13 @@ const alertsSchema = new Schema({
         type: String,
         required: true,
     },
-})
+},{timestamps:true})
 
-const ALert = mongoose.model("alert", alertsSchema);
 
-module.exports ={ALert};
+
+alertsSchema.index({createdAt:1})
+const Alert = mongoose.model("alert", alertsSchema);
+
+
+module.exports = { Alert };
+
