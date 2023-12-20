@@ -15,7 +15,6 @@ const alertsSchema = new Schema({
     date: {
         type: Date,
         default: Date.now,
-        expires: 3600,
     },
     distressDescription:{
         type: String,
