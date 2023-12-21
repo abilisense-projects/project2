@@ -98,8 +98,31 @@ const resetPassword = async (userId, token, password) => {
 
   return { message: "Password reset was successful" };
 };
+const Login = async(useremail,password)=>{
+    const user = await User.findOne({ email: useremail });
+    if (!user) {
+      // Username not found
+      throw new Error("Invalid user",401)
+     // return res.status(401).json({ message: 'Invalid user' });
+    }
+  
+    const isMatch = await User.comparePassword(password);
+    if (!isMatch) {
+      // Incorrect password
+      throw new Error("Invalid username or password",401)
+      //return res.status(401).json({ message: 'Invalid username or password' });
+    }
+  
+    const token = user.generateAuthToken();
+    
+    // Increments the login count for the user
+    //await user.incrementLoginCount();
+  
+    return token
+}
 
 module.exports = {
+    Login,
   register,
   requestPasswordReset,
   resetPassword,
