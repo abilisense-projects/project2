@@ -84,7 +84,7 @@ const RegisterScreen = ({ navigation }) => {
       };
 
       // Make a POST request to your server endpoint
-      const response = await axios.post("/register", user);
+      const response = await axios.post("/auth/register", user);
 
       // Check if the registration was successful based on your server's response
       if (response.status === 200 || response.status === 201) {
