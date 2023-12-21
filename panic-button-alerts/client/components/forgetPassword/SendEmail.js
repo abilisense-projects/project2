@@ -4,7 +4,7 @@ import axios from '../../services/axiosInstance';
 import validateEmail from '../../services/ValidateEmail';
 import CustomButton from '../../services/CustomButton';
 
-const SendEmail = ({navigation}) => {
+const SendEmail = ({ route }) => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
@@ -18,7 +18,7 @@ const SendEmail = ({navigation}) => {
 
     try {
       // Send a request to the server to initiate the password reset process
-      const response = await axios.post('/reset-password', {
+      const response = await axios.post('auth/requestResetPassword', {
         email,
       });
 
@@ -39,6 +39,8 @@ const SendEmail = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      
       <TextInput
         style={styles.input}
         placeholder="Enter Email"

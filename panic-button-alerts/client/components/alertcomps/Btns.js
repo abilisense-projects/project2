@@ -38,7 +38,9 @@ export default function Btns() {
             width={'25%'} 
             animation={true}
             background-color={"--reactive-button-red-colo"}
+            margin-top={'10%'}
         />
+        
     );
 }
 

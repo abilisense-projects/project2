@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     
+    
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -24,8 +25,7 @@
       }
     },
     "web": {
-      "favicon": ""
-
+      "favicon": "./assets/favicon.png"
     }
   }
 }

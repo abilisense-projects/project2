@@ -11,7 +11,7 @@ import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({ route }) => {
   // State variables to store form inputs,
   // errors, and form validity
   const [name, setName] = useState("");
@@ -84,7 +84,7 @@ const RegisterScreen = ({ navigation }) => {
       };
 
       // Make a POST request to your server endpoint
-      const response = await axios.post("/register", user);
+      const response = await axios.post("/auth/register", user);
 
       // Check if the registration was successful based on your server's response
       if (response.status === 200 || response.status === 201) {
@@ -146,6 +146,7 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <TextInput
         style={styles.input}
         placeholder="Name"
