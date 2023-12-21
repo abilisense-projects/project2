@@ -14,7 +14,7 @@ const alertsSchema = new Schema({
         },
     date: {
         type: Date,
-        default: Date.now,
+        required:true
     },
     distressDescription:{
         type: String,
@@ -32,11 +32,11 @@ const alertsSchema = new Schema({
         type: String,
         required: true,
     },
-},{timestamps:true})
+})
 
 
 
-alertsSchema.index({createdAt:1})
+alertsSchema.index({date:1})
 const Alert = mongoose.model("alert", alertsSchema);
 
 

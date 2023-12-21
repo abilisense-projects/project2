@@ -18,7 +18,7 @@ const SendEmail = ({navigation}) => {
 
     try {
       // Send a request to the server to initiate the password reset process
-      const response = await axios.post('/reset-password', {
+      const response = await axios.post('auth/requestResetPassword', {
         email,
       });
 
