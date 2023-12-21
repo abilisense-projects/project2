@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const logger = require('../logger/logger');
 
-const connection = () => {
+const  connection = () => {
 
     const url = process.env.DATABASE_URL;
     logger.info("process.env.DATABASE_URL :::" + url);
