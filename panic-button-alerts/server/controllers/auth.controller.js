@@ -1,4 +1,5 @@
 const {
+  Login,
   register,
   requestPasswordReset,
   resetPassword,
@@ -28,8 +29,23 @@ const resetPasswordController = async (req, res, next) => {
   );
   return res.json(resetPasswordService);
 };
+const LoginController = async (req, res) => {
+  try {
+    const token = await Login( req.body.email,req.body.password );
+    if (token) {
+    }
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: false,
+    }); // secure true to allow https only
+
+    res.json({ message: "Login Success", status: 1 });
+  } catch {}
+};
 
 module.exports = {
+  LoginController,
   registerController,
   resetPasswordRequestController,
   resetPasswordController,
