@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import CustomButton from "../services/CustomButton";
 
-const Login = ({ navigation }) => {
+const Login = ({ route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true); // State to track email validation
@@ -81,6 +81,7 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <Text style={styles.header}>Login</Text>
       <TextInput
         style={[styles.input, !isEmailValid && styles.invalidInput]}

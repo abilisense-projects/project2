@@ -6,8 +6,8 @@ import { useRoute } from '@react-navigation/native';
 import CustomButton from '../../services/CustomButton';
 import ValidatePassword from '../../services/ValidatePassword';
 
-const ResetPassword = ({   navigation }) => {
-  const route = useRoute();
+const ResetPassword = ({ route }) => {
+  //const route = useRoute();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -82,6 +82,7 @@ const ResetPassword = ({   navigation }) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}

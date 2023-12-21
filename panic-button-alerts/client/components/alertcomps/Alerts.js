@@ -13,19 +13,22 @@ export default function Alertscomp() {
     const [ListLow, setListLow] = useState([])
     const [ListMedium, setListMedium] = useState([])
     const [ListHigh, setListHigh] = useState([])
-    //const [State, setState] = useState([])
-    const [lastIdAlert, setlastIdAlert] = useState("")
+   const [State, setState] = useState([])
+    const [lastIdAlert, setlastIdAlert] = useState(null)
     const [flag, setflag] = useState(false)
-    const ListCalls = [...ListHigh, ...ListMedium, ...ListLow]
-    const State=ListCalls
+    //const ListCalls = [...ListHigh, ...ListMedium, ...ListLow]
+   // const State=ListCalls
     useEffect(() => {
-        // if (lastIdAlert) {
-        //     const interval = setInterval(() => {
-        //         getnewAlert();
-        //     }, 1000);
-        //     return () => clearInterval(interval);
-        // }
+        if (lastIdAlert) {
+            const interval = setInterval(() => {
+                getnewAlert();
+            }, 1000);
+            return () => clearInterval(interval);
+        }
        getListAlerts();
+       
+       setState([...ListHigh, ...ListMedium, ...ListLow])
+       //setState(ListCalls)
 
  }, [lastIdAlert]);
 
@@ -72,8 +75,8 @@ async function getListAlerts() {
     } catch (error) {
         console.log(error)
     }
-
-    
+    setState([])
+    setState([...ListHigh, ...ListMedium, ...ListLow])
 
     setflag(true)
 }
@@ -111,40 +114,44 @@ async function getnewAlert() {
     }
 }
 function changeState(params) {
-    if (params="High") {
-        State=ListHigh
+    if (params==="High") {
+        setState([])
+        setState([...ListHigh])
     }
-    else if (params="Med") {
-        State=ListMedium
+    else if (params==="Med") {
+        setState([])
+        setState([...ListMedium])
     }
-    else if (params="Low") {
-        State=ListLow
+    else if (params==="Low") {
+        setState([])
+        setState([...ListLow])
     }
     else{
-        State=ListCalls
+        setState([])
+        setState([...ListHigh, ...ListMedium, ...ListLow])
     }
 }
 
 return (
     <View style={styles.container}>
         <View style={styles.buttons}>
-            <Pressable style={styles.button} onPress={() =>{changeState("high")}}
+            <TouchableOpacity style={styles.button} onPress={() =>{setState([]),changeState("High")}}
             ><Text style={styles.textb}>High</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={() =>{changeState("Med")}}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() =>{setState([]),changeState("Med")}}
             ><Text style={styles.textb}>Med</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={() =>{changeState("Low")}}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() =>{setState([]),changeState("Low")}}
             ><Text style={styles.textb}>Low</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={() =>{changeState("All")}}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() =>{setState([]),changeState("All")}}
             ><Text style={styles.textb}>All</Text>
-            </Pressable>
+            </TouchableOpacity>
         </View>
 
         <View style={styles.containerCalls}>
             {State == null ? console.log(State) : console.log(State)}
-            {State.map((call, index) => {
+            { State && State.map((call, index) => {
                 return (
                     <TouchableOpacity
                         key={call._id}

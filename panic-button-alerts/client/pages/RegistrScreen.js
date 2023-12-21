@@ -11,7 +11,7 @@ import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({ route }) => {
   // State variables to store form inputs,
   // errors, and form validity
   const [name, setName] = useState("");
@@ -146,6 +146,7 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <TextInput
         style={styles.input}
         placeholder="Name"

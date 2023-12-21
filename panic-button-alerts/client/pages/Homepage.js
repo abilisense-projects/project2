@@ -5,7 +5,7 @@ import { StyleSheet, View, Button, FlatList, Image, Text } from "react-native";
 import { useRoute } from '@react-navigation/native';
 import Alertscomp from '../components/alertcomps/Alerts';
 import RegisterScreen from "./RegistrScreen";
-export default function Homepage({ navigation }) {
+export default function Homepage({ route }) {
     useEffect(() => {
         updatemes();
 
@@ -34,6 +34,11 @@ export default function Homepage({ navigation }) {
     return (
         <View style={styles.container}>
             <Text>{Mes} {Name}</Text>
+            
+    {/* <Text>Home Screen</Text>
+    {/* Display the deep link parameters if available */}
+    {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+  
             <Alertscomp />
             {/* <Specificall /> */}
             
