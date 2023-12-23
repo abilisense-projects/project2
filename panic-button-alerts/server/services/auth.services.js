@@ -1,5 +1,5 @@
 const JWT = require("jsonwebtoken");
-const { User, validate } = require("../models/users.model");
+const { User, validate,comparePassword,generateAuthToken } = require("../models/users.model");
 const { Token } = require("../models/tokens.model");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
@@ -10,9 +10,9 @@ const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
 
 const register = async (data) => {
-  const { error } = validate(req.body);
+  const { error } = validate(data);
   if (error) {
-    throw new Error(error.details[0].message,400);
+    throw new Error(error.details[0].message, 400);
   }
   let user = await User.findOne({ email: data.email });
   if (user) {
@@ -98,31 +98,34 @@ const resetPassword = async (userId, token, password) => {
 
   return { message: "Password reset was successful" };
 };
-const Login = async(useremail,password)=>{
-    const user = await User.findOne({ email: useremail });
-    if (!user) {
-      // Username not found
-      throw new Error("Invalid user",401)
-     // return res.status(401).json({ message: 'Invalid user' });
-    }
-  
-    const isMatch = await User.comparePassword(password);
-    if (!isMatch) {
-      // Incorrect password
-      throw new Error("Invalid username or password",401)
-      //return res.status(401).json({ message: 'Invalid username or password' });
-    }
-  
-    const token = user.generateAuthToken();
-    
-    // Increments the login count for the user
-    //await user.incrementLoginCount();
-  
-    return token
-}
+const Login = async (useremail, password) => {
+  const user = await User.findOne({ email: useremail });
+  console.log(user)
+
+  if (!user) {
+    // Username not found
+    throw new Error("Invalid user", 401);
+    // return res.status(401).json({ message: 'Invalid user' });
+  }
+
+  const isMatch = await user.comparePassword(password);
+  console.log(isMatch)
+  if (!isMatch) {
+    // Incorrect password
+    throw new Error("Invalid username or password", 401);
+    //return res.status(401).json({ message: 'Invalid username or password' });
+  }
+
+  const token =  user.generateAuthToken();
+
+  // Increments the login count for the user
+  //await user.incrementLoginCount();
+
+  return token;
+};
 
 module.exports = {
-    Login,
+  Login,
   register,
   requestPasswordReset,
   resetPassword,

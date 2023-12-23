@@ -41,7 +41,9 @@ const LoginController = async (req, res) => {
     }); // secure true to allow https only
 
     res.json({ message: "Login Success", status: 1 });
-  } catch {}
+  } catch (error){
+    console.log(error)
+  }
 };
 
 module.exports = {
