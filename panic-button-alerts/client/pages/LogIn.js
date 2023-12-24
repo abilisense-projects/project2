@@ -57,7 +57,7 @@ const updateValidationResult = (fieldName, value) => {
 
       // Store token in local storage and navigate to the home screen
       console.log("Login successful");
-      navigation.navigate("home");
+      navigation.navigate("Home");
     } catch (error) {
       // console.error(error.message);
     }
@@ -76,6 +76,7 @@ const updateValidationResult = (fieldName, value) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <Text style={styles.header}>Login</Text>
       <TextInput
         style={[styles.input, !isEmailValid && styles.invalidInput]}
@@ -116,13 +117,13 @@ const updateValidationResult = (fieldName, value) => {
       <View style={{ flexDirection: "row" }}>
         <Text
           style={styles.forgotPassword}
-          onPress={() => navigation.navigate("sendEmail")}
+          onPress={() => navigation.navigate("SendEmail")}
         >
           Forgot Password?
         </Text>
         <Text
           style={styles.register}
-          onPress={() => navigation.navigate("register")}
+          onPress={() => navigation.navigate("Register")}
         >
           Register
         </Text>

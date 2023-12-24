@@ -1,4 +1,3 @@
-// CommonResetPassword.js
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,8 +6,8 @@ import { useRoute } from '@react-navigation/native';
 import CustomButton from '../../services/CustomButton';
 import ValidatePassword from '../../services/ValidatePassword';
 
-const ResetPassword = ({ navigation }) => {
-  const route = useRoute();
+const ResetPassword = ({ route }) => {
+  //const route = useRoute();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -27,12 +26,15 @@ const ResetPassword = ({ navigation }) => {
   useEffect(() => {
     const verify = async () => {
       const token = route.params?.resetToken;
+      console.log('Reset Password Token:', token);
 
       if (token) {
         setResetToken(token);
         setTokenVerified(await verifyToken(token));
+        navigation.navigate('password-reset', { email, resetToken })
       } else {
         setTokenVerified(false);
+        setMessage("token not valid")
       }
     };
     verify();
@@ -40,10 +42,11 @@ const ResetPassword = ({ navigation }) => {
 
   const handleResetPassword = async () => {
     setMessage(null);
-
-    if (!validationResults) {
+    console.warn(validationResults)
+    if (!(validationResults.length&validationResults.number&validationResults.specialChar&validationResults.match)) {
       return;
     }
+    
 
     try {
       const response = await axios.post('/reset-password/reset', {
@@ -60,18 +63,18 @@ const ResetPassword = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error resetting password:', error.message);
-      setMessage('An error occurred while resetting the password.');
+      setMessage('An error occurred while resetting the password,check password again...');
     }
   };
 
   const handlePasswordChange = (password) => {
     setPassword(password);
-    ValidationResults(password, confirmPassword);
+    setValidationResults(ValidatePassword(password, confirmPassword))
   };
   
   const handleConfirmPasswordChange = (confirmPassword) => {
     setConfirmPassword(confirmPassword);
-    ValidationResults(password, confirmPassword);
+    setValidationResults(ValidatePassword(password, confirmPassword));
   };
   
   
@@ -79,6 +82,7 @@ const ResetPassword = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}
@@ -113,7 +117,7 @@ const ResetPassword = ({ navigation }) => {
         <View>
           <Text>
             Reset successfully.{' '}
-            <TouchableOpacity onPress={() => navigation.navigate('login')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={{ color: 'blue' }}>Login</Text>
             </TouchableOpacity>
           </Text>

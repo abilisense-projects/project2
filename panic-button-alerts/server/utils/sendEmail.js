@@ -1,13 +1,14 @@
 const nodemailer = require("nodemailer");
 const logger = require("../logger/logger");
-const logger = require("../logger/logger");
+const handlebars = require("handlebars");
+const fs = require("fs");
+const path = require("path");
 
-const sendEmail = async (email, subject, text) => {
+const sendEmail = async (email, subject, payload, template) => {
   try {
     logger.info(`${process.env.USER}=${process.env.PASS}`);
-    logger.info(`${process.env.USER}=${process.env.PASS}`);
+    
     const transporter = nodemailer.createTransport({
-      host: process.env.HOST,
       host: process.env.HOST,
       service: process.env.SERVICE,
       auth: {
@@ -15,22 +16,34 @@ const sendEmail = async (email, subject, text) => {
         pass: process.env.PASS,
       },
     });
-    const htmlContent = `
-    <p>Click the button below to reset your password:</p>
-    <a href="${text}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: #ffffff; text-decoration: none; border-radius: 5px;">Reset Email</a>
-`;
+    console.log(email)
+    const source = fs.readFileSync(path.join(__dirname, template), "utf8");
+    console.log(source)
+    const compiledTemplate = handlebars.compile(source);
+    const options = () => {
+      return {
+        from: process.env.USER,
+        to: email,
+        subject: subject,
+        html: compiledTemplate(payload),
+      };
+    };
 
-    await transporter.sendMail({
-      from: process.env.USER,
-      to: email,
-      subject: subject,
-      html: htmlContent,
+    // Send emaile 
+    console.log("came to send mail")
+    transporter.sendMail(options(), (error, info) => {
+      if (error) {
+        return error;
+      } else {
+        return res.status(200).json({
+          success: true,
+        });
+      }
     });
-
-    console.log("email sent sucessfully");
   } catch (error) {
-    console.log(error, "email not sent");
+    return error;
   }
+
 };
 
 module.exports = sendEmail;

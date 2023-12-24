@@ -1,52 +1,58 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Text, StyleSheet } from 'react-native';
 import axios from '../../services/axiosInstance';
-import validateEmail from '../../services/ValidateEmail'
-import InputField from '../../services/InputField';
+import validateEmail from '../../services/ValidateEmail';
 import CustomButton from '../../services/CustomButton';
 
-const SendEmail = () => {
+const SendEmail = ({ route }) => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const handleSendResetEmail = async () => {
     if (!validateEmail(email)) {
       setMessage('Please enter a valid email address.');
+      setIsError(true);
       return;
     }
 
     try {
       // Send a request to the server to initiate the password reset process
-      const response = await axios.post('/reset-password', {
+      const response = await axios.post('auth/requestResetPassword', {
         email,
       });
-     console.log(response.data.success)
-     console.log(response.data)
 
-      if (response.data!=null) {
+      if (response.data != null) {
         setMessage('Reset email sent. Check your email for further instructions.');
+        setIsError(false);
       } else {
-        console.log(response.data.success)
-        setMessage('An error occurred while sending the reset email,please try again');
+        setMessage('An error occurred while sending the reset email. Please try again.');
+        setIsError(true);
+        
       }
     } catch (error) {
       console.error('Error sending reset email:', error.message);
       setMessage('An error occurred while sending the reset email.');
+      setIsError(true);
     }
   };
 
-
-
   return (
     <View style={styles.container}>
+      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      
       <TextInput
         style={styles.input}
         placeholder="Enter Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <CustomButton label={"Send Reset Email"} onPress={handleSendResetEmail} />
-      {message ? <Text style={styles.message}>{message}</Text> : null}
+      <CustomButton label="Send Reset Email" onPress={handleSendResetEmail} />
+      {message ? (
+        <Text style={[styles.message, isError ? styles.errorMessage : styles.successMessage]}>
+          {message}
+        </Text>
+      ) : null}
     </View>
   );
 };
@@ -68,7 +74,12 @@ const styles = StyleSheet.create({
   },
   message: {
     marginTop: 20,
-    color: 'red', 
+  },
+  errorMessage: {
+    color: 'red',
+  },
+  successMessage: {
+    color: 'purple',
   },
 });
 

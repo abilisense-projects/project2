@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Button, FlatList, Image,Text } from "react-native";
-import Callscomp from './Callscomp';
+import Callscomp from './Alerts';
 
 export default function Specificall() {
     useEffect(() => {
