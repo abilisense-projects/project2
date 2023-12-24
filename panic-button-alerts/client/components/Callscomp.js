@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Image, TouchableOpacity, Text, View, Button, } from 'react-native';
-import axios from '../../services/axiosInstance';
+import axios from '../services/axiosInstance';
 export default function Callscomp() {
     useEffect(() => {
         getListCalls();
