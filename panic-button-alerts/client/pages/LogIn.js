@@ -4,7 +4,10 @@ import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
 import axios from 'axios';
-import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
+
+// import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
+// import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
+
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,15 +49,7 @@ const updateValidationResult = (fieldName, value) => {
 
 
       
-      const user = { username: "test" }; // Example user object
-
-      if (!user) {
-        console.error("Invalid credentials");
-        return;
-      }
-
       const token = "example_token"; // Example token
-
       // Store token in local storage and navigate to the home screen
       console.log("Login successful");
       navigation.navigate("Home");
@@ -63,7 +58,7 @@ const updateValidationResult = (fieldName, value) => {
     }
     const checkEmailAndpassword = async (email, password) => {
       
-      const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
+      const url = 'http://localhost:3000'+'/api/user/get-by-email-and-password/';
       return await axios.post(url, { email, password })
         .then(response => {
           console.log('Data in checkEmailAndpassword:', response.data);
@@ -76,7 +71,7 @@ const updateValidationResult = (fieldName, value) => {
 
   return (
     <View style={styles.container}>
-      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <Text style={styles.header}>Login</Text>
       <TextInput
         style={[styles.input, !isEmailValid && styles.invalidInput]}
