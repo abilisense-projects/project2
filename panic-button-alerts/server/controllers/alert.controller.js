@@ -19,7 +19,7 @@ const getnewAlertController = async (req, res) => {
       res.status(404).send("id not valid");
     }
     const newAlerts = await getnewAlerts(id);
-    if (newAlerts)
+    if (newAlerts!=null)
       res.send({ isUpdate: true, response: newAlerts });
     else res.send({ isUpdate: false });
   } catch (error) {

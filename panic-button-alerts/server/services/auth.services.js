@@ -2,11 +2,12 @@ const JWT = require("jsonwebtoken");
 const {
   User,
   validate,
-  comparePassword,
-  generateAuthToken,
 } = require("../models/users.model");
 const { Token } = require("../models/tokens.model");
 const sendEmail = require("../utils/sendEmail");
+const{findOne,}=require("../dal/dal")
+
+
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
@@ -19,14 +20,21 @@ const register = async (data) => {
   if (error) {
     throw new Error(error.details[0].message, 400);
   }
-  let user = await User.findOne({ email: data.email });
+  let user = await findOne(User,{ email: data.email });
   if (user) {
     throw new Error("Email already exist", 422);
   }
   user = new User(data);
   const token = JWT.sign({ id: user._id }, JWTSecret);
   await user.save();
-
+  sendEmail(
+    user.email,
+    "Welcome to you new account",
+    {
+      name: user.name,
+    },
+    "../utils/template/welcome.handlebars"
+  );
   return (data = {
     userId: user._id,
     email: user.email,
