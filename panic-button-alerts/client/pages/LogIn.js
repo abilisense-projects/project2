@@ -43,7 +43,11 @@ const updateValidationResult = (fieldName, value) => {
         return;
       }
 
-      const response = await checkEmailAndpassword(email, password)
+      const response = axios.post("/auth/login", { email, password })
+      .then(response => {
+        console.log('Data in checkEmailAndpassword:', response.data);
+        return response.data
+      })
       console.log(response)
 
 
@@ -63,8 +67,9 @@ const updateValidationResult = (fieldName, value) => {
     } catch (error) {
       // console.error(error.message);
     }
-    const checkEmailAndpassword = async (email, password) => {
-      
+    const sendTOServer = async() => {
+    
+      console.log("came to axios")
       // const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
        await axios.post("/auth/login", { email, password })
         .then(response => {
