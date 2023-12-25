@@ -33,7 +33,8 @@ export default function Alertscomp() {
             return () => clearInterval(interval);
         }
         getListAlerts();
-       screen();
+        setState([...ListHigh, ...ListMedium, ...ListLow])
+        screen();
     }, [lastIdAlert]);
 
     async function getListAlerts() {
@@ -62,9 +63,9 @@ export default function Alertscomp() {
     async function getnewAlert() {
         if (lastIdAlert) {
             try {
-                const response = await axios.get(`alert/${lastIdAlert}`,);
+                const response = await axios.get(`alerts/${lastIdAlert}`,);
                 const result = response.data
-                if (result) {
+                if (result.isUpdate) {
                     setlastIdAlert(result[(result.length - 1)]._id)
                     for (let index = 0; index < result.length; index++) {
                         const element = result[index];
@@ -119,7 +120,6 @@ export default function Alertscomp() {
                 ><Text style={styles.textb}>All</Text>
                 </TouchableOpacity>
             </View>
-
             <View style={styles.containerCalls}>
                 {State && State.map((call, index) => {
                     return (
@@ -139,7 +139,7 @@ export default function Alertscomp() {
                                     <Image style={styles.img}
                                         source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />}
                             <Text style={styles.text}>{call.date}</Text>
-                            <Text style={styles.text}>{call.location}</Text>
+                            {/* <Text style={styles.text}>{call.location}</Text> */}
                             <Text style={styles.text}>{call.distressDescription}</Text>
                         </TouchableOpacity>
                     )
