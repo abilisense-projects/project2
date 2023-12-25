@@ -25,7 +25,7 @@ const ResetPassword = ({ route }) => {
 
   useEffect(() => {
     const verify = async () => {
-      const token = route.params?.resetToken;
+      const token =route.params.token;
       console.log('Reset Password Token:', token);
 
       if (token) {
@@ -49,7 +49,7 @@ const ResetPassword = ({ route }) => {
     
 
     try {
-      const response = await axios.post('/reset-password/reset', {
+      const response = await axios.post('/auth/resetPassword', {
         email: route.params.email,
         token: route.params.token,
         password,
@@ -82,7 +82,7 @@ const ResetPassword = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}

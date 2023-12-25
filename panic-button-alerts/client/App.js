@@ -1,40 +1,7 @@
-// import { StatusBar } from "expo-status-bar";
-// import { StyleSheet, Text, View } from "react-native";
-// import SendEmailScreen from "./components/forgetPassword/SendEmail";
-// import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import HomeScreen from "./pages/Homepage";
-// import RegisterScreen from "./pages/RegistrScreen";
-// import LoginScreen from "./pages/LogIn";
-// // import { render } from "react-dom";
-// // import Routes from './pages/Route'
-
-// const Stack = createNativeStackNavigator();
-// export default function App() {
-//   // render();{
-//     return (
-
-//       // <Routes />
-//       <NavigationContainer>
-//         <Stack.Navigator initialRouteName="home">
-//           <Stack.Screen name="sendEmail" component={SendEmailScreen} />
-//           <Stack.Screen name="password-reset" component={ResetPasswordScreen} />
-//           <Stack.Screen name="home" component={HomeScreen} />
-//           <Stack.Screen name="register" component={RegisterScreen} />
-//           <Stack.Screen name="login" component={LoginScreen} />
-//         </Stack.Navigator>
-//       </NavigationContainer>
-//     );
-//   }
-// // }
-
-
-
-
-import React, { useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Linking } from 'react-native';
 import HomeScreen from "./pages/Homepage";
 import RegisterScreen from "./pages/RegistrScreen";
@@ -45,7 +12,7 @@ import Login from './pages/LogIn';
 
 const Stack = createStackNavigator();
 
-
+ //const Stack = createNativeStackNavigator();
 const App = () => {
   const linking = {
     prefixes: ['localhost:19006://'],
@@ -60,8 +27,8 @@ const App = () => {
       },
     },
   };
-
-  const [initialState, setInitialState] = React.useState();
+  //const Stack = createStackNavigator();
+  const [initialState, setInitialState] = useState();
 
   useEffect(() => {
     const fetchInitialUrl = async () => {
