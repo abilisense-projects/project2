@@ -1,5 +1,10 @@
 const JWT = require("jsonwebtoken");
-const { User, validate,comparePassword,generateAuthToken } = require("../models/users.model");
+const {
+  User,
+  validate,
+  comparePassword,
+  generateAuthToken,
+} = require("../models/users.model");
 const { Token } = require("../models/tokens.model");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
@@ -60,9 +65,11 @@ const requestPasswordReset = async (email) => {
   return { link };
 };
 
-const resetPassword = async (userId, token, password) => {
-  let passwordResetToken = await Token.findOne({ userId });
-
+const resetPassword = async (user_Id, token, password) => {
+  console.log(user_Id);
+  let passwordResetToken = await Token.findOne({ userId: user_Id });
+  console.log(passwordResetToken);
+  console.log(token);
   if (!passwordResetToken) {
     throw new Error("Invalid or expired password reset token");
   }
@@ -78,7 +85,7 @@ const resetPassword = async (userId, token, password) => {
   const hash = await bcrypt.hash(password, Number(bcryptSalt));
 
   await User.updateOne(
-    { _id: userId },
+    { _id: user_Id },
     { $set: { password: hash } },
     { new: true }
   );
@@ -100,23 +107,21 @@ const resetPassword = async (userId, token, password) => {
 };
 const Login = async (useremail, password) => {
   const user = await User.findOne({ email: useremail });
-  console.log(user)
+  console.log(user);
 
   if (!user) {
     // Username not found
     throw new Error("Invalid user", 401);
-    // return res.status(401).json({ message: 'Invalid user' });
   }
 
   const isMatch = await user.comparePassword(password);
-  console.log(isMatch)
+  console.log(isMatch);
   if (!isMatch) {
     // Incorrect password
     throw new Error("Invalid username or password", 401);
-    //return res.status(401).json({ message: 'Invalid username or password' });
   }
 
-  const token =  user.generateAuthToken();
+  const token = user.generateAuthToken();
 
   // Increments the login count for the user
   //await user.incrementLoginCount();

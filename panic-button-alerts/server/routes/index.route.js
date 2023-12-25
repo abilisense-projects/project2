@@ -16,10 +16,10 @@ const router = require("express").Router();
 router.post("/auth/register", registerController);
 router.post(
   "/auth/requestResetPassword",
-  ApiRateLimiter,
+  ApiRateLimiter,VerifyToken,
   resetPasswordRequestController
 );
-router.post("/auth/resetPassword", resetPasswordController);
+router.post("/auth/resetPassword",VerifyToken, resetPasswordController);
 router.get("/alert/:lastAlertID", VerifyToken, getnewAlertController);
 router.get("/alert", getAllertsController);
 router.post("/auth/login", ApiRateLimiter, LoginController);
