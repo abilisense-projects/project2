@@ -12,11 +12,12 @@ const getAllertsController = async (req, res) => {
 
 const getnewAlertController = async (req, res) => {
   try {
-    const id = req.param.lastAlertID;
+    const id = req.params.lastIdAlert;
+    console.log(req.params.lastIdAlert)
     if (!id) {
       res.status(404).send("id not valid");
     }
-    const newAlerts = await getnewAlerts();
+    const newAlerts = await getnewAlerts(id);
     if (newAlerts)
       res.send(new AlertAnswer({ isUpdate: true, response: newAlerts }));
     res.send({ isUpdate: false });

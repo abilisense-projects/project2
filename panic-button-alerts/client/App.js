@@ -32,9 +32,12 @@
 
 
 
-import React, { useEffect } from 'react';
+import React, {useState, useEffect,useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+//import { navigationRef } from './RootNavigation';
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Linking } from 'react-native';
 import HomeScreen from "./pages/Homepage";
 import RegisterScreen from "./pages/RegistrScreen";
@@ -43,44 +46,46 @@ import SendEmailScreen from "./components/forgetPassword/SendEmail";
 import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
 const Stack = createStackNavigator();
 
-
-const App = () => {
+ //const Stack = createNativeStackNavigator();
+const App = ({}) => {
   const linking = {
     prefixes: ['localhost:19006://'],
     config: {
       screens: {
-        Home: 'home',
-        Details: 'details/:id',
+         Login:'login',
+       
         Register:'register' ,
         SendEmail:'sendEmail' ,
-       PasswordReset:"passwordreset",
-       Login:'login'
+       PasswordReset:"passwordReset",
+      Home: 'home'
       },
     },
   };
-
-  const [initialState, setInitialState] = React.useState();
+  const navigationRef = useRef(null)
+  //const Stack = createStackNavigator();
+  const [initialState, setInitialState] = useState();
 
   useEffect(() => {
     const fetchInitialUrl = async () => {
       const url = await Linking.getInitialURL();
 
-      if (url !== null) {
-        setInitialState(NavigationContainer.resolveRootScreen(linking, url));
-      }
+      // if (url !== null) {
+      //   setInitialState(NavigationContainer.resolveRootScreen(linking, url));
+      // }
     };
 
     fetchInitialUrl();
   }, []);
 
   return (
-    <NavigationContainer linking={linking} initialState={initialState}>
+    <NavigationContainer ref={navigationRef} linking={linking} initialState={initialState}>
       <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="SendEmail" component={SendEmailScreen} />
         <Stack.Screen name="PasswordReset" component={ResetPasswordScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

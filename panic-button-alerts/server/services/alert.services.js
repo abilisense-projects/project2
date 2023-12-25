@@ -5,7 +5,10 @@ const getAlerts = async () => {
 };
 
 const getnewAlerts = async (lastIdAlert) => {
-  const lastItem = await Alert.findById(lastIdAlert);
+console.log(lastIdAlert)
+  const lastItem = await Alert.find({_id:{$gt:lastIdAlert}})
+  //({lastIdAlert});
+  console.log(lastItem)
   console.error(lastItem.date);
   // Find documents that came after the last item based on the date 
   const result = await Alert.find({ date: { $gt: lastItem.date } }).sort({

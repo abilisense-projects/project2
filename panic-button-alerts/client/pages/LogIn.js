@@ -3,9 +3,9 @@ import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
-import axios from 'axios';
-import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
-const Login = ({ navigation }) => {
+import axios from '../services/axiosInstance';
+//import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
+const Login = ({ navigation ,route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // Added confirmPassword state
@@ -64,11 +64,17 @@ const updateValidationResult = (fieldName, value) => {
     const checkEmailAndpassword = async (email, password) => {
       
       const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
-      return await axios.post(url, { email, password })
-        .then(response => {
-          console.log('Data in checkEmailAndpassword:', response.data);
-          return response.data
-        })
+      const response = await axios.post("/auth/login", { email, password });
+      const result = response.data
+      if(result.message==="Login Success"){
+        localStorage.setItem('user', JSON.stringify(items));
+        navigation.navigate("Home")
+      }
+      // return await axios.post(url, { email, password })
+      //   .then(response => {
+      //     console.log('Data in checkEmailAndpassword:', response.data);
+      //     return response.data
+      //   })
      
     }
     

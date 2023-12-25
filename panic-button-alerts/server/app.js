@@ -35,6 +35,6 @@ app.listen(PORT, HOST_NAME, () => {
 process.on("unhandledRejection", err => {
     console.log(`An error occurred: ${err.message}`);
     //disconnect();
-    server.close(() => process.exit(1))
+    //server.close(() => process.exit(1))
 }
 )
