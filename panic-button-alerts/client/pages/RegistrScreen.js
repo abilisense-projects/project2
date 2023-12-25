@@ -168,7 +168,7 @@ const RegisterScreen = ({ route }) => {
       />
       <CustomButton
         label={"submit"}
-        style={[{ opacity: isFormValid ? 1 : 0.5 }]}
+        style={[{ opacity: isFormValid ? 1 : 0.3 }]}
         disabled={!isFormValid}
         onPress={handleSubmit}
       ></CustomButton>

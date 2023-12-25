@@ -1,62 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  AsyncStorage,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, AsyncStorage, TouchableOpacity } from "react-native";
 import CustomButton from "../services/CustomButton";
-
-const Login = ({ route }) => {
+import ValidateEmail from "../services/ValidateEmail";
+import ValidatePassword from "../services/ValidatePassword";
+import { useState } from "react";
+import axios from '../services/axiosInstance';
+// import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true); // State to track email validation
-  const [isPasswordValid, setIsPasswordValid] = useState(true); // State to track password validation
+  const [confirmPassword, setConfirmPassword] = useState(""); // Added confirmPassword state
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [validationResults, setValidationResults] = useState({
+    length: true,
+    number: true,
+    specialChar: true,
+    match: true,
+  });
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
-  const validatePassword = (password) => {
-    // Password length validation (minimum 6 characters)
-    const isLengthValid = password.length >= 6;
+const updateValidationResult = (fieldName, value) => {
+  setValidationResults(prevState => ({
+    ...prevState,
+    [fieldName]: value,
+  }));
+};
 
-    // Password special character validation
-    const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
-    const hasSpecialCharacter = specialCharacterRegex.test(password);
-
-    // Password alphanumeric validation
-    const alphanumericRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])/;
-    const isAlphanumeric = alphanumericRegex.test(password);
-
-    // Update password validation state
-    setIsPasswordValid(isLengthValid && hasSpecialCharacter && isAlphanumeric);
-
-    return isLengthValid && hasSpecialCharacter && isAlphanumeric;
-  };
 
   const handleLogin = async () => {
     try {
-      // Validate email format
-      setIsEmailValid(validateEmail(email));
+      setIsEmailValid(ValidateEmail(email));
 
       if (!isEmailValid) {
         console.error("Invalid email format");
         return;
       }
-
-      // Validate password
-      if (!validatePassword(password)) {
+      console.log("b-4 validate password")
+      setConfirmPassword(password)
+      const isPasswordValid = ValidatePassword(password);
+      console.log("came validate password")
+      if (!isPasswordValid) {
         console.error("Invalid password format");
         return;
       }
 
-      // Connect to MongoDB and verify user credentials
-      // Replace the next line with the actual logic for connecting to MongoDB
-      // const user = await usersCollection.findOne({ email, password });
+      const response = await checkEmailAndpassword(email, password)
+      console.log(response)
+
+
+      
       const user = { username: "test" }; // Example user object
 
       if (!user) {
@@ -64,31 +55,36 @@ const Login = ({ route }) => {
         return;
       }
 
-      // Create JWT token
-      // Replace the next line with the actual logic for creating a JWT token
-      // const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
       const token = "example_token"; // Example token
 
       // Store token in local storage and navigate to the home screen
-      // Replace the next line with the actual logic for storing the token
-      // await AsyncStorage.setItem('token', token);
       console.log("Login successful");
       navigation.navigate("Home");
     } catch (error) {
-      console.error(error.message);
+      // console.error(error.message);
     }
+    const checkEmailAndpassword = async (email, password) => {
+      
+      // const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
+       await axios.post("/auth/login", { email, password })
+        .then(response => {
+          console.log('Data in checkEmailAndpassword:', response.data);
+          return response.data
+        })
+     
+    }
+    
   };
 
   return (
     <View style={styles.container}>
-      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <Text style={styles.header}>Login</Text>
       <TextInput
         style={[styles.input, !isEmailValid && styles.invalidInput]}
         placeholder="Email"
         onChangeText={(text) => {
           setEmail(text);
-          // Reset email validation on input change
           setIsEmailValid(true);
         }}
         value={email}
@@ -97,21 +93,28 @@ const Login = ({ route }) => {
         <Text style={styles.warningText}>Invalid email format</Text>
       )}
       <TextInput
-        style={[styles.input, !isPasswordValid && styles.invalidInput]}
+        style={[
+          styles.input,
+          !validationResults.length && styles.invalidInput,
+        ]}
         placeholder="Password"
         secureTextEntry
         onChangeText={(text) => {
           setPassword(text);
-          // Reset password validation on input change
-          setIsPasswordValid(true);
+          updateValidationResult('length', true); // לדוגמא, מעדכן את הערך של length להיות false
+
         }}
         value={password}
       />
-      {!isPasswordValid && (
+      
+      {!validationResults.length && (
         <Text style={styles.warningText}>
-          Password must be at least 6 characters long and include at least one
-          special character and one number.
+          Password must be at least 8 characters long.
         </Text>
+      )}
+      
+      {!validationResults.match && (
+        <Text style={styles.warningText}>Passwords do not match.</Text>
       )}
       <View style={{ flexDirection: "row" }}>
         <Text
@@ -128,7 +131,7 @@ const Login = ({ route }) => {
         </Text>
       </View>
 
-      <CustomButton label={"Login"} onPress={handleLogin} />
+      <CustomButton label={"Login"} onPress={handleLogin} ></CustomButton>
     </View>
   );
 };
@@ -144,8 +147,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: "25%",
-    height: 20,
+    width: "75%", // Adjusted width
+    height: 40, // Adjusted height
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
