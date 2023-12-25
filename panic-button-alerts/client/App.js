@@ -35,9 +35,6 @@
 import React, {useState, useEffect,useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-//import { navigationRef } from './RootNavigation';
-
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Linking } from 'react-native';
 import HomeScreen from "./pages/Homepage";
 import RegisterScreen from "./pages/RegistrScreen";
@@ -46,8 +43,8 @@ import SendEmailScreen from "./components/forgetPassword/SendEmail";
 import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
 const Stack = createStackNavigator();
 
- //const Stack = createNativeStackNavigator();
-const App = ({}) => {
+
+const App = () => {
   const linking = {
     prefixes: ['localhost:19006://'],
     config: {

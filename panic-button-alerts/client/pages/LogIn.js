@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, AsyncStorage } from "react-native";
+import { View, Text, TextInput, StyleSheet, AsyncStorage, TouchableOpacity } from "react-native";
 import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
@@ -34,15 +34,17 @@ const updateValidationResult = (fieldName, value) => {
         console.error("Invalid email format");
         return;
       }
-
-      const isPasswordValid = ValidatePassword(password, confirmPassword);
-
+      console.log("b-4 validate password")
+      setConfirmPassword(password)
+      const isPasswordValid = ValidatePassword(password);
+      console.log("came validate password")
       if (!isPasswordValid) {
         console.error("Invalid password format");
         return;
       }
 
       const response = await checkEmailAndpassword(email, password)
+      console.log(response)
 
 
       
@@ -63,18 +65,12 @@ const updateValidationResult = (fieldName, value) => {
     }
     const checkEmailAndpassword = async (email, password) => {
       
-      const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
-      const response = await axios.post("/auth/login", { email, password });
-      const result = response.data
-      if(result.message==="Login Success"){
-        localStorage.setItem('user', JSON.stringify(items));
-        navigation.navigate("Home")
-      }
-      // return await axios.post(url, { email, password })
-      //   .then(response => {
-      //     console.log('Data in checkEmailAndpassword:', response.data);
-      //     return response.data
-      //   })
+      // const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
+       await axios.post("/auth/login", { email, password })
+        .then(response => {
+          console.log('Data in checkEmailAndpassword:', response.data);
+          return response.data
+        })
      
     }
     
@@ -82,7 +78,7 @@ const updateValidationResult = (fieldName, value) => {
 
   return (
     <View style={styles.container}>
-      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <Text style={styles.header}>Login</Text>
       <TextInput
         style={[styles.input, !isEmailValid && styles.invalidInput]}
@@ -135,7 +131,7 @@ const updateValidationResult = (fieldName, value) => {
         </Text>
       </View>
 
-      <CustomButton label={"Login"} onPress={handleLogin} />
+      <CustomButton label={"Login"} onPress={handleLogin} ></CustomButton>
     </View>
   );
 };

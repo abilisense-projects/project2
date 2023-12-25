@@ -19,8 +19,8 @@ const getnewAlertController = async (req, res) => {
     }
     const newAlerts = await getnewAlerts(id);
     if (newAlerts)
-      res.send(new AlertAnswer({ isUpdate: true, response: newAlerts }));
-    res.send({ isUpdate: false });
+      res.send({ isUpdate: true, response: newAlerts });
+    else res.send({ isUpdate: false });
   } catch (error) {
     res.status(500).send("An error occurred");
     console.error(error);

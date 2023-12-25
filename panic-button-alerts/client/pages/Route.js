@@ -9,6 +9,7 @@ const Routes = () => (
       <Scene key = "root">
          <Scene key = "home" component = {HomeScreen} title = "Home" initial = {true} />
          <Scene key = "Register" component = {RegisterScreen} title = "Register" />
+         
       </Scene>
    </Router>
 )

@@ -4,7 +4,7 @@
   "description": "panic_button_alerts",
   "main": "index.js",
   "scripts": {
-    "dev::": "nodemon app.js",
+    "dev": "nodemon app.js",
     "start": "node app.js",
     "test": "nodemon app.js"
   },
@@ -25,5 +25,8 @@
     "nodemailer": "^6.9.7",
     "nodemon": "^2.0.22",
     "pine": "^1.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0"
   }
 }
