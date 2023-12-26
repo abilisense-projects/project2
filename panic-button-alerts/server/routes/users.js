@@ -33,12 +33,12 @@ router.post('/get-by-email-and-password/', async (req, res) => {
     }
     try {
         const user = await user.findOne({ email });
-        const isPasswordValid = 0//מה שחני תביא;
+        const isPasswordValid = 0
         if (!isPasswordValid) {
             return { error: "invalid password" };
         }
         if (user) {
-            // Respond with success
+            
             res.status(200).json({ success: true, user: user });
         } else {
             res.status(401).json({ success: false, message: 'Auth fail' });

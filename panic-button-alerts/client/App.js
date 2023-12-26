@@ -4,9 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Linking } from 'react-native';
 import HomeScreen from "./pages/Homepage";
 import RegisterScreen from "./pages/RegistrScreen";
-import LoginScreen from "./pages/LogIn";
+// import LoginScreen from "./pages/Login";
 import SendEmailScreen from "./components/forgetPassword/SendEmail";
 import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
+import Login from './pages/LogIn';
+
 const Stack = createStackNavigator();
 export default function App () {
   const linking = {
@@ -14,6 +16,7 @@ export default function App () {
     config: {
       screens: {
          Login:'login',
+       
         Register:'register' ,
         SendEmail:'sendEmail' ,
        PasswordReset:"passwordReset",
@@ -32,11 +35,11 @@ export default function App () {
   return (
     <NavigationContainer  linking={linking} >
       <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="SendEmail" component={SendEmailScreen} />
         <Stack.Screen name="PasswordReset" component={ResetPasswordScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

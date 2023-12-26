@@ -1,6 +1,10 @@
-const { getAlerts, getnewAlerts } = require("../services/alert.services");
+const {
+  getAlerts,
+  getnewAlerts,
+  getAlert,
+} = require("../services/alert.services");
 
-const getAllertsController = async (req, res) => {
+const getAlertsController = async (req, res) => {
   try {
     const alerts = await getAlerts();
     res.send(alerts);
@@ -9,11 +13,17 @@ const getAllertsController = async (req, res) => {
     console.error(error);
   }
 };
+const getAlertController = async (req, res) => {
+  try {
+    const alert = await getAlert(req.alertId);
+    res.send(alert);
+  } catch {}
+};
 
 const getnewAlertController = async (req, res) => {
   try {
     const id = req.params.lastAlertID;
-    console.log(id)
+    console.log(id);
 
     if (!id) {
       res.status(404).send("id not valid");
@@ -31,4 +41,8 @@ const getnewAlertController = async (req, res) => {
     console.error(error);
   }
 };
-module.exports = { getnewAlertController, getAllertsController };
+module.exports = {
+  getnewAlertController,
+  getAlertsController,
+  getAlertController,
+};

@@ -34,10 +34,8 @@ const updateValidationResult = (fieldName, value) => {
         console.error("Invalid email format");
         return;
       }
-      console.log("b-4 validate password")
       setConfirmPassword(password)
       const isPasswordValid = ValidatePassword(password);
-      console.log("came validate password")
       if (!isPasswordValid) {
         console.error("Invalid password format");
         return;
@@ -51,16 +49,9 @@ const updateValidationResult = (fieldName, value) => {
       console.log(response)
 
 
+
       
-      const user = { username: "test" }; // Example user object
-
-      if (!user) {
-        console.error("Invalid credentials");
-        return;
-      }
-
       const token = "example_token"; // Example token
-
       // Store token in local storage and navigate to the home screen
       console.log("Login successful");
       navigation.navigate("Home");
@@ -72,6 +63,8 @@ const updateValidationResult = (fieldName, value) => {
       console.log("came to axios")
       // const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
        await axios.post("/auth/login", { email, password })
+      const url = 'http://localhost:3000'+'/api/user/get-by-email-and-password/';
+      return await axios.post(url, { email, password })
         .then(response => {
           console.log('Data in checkEmailAndpassword:', response.data);
           return response.data
@@ -83,6 +76,7 @@ const updateValidationResult = (fieldName, value) => {
 
   return (
     <View style={styles.container}>
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <Text style={styles.header}>Login</Text>
       <TextInput
