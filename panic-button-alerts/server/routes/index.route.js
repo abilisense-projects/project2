@@ -16,7 +16,7 @@ const router = require("express").Router();
 router.post("/auth/register", registerController);
 router.post(
   "/auth/requestResetPassword",
-  ApiRateLimiter,VerifyToken,
+  ApiRateLimiter,
   resetPasswordRequestController
 );
 router.post("/auth/resetPassword",VerifyToken, resetPasswordController);
