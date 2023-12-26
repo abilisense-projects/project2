@@ -1,39 +1,44 @@
-import React, {useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Linking } from 'react-native';
 import HomeScreen from "./pages/Homepage";
 import RegisterScreen from "./pages/RegistrScreen";
-// import LoginScreen from "./pages/Login";
 import SendEmailScreen from "./components/forgetPassword/SendEmail";
 import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
 import Login from './pages/LogIn';
-
 const Stack = createStackNavigator();
-export default function App () {
+const App = () => {
   const linking = {
     prefixes: ['localhost:19006://'],
     config: {
       screens: {
-         Login:'login',
-       
-        Register:'register' ,
-        SendEmail:'sendEmail' ,
-       PasswordReset:"passwordReset",
-      Home: 'home'
+        Login: 'login',
+        Details: 'details/:id',
+        Register: 'register',
+        SendEmail: 'sendEmail',
+        PasswordReset: 'passwordReset',
+        Home: 'home'
       },
     },
   };
-  const navigationRef = useRef(null)
+  const [initialState, setInitialState] = useState();
+
   useEffect(() => {
     const fetchInitialUrl = async () => {
       const url = await Linking.getInitialURL();
+
+      if (url !== null) {
+        setInitialState(NavigationContainer.resolveRootScreen(linking, url));
+      }
     };
+
     fetchInitialUrl();
   }, []);
 
   return (
-    <NavigationContainer  linking={linking} >
+    <NavigationContainer linking={linking} initialState={initialState}>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={RegisterScreen} />
@@ -44,3 +49,5 @@ export default function App () {
     </NavigationContainer>
   );
 };
+
+export default App;
