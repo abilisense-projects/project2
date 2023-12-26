@@ -37,16 +37,20 @@ const updateValidationResult = (fieldName, value) => {
         console.error("Invalid email format");
         return;
       }
-      console.log("b-4 validate password")
       setConfirmPassword(password)
       const isPasswordValid = ValidatePassword(password);
-      console.log("came validate password")
       if (!isPasswordValid) {
         console.error("Invalid password format");
         return;
       }
 
-      const response = await checkEmailAndpassword(email, password)
+      const response = axios.post("/auth/login", { email, password })
+      .then(response => {
+        console.log('Data in checkEmailAndpassword:', response.data);
+        return response.data
+      })
+      console.log(response)
+
 
 
       
@@ -57,8 +61,9 @@ const updateValidationResult = (fieldName, value) => {
     } catch (error) {
       // console.error(error.message);
     }
-    const checkEmailAndpassword = async (email, password) => {
-      
+    const sendTOServer = async() => {
+    
+      console.log("came to axios")
       // const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
        await axios.post("/auth/login", { email, password })
       const url = 'http://localhost:3000'+'/api/user/get-by-email-and-password/';
