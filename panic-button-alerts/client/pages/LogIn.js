@@ -5,8 +5,6 @@ import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
 import axios from 'axios';
 
-// import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
-// import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -79,8 +77,6 @@ const updateValidationResult = (fieldName, value) => {
 
   return (
     <View style={styles.container}>
-      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
-      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <Text style={styles.header}>Login</Text>
       <TextInput
         style={[styles.input, !isEmailValid && styles.invalidInput]}

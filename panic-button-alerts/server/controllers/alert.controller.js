@@ -1,7 +1,7 @@
 const {
   getAlerts,
   getnewAlerts,
-  getAlert,
+  getAlertDetails,
 } = require("../services/alert.services");
 
 const getAlertsController = async (req, res) => {
@@ -15,9 +15,12 @@ const getAlertsController = async (req, res) => {
 };
 const getAlertController = async (req, res) => {
   try {
-    const alert = await getAlert(req.alertId);
+    const alert = await getAlertDetails(req.params.alertId);
     res.send(alert);
-  } catch {}
+  } catch (error){
+    res.status(500).send("An error occurred");
+    console.error(error);
+  }
 };
 
 const getnewAlertController = async (req, res) => {

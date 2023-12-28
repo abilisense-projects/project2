@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const addressSchema = mongoose.Schema({
     country: String,
     city: String,
@@ -9,6 +10,7 @@ const addressSchema = mongoose.Schema({
     apartmentNumber: Number,
     comments: { type: String, require: false }
 });
+
 const patientsSchema = mongoose.Schema({
     fname: String,
     lname: String,
@@ -17,17 +19,8 @@ const patientsSchema = mongoose.Schema({
     phone: String,
     address: addressSchema,
     dateOfBirth: Date,
-    medicalConditions: [String]
-})
-const Patient = mongoose.model("patient", patientsSchema);
+});
 
-// const validate = (patient) => {
-//     const schema = Joi.object({
-//         name: Joi.string().required(),
-//         email: Joi.string().email().required(),
-//         password: Joi.string().required(),
-//     });
-//     return schema.validate(alert);
-// };
+const Patient = new mongoose.model('patients', patientsSchema);
 
 module.exports = { Patient };

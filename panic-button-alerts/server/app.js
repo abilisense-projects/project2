@@ -30,7 +30,7 @@ app.use("/api",require("./routes/index.route"))
 logger.info(process.env.HOST_NAME,PORT)
 app.use(errorMiddlware);
 app.listen(PORT, HOST_NAME, () => {
-  console.log(`server is up and running+${HOST_NAME}:${PORT}`);
+  logger.info(`server is up and running+${HOST_NAME}:${PORT}`);
 });
 // process.on("unhandledRejection", err => {
 //     console.log(`An error occurred: ${err.message}`);

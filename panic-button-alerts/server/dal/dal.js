@@ -16,10 +16,16 @@ exports.find = async (model, filter = {}, pagination = {}, sort = {}, projection
 exports.findOne = async (model, filter, projection = {}) => {
     return await model.findOne(filter, projection);
 };
+exports.findByID = async (model, id, fieldToSelect={}) => {
+    let query = model.findById(id);
 
-exports.findByID = async (model, id) => {
-    return await model.findById(id);
+    if (fieldToSelect) {
+        query = query.select(fieldToSelect);
+    }
+
+    return await query;
 };
+
 
 exports.countDocuments = async (model, filter) => {
     return await model.countDocuments(filter);
