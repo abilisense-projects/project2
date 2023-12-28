@@ -34,14 +34,10 @@ const LoginController = async (req, res) => {
   try {
     const token = await Login( req.body.email,req.body.password );
     if (token) {
+      res.json({ message: "Login Success", status: 1,token:token });
     }
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false,
-    }); // secure true to allow https only
-
-    res.json({ message: "Login Success", status: 1 });
+    
+   else {res.json({message: "Login failed", status: 0})}
   } catch (error){
     console.log(error)
   }
