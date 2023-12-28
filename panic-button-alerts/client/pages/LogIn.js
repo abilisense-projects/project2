@@ -3,10 +3,9 @@ import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
-import axios from 'axios';
-
-
-const Login = ({ navigation }) => {
+import axios from '../services/axiosInstance';
+//import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
+const Login = ({ navigation ,route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // Added confirmPassword state

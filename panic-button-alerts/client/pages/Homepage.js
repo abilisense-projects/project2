@@ -1,24 +1,17 @@
 
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, FlatList, Image, Text } from "react-native";
-import { useRoute } from '@react-navigation/native';
+import { StyleSheet, View, Text } from "react-native";
 import Alertscomp from '../components/alertcomps/Alerts';
-import RegisterScreen from "./RegistrScreen";
 export default function Homepage({ route }) {
     useEffect(() => {
         updatemes();
-
     }, []);
-    // { route, navigation }
-    // const { paramName } = route
-    // navigation.navigate('RouteName', { /* params go here */ })
     const [Mes, setMes] = useState(" ")
     const [Name, setName] = useState("Malka")
 
     async function updatemes() {
         const time = new Date();
-
         const hour = time.getHours()
         if (hour < 13) {
             setMes("Good morning!")
@@ -28,26 +21,15 @@ export default function Homepage({ route }) {
         }
         else {
             setMes("Good night");
-
         }
     }
     return (
         <View style={styles.container}>
             <Text>{Mes} {Name}</Text>
-            
-    {/* <Text>Home Screen</Text>
-    {/* Display the deep link parameters if available */}
-    {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
-  
             <Alertscomp />
-            {/* <Specificall /> */}
-            
             <StatusBar style="auto" />
         </View>
     );
-    const RegisterScreen = ({ navigation, route }) => {
-        return <Text>This is {route.params.name}'s profile</Text>;
-    };
 }
 const styles = StyleSheet.create({
     nav: {

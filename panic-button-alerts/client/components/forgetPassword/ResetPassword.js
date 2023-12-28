@@ -12,9 +12,25 @@ import axios from "../../services/axiosInstance";
 import { useRoute } from "@react-navigation/native";
 import CustomButton from "../../services/CustomButton";
 import ValidatePassword from "../../services/ValidatePassword";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  TextInput,
+  Button,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import axios from "../../services/axiosInstance";
+import { useRoute } from "@react-navigation/native";
+import CustomButton from "../../services/CustomButton";
+import ValidatePassword from "../../services/ValidatePassword";
 
 const ResetPassword = ({ route }) => {
   //const route = useRoute();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -22,6 +38,7 @@ const ResetPassword = ({ route }) => {
   const [message, setMessage] = useState(null);
   const [tokenVerified, setTokenVerified] = useState(false);
   const [isResetSuccess, setIsResetSuccess] = useState(false);
+  const [resetToken, setResetToken] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [validationResults, setValidationResults] = useState({
     length: false,
@@ -42,6 +59,7 @@ const ResetPassword = ({ route }) => {
       } else {
         setTokenVerified(false);
         setMessage("token not valid");
+        setMessage("token not valid");
       }
     };
     verify();
@@ -57,10 +75,20 @@ const ResetPassword = ({ route }) => {
         validationResults.match
       )
     ) {
+    if (
+      !(
+        validationResults.length &
+        validationResults.number &
+        validationResults.specialChar &
+        validationResults.match
+      )
+    ) {
       return;
     }
 
     try {
+      const response = await axios.post("/auth/resetPassword", {
+        userid: route.params.id,
       const response = await axios.post("/auth/resetPassword", {
         userid: route.params.id,
         token: route.params.token,
@@ -71,11 +99,19 @@ const ResetPassword = ({ route }) => {
         setMessage(
           "Password reset successful. You can now log in with your new password."
         );
+        setMessage(
+          "Password reset successful. You can now log in with your new password."
+        );
         setIsResetSuccess(true);
       } else {
         setMessage("Something went wrong. Please try again later.");
+        setMessage("Something went wrong. Please try again later.");
       }
     } catch (error) {
+      console.error("Error resetting password:", error.message);
+      setMessage(
+        "An error occurred while resetting the password,check password again..."
+      );
       console.error("Error resetting password:", error.message);
       setMessage(
         "An error occurred while resetting the password,check password again..."
@@ -86,7 +122,9 @@ const ResetPassword = ({ route }) => {
   const handlePasswordChange = (password) => {
     setPassword(password);
     setValidationResults(ValidatePassword(password, confirmPassword));
+    setValidationResults(ValidatePassword(password, confirmPassword));
   };
+
 
   const handleConfirmPasswordChange = (confirmPassword) => {
     setConfirmPassword(confirmPassword);
@@ -113,8 +151,23 @@ const ResetPassword = ({ route }) => {
             size={24}
             color="black"
           />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Ionicons
+            name={showPassword ? "eye-off" : "eye"}
+            size={24}
+            color="black"
+          />
         </TouchableOpacity>
       </View>
+      {renderValidationItem("Minimum 8 characters", validationResults.length)}
+      {renderValidationItem("At least 1 number", validationResults.number)}
+      {renderValidationItem(
+        "At least 1 special character",
+        validationResults.specialChar
+      )}
       {renderValidationItem("Minimum 8 characters", validationResults.length)}
       {renderValidationItem("At least 1 number", validationResults.number)}
       {renderValidationItem(
@@ -138,14 +191,28 @@ const ResetPassword = ({ route }) => {
             size={24}
             color="black"
           />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Ionicons
+            name={showPassword ? "eye-off" : "eye"}
+            size={24}
+            color="black"
+          />
         </TouchableOpacity>
       </View>
+      {renderValidationItem("Passwords match", validationResults.match)}
+      <CustomButton label={"Reset Password"} onPress={handleResetPassword} />
       {renderValidationItem("Passwords match", validationResults.match)}
       <CustomButton label={"Reset Password"} onPress={handleResetPassword} />
 
       {isResetSuccess && (
         <View>
           <Text>
+            Reset successfully.{" "}
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={{ color: "blue" }}>Login</Text>
             Reset successfully.{" "}
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={{ color: "blue" }}>Login</Text>
@@ -164,6 +231,9 @@ const renderValidationItem = (text, isValid) => (
     <Text style={{ color: isValid ? "green" : "red" }}>
       {isValid ? "✅" : "❌"}
     </Text>
+    <Text style={{ color: isValid ? "green" : "red" }}>
+      {isValid ? "✅" : "❌"}
+    </Text>
     <Text style={{ marginLeft: 8 }}>{text}</Text>
   </View>
 );
@@ -173,9 +243,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
@@ -183,6 +257,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
+    borderColor: "gray",
     borderColor: "gray",
     borderWidth: 1,
     padding: 8,
@@ -193,7 +268,10 @@ const styles = StyleSheet.create({
   validationItem: {
     flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
+    alignSelf: "flex-start",
     alignSelf: "flex-start",
   },
   button: {
@@ -201,6 +279,7 @@ const styles = StyleSheet.create({
   },
   message: {
     marginTop: 12,
+    color: "red", // or any other color you prefer for error messages
     color: "red", // or any other color you prefer for error messages
   },
 });

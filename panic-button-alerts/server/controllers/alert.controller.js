@@ -32,8 +32,13 @@ const getnewAlertController = async (req, res) => {
       res.status(404).send("id not valid");
     }
     const newAlerts = await getnewAlerts(id);
-    if (newAlerts != null) res.send({ isUpdate: true, response: newAlerts });
-    else res.send({ isUpdate: false });
+    console.log("bhbh" + newAlerts)
+    const earr=[]
+    if (newAlerts.length == 0) {
+      console.log(newAlerts.length)
+      res.send({ isUpdate: false });
+    }
+    else res.send({ isUpdate: true, response: newAlerts });
   } catch (error) {
     res.status(500).send("An error occurred");
     console.error(error);
