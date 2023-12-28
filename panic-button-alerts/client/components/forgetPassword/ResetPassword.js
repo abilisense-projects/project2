@@ -33,12 +33,12 @@ const ResetPassword = ({ route }) => {
   useEffect(() => {
     const verify = async () => {
       const token = route.params.token;
-      console.log('Reset Password Token:', token);
+      console.log("Reset Password Token:", token);
 
       if (token) {
         setResetToken(token);
         setTokenVerified(await verifyToken(token));
-        navigation.navigate('passwordReset', { email, resetToken })
+        navigation.navigate("password-reset", { email, resetToken });
       } else {
         setTokenVerified(false);
         setMessage("token not valid");
