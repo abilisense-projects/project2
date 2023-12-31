@@ -37,7 +37,7 @@ const LoginController = async (req, res) => {
       res.json({ message: "Login Success", status: 1,token:token });
     }
     
-   else {res.json({message: "Login failed", status: 0})}
+   else {res.send({message: "Login failed", status: 0})}
   } catch (error){
     console.log(error)
   }
