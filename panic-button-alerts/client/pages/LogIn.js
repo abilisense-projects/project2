@@ -4,8 +4,8 @@ import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
 import axios from '../services/axiosInstance';
-//import { BY_EMAIL_AND_PASSWORD, SERVER_BASE_URL } from '@env';
-const Login = ({ navigation ,route }) => {
+// import { storeTokens } from "../services/authService"
+const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // Added confirmPassword state
@@ -16,14 +16,14 @@ const Login = ({ navigation ,route }) => {
     specialChar: true,
     match: true,
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
-
-const updateValidationResult = (fieldName, value) => {
-  setValidationResults(prevState => ({
-    ...prevState,
-    [fieldName]: value,
-  }));
-};
+  const updateValidationResult = (fieldName, value) => {
+    setValidationResults(prevState => ({
+      ...prevState,
+      [fieldName]: value,
+    }));
+  };
 
 
   const handleLogin = async () => {
@@ -41,37 +41,25 @@ const updateValidationResult = (fieldName, value) => {
         return;
       }
 
-      const response = axios.post("/auth/login", { email, password })
-      .then(response => {
-        console.log('Data in checkEmailAndpassword:', response.data);
-        return response.data
-      })
-      console.log(response)
+      const response = await axios.post("/auth/login", { email, password })
+      if (response.data.message === 'Login Success') {
+        // dispatch(loginSuccess(response.user));
+        // storeTokens(response.data.token, {})
+        navigation.replace('DrawerNavigationRoutes');
+       
+      } else {
+        setErrorMessage('user name or password invalid');
+      }
 
 
-
-      
       const token = "example_token"; // Example token
-      // Store token in local storage and navigate to the home screen
+
       console.log("Login successful");
-      navigation.navigate("Home");
     } catch (error) {
       // console.error(error.message);
     }
-    const sendTOServer = async() => {
-    
-      console.log("came to axios")
-      // const url = SERVER_BASE_URL + BY_EMAIL_AND_PASSWORD;
-       await axios.post("/auth/login", { email, password })
-      const url = 'http://localhost:3000'+'/api/user/get-by-email-and-password/';
-      return await axios.post(url, { email, password })
-        .then(response => {
-          console.log('Data in checkEmailAndpassword:', response.data);
-          return response.data
-        })
-     
-    }
-    
+
+
   };
 
   return (
@@ -103,13 +91,13 @@ const updateValidationResult = (fieldName, value) => {
         }}
         value={password}
       />
-      
+
       {!validationResults.length && (
         <Text style={styles.warningText}>
           Password must be at least 8 characters long.
         </Text>
       )}
-      
+
       {!validationResults.match && (
         <Text style={styles.warningText}>Passwords do not match.</Text>
       )}
@@ -120,14 +108,16 @@ const updateValidationResult = (fieldName, value) => {
         >
           Forgot Password?
         </Text>
+
         <Text
           style={styles.register}
           onPress={() => navigation.navigate("Register")}
         >
-          Register
+          new here?
         </Text>
-      </View>
 
+      </View>
+      {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
       <CustomButton label={"Login"} onPress={handleLogin} ></CustomButton>
     </View>
   );
