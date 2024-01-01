@@ -104,7 +104,7 @@ const Login = ({ navigation, route }) => {
       <View style={{ flexDirection: "row" }}>
         <Text
           style={styles.forgotPassword}
-          onPress={() => navigation.navigate("SendEmail")}
+          onPress={() => navigation.replace('DrawerNavigationRoutes')}
         >
           Forgot Password?
         </Text>

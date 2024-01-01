@@ -96,148 +96,23 @@ const App = () => {
   }, []);
 
   return (
-    // <Map/>
-    // <NavigationContainer linking={linking} >
-    //   <Drawer.Navigator
-    //     drawerContent={(props) => {
-    //       return (
-    //         <SafeAreaView>
-    //           <View
-    //             style={{
-    //               height: 200,
-    //               width: "100%",
-    //               justifyContent: "center",
-    //               alignItems: "center",
-    //               borderBottomColor: "#f4f4f4",
-    //               borderBottomWidth: 1,
-    //             }}
-    //           >
-    //             <Image
-    //                 source={require("./assets/user.png")}
-    //                 style={{
-    //                   height: 130,
-    //                   width: 130,
-    //                   borderRadius: 65
-    //                 }}
-    //               />
-    //             <Text
-    //               style={{
-    //                 fontSize: 22,
-    //                 marginVertical: 6,
-    //                 fontWeight: "bold",
-    //                 color: "#111",
-    //               }}
-    //             >
-    //               Isabella Joanna
-    //             </Text>
-    //             <Text
-    //               style={{
-    //                 fontSize: 16,
-    //                 color: "#111",
-    //               }}
-    //             >
-    //               Product Manager
-    //             </Text>
-    //           </View>
-    //           <DrawerItemList {...props} />
-    //         </SafeAreaView>
-    //       );
-    //     }}
-    //     screenOptions={{
-    //       drawerStyle: {
-    //         backgroundColor: "#fff",
-    //         width: 250,
-    //       },
-    //       headerStyle: {
-    //         backgroundColor: "#f4511e",
-    //       },
-    //       headerTintColor: "#fff",
-    //       headerTitleStyle: {
-    //         fontWeight: "bold",
-    //       },
-    //       drawerLabelStyle: {
-    //         color: "#111",
-    //       },
-    //     }}
-    //   >
-    //     <Drawer.Screen
-    //       name="Home"
-    //       options={{
-    //         drawerLabel: "Home",
-    //         title: "Home",
-    //         drawerIcon: () => (
-    //           <SimpleLineIcons name="home" size={20} color="#808080" />
-    //         ),
-    //       }}
-    //       component={HomeScreen}
-    //     />
+    //  <Map/>
 
-    //     <Drawer.Screen
-    //       name="Login"
-    //       options={{
-    //         drawerLabel: "Login",
-    //         title: "Login",
-    //         drawerIcon: () => (
-    //           <MaterialIcons name="category" size={20} color="#808080" />
-    //         ),
-    //       }}
-    //       component={Login}
-    //     />
-    //     <Drawer.Screen
-    //       name="SendEmail"
-    //       options={{
-    //         drawerLabel: "SendEmail",
-    //         title: "SendEmail",
-    //         drawerIcon: () => (
-    //           <MaterialIcons
-    //             name="dashboard-customize"
-    //             size={20}
-    //             color="#808080"
-    //           />
-    //         ),
-    //       }}
-    //       component={SendEmailScreen}
-    //     />
-    //     <Drawer.Screen
-    //       name="Register"
-    //       options={{
-    //         drawerLabel: "Register",
-    //         title: "Register",
-    //         drawerIcon: () => (
-    //           <SimpleLineIcons name="settings" size={20} color="#808080" />
-    //         ),
-    //       }}
-    //       component={RegisterScreen}
-    //     />
-
-    //     <Drawer.Screen
-    //       name="ResetPassword"
-    //       options={{
-    //         drawerLabel: "ResetPassword",
-    //         title: "ResetPassword",
-    //         drawerIcon: () => (
-    //           <MaterialIcons name="backup" size={20} color="#808080" />
-    //         ),
-    //       }}
-    //       component={ResetPasswordScreen}
-    //     />
-    //   </Drawer.Navigator>
-    // </NavigationContainer>
     <NavigationContainer linking={linking}>
       <Stack.Navigator initialRouteName="SplashScreen">
         {/* SplashScreen which will come once for 5 Seconds */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SplashScreen"
           component={Splash}
           // Hiding header for Splash Screen
           options={{ headerShown: false }}
-        />
+        /> */}
         {/* Auth Navigator: Include Login and Signup */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Auth"
           component={Auth}
           options={{ headerShown: false }}
-        />
+        /> */}
         {/* Navigation Drawer as a landing page */}
         <Stack.Screen
           name="DrawerNavigationRoutes"

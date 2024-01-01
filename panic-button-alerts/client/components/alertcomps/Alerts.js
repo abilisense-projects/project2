@@ -2,19 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, TouchableOpacity, Text, View, } from 'react-native';
 import SpecificCall from "./Specificallcomp";
 import axios from '../../services/axiosInstance';
-export default function Alertscomp() {
+export default function Alertscomp({onvaluechange}) {
 
     const [ListLow, setListLow] = useState([])
     const [ListMedium, setListMedium] = useState([])
     const [ListHigh, setListHigh] = useState([])
     const [ListAlertsAvailability, setListAlertsAvailability] = useState([])
     const [ListAlertsUrgency, setListAlertsUrgency] = useState([])
-    const [State, setState] = useState([])
+    const [State, setState] = useState([...ListHigh, ...ListMedium, ...ListLow])
     const [lastIdAlert, setlastIdAlert] = useState(null)
-
-    const screen =()=>{
-         setState([...ListHigh, ...ListMedium, ...ListLow])
-    }
+    console.log( "אחרי הקונסט" +lastIdAlert)
+const[flag,setflag]=useState(false)
     const colorHi = {
         backgroundImage: 'linear-gradient(220deg, rgb(255, 0, 0), rgb(255, 255, 255))'
     };
@@ -27,18 +25,21 @@ export default function Alertscomp() {
 
     useEffect(() => {
         if (lastIdAlert) {
+            console.log( "אחריהאיפ" +lastIdAlert)
+            {flag&&  setState([...ListHigh, ...ListMedium, ...ListLow]),
+                setflag(false)}
             const interval = setInterval(() => {
                 getnewAlert();
-            }, 1000);
+            }, 3300);
             return () => clearInterval(interval);
         }
         getListAlerts();
-        setState([...ListHigh, ...ListMedium, ...ListLow])
-        screen();
+        
     }, [lastIdAlert]);
 
     async function getListAlerts() {
         try {
+            console.log("enter")
             const response = await axios.get('alerts');
             const result = response.data
             setlastIdAlert(result[(result.length - 1)]._id)
@@ -55,7 +56,7 @@ export default function Alertscomp() {
                 }
                 setListAlertsAvailability(current => [element, ...current])
             }
-            setState([...ListHigh, ...ListMedium, ...ListLow])
+           setflag(true)
         } catch (error) {
             console.log(error)
         }
@@ -63,12 +64,13 @@ export default function Alertscomp() {
     async function getnewAlert() {
         if (lastIdAlert) {
             try {
+                console.log( "אחרי הטרי" +lastIdAlert)
                 const response = await axios.get(`alerts/${lastIdAlert}`,);
                 const result = response.data
                 if (result.isUpdate) {
-                    setlastIdAlert(result[(result.length - 1)]._id)
-                    for (let index = 0; index < result.length; index++) {
-                        const element = result[index];
+                    setlastIdAlert(result.response[(result.response.length-1)]._id)
+                    for (let index = 0; index < result.response.length; index++) {
+                        const element = result.response[index];
                         if (element.level == "Hard") {
                             setListHigh(current => [element, ...current])
                         }
@@ -79,6 +81,8 @@ export default function Alertscomp() {
                             setListLow(current => [element, ...current])
                         }
                     }
+                    setflag(true)
+                    console.log( " והאיפ אחרי הטרי" +lastIdAlert)
                 }
             } catch (error) {
                 console.log(error)
@@ -103,7 +107,9 @@ export default function Alertscomp() {
             setState([...ListHigh, ...ListMedium, ...ListLow])
         }
     }
-
+function handleId(value) {
+    onvaluechange(value)
+}
     return (
         <View style={styles.container}>
             <View style={styles.buttons}>
@@ -126,11 +132,12 @@ export default function Alertscomp() {
                         <TouchableOpacity
                             key={call._id}
                             style={[
-                                styles.alert,
+                                (call.status=="in treatment"?
+                                [styles.alert, styles.inTreatment]:styles.alert),
                                 call.level == "Hard" ? colorHi :
                                     call.level == "Medium" ? colorMed : colorLow
                             ]}
-                            onPress={() => <SpecificCall />}
+                            onPress={() =>{ handleId(call._id),call.status="in treatment"}}
                         >
                             {call.level == "Hard" ? <Image style={styles.img}
                                 source={{ uri: '/static/media/hi.b2fd8eed21094cc1e0ef.png' }} /> :
@@ -175,6 +182,9 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center', // Center text within each alert
         marginVertical: 5, // Add vertical margin to separate text lines
+    },
+    inTreatment:{
+        borderWidth: "medium"
     },
     // img: {
     //     width: '100%',

@@ -44,6 +44,7 @@ const getAlertDetails = async (alertId) => {
 const getnewAlerts = async (lastIdAlert) => {
   const filters = {date:1,_id:0}
   const lastItemDate = await findByID(Alert, lastIdAlert,filters);
+  console.log(lastItemDate);
   console.error(lastItemDate.date);
   // Find documents that came after the last item based on the date
   const result = await find(
