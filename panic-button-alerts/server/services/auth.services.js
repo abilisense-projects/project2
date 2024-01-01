@@ -2,6 +2,8 @@ const JWT = require("jsonwebtoken");
 const { User, validate } = require("../models/users.model");
 const { Token } = require("../models/tokens.model");
 const sendEmail = require("../utils/sendEmail");
+const { findOne, findOneAndDelete, findByID,findOneAndUpdate } = require("../dal/dal");
+
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
@@ -10,18 +12,25 @@ const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
 
 const register = async (data) => {
-  const { error } = validate(req.body);
+  const { error } = validate(data);
   if (error) {
-    throw new Error(error.details[0].message,400);
+    throw new Error(error.details[0].message, 400);
   }
-  let user = await User.findOne({ email: data.email });
+  let user = await findOne(User, { email: data.email });
   if (user) {
     throw new Error("Email already exist", 422);
   }
   user = new User(data);
   const token = JWT.sign({ id: user._id }, JWTSecret);
   await user.save();
-
+  sendEmail(
+    user.email,
+    "Welcome to you new account",
+    {
+      name: user.name,
+    },
+    "../utils/template/welcome.handlebars"
+  );
   return (data = {
     userId: user._id,
     email: user.email,
@@ -31,11 +40,10 @@ const register = async (data) => {
 };
 
 const requestPasswordReset = async (email) => {
-  const user = await User.findOne({ email });
+  const user = await findOne(User, { email });
   if (!user) throw new Error("Email does not exist");
 
-  let token = await Token.findOne({ userId: user._id });
-  if (token) await token.deleteOne();
+  await findOneAndDelete(Token, { userId: user._id });
 
   let resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, Number(bcryptSalt));
@@ -60,10 +68,12 @@ const requestPasswordReset = async (email) => {
   return { link };
 };
 
-const resetPassword = async (userId, token, password) => {
-  let passwordResetToken = await Token.findOne({ userId });
-
-  if (!passwordResetToken) {
+const resetPassword = async (user_Id, token, password) => {
+  console.log(user_Id);
+  let passwordResetToken = await findOne(Token, { userId: user_Id });
+  console.log("passwordResetToken" + passwordResetToken);
+  console.log("yoken" + token);
+  if (!passwordResetToken.token) {
     throw new Error("Invalid or expired password reset token");
   }
 
@@ -78,12 +88,12 @@ const resetPassword = async (userId, token, password) => {
   const hash = await bcrypt.hash(password, Number(bcryptSalt));
 
   await User.updateOne(
-    { _id: userId },
+    { _id: user_Id },
     { $set: { password: hash } },
     { new: true }
   );
 
-  const user = await User.findById({ _id: userId });
+  const user = await findByID(User, { _id: user_Id });
 
   sendEmail(
     user.email,
@@ -96,33 +106,34 @@ const resetPassword = async (userId, token, password) => {
 
   await passwordResetToken.deleteOne();
 
-  return { message: "Password reset was successful" };
+  return { success: "Password reset was successful" };
 };
-const Login = async(useremail,password)=>{
-    const user = await User.findOne({ email: useremail });
-    if (!user) {
-      // Username not found
-      throw new Error("Invalid user",401)
-     // return res.status(401).json({ message: 'Invalid user' });
-    }
-  
-    const isMatch = await User.comparePassword(password);
-    if (!isMatch) {
-      // Incorrect password
-      throw new Error("Invalid username or password",401)
-      //return res.status(401).json({ message: 'Invalid username or password' });
-    }
-  
-    const token = user.generateAuthToken();
-    
-    // Increments the login count for the user
-    //await user.incrementLoginCount();
-  
-    return token
-}
+const Login = async (useremail, password) => {
+  const user = await findOne(User, { email: useremail });
+  console.log(user);
+
+  if (!user) {
+    // Username not found
+    throw new Error("Invalid user", 401);
+  }
+
+  const isMatch = await user.comparePassword(password);
+  console.log(isMatch);
+  if (!isMatch) {
+    // Incorrect password
+    throw new Error("Invalid username or password", 401);
+  }
+
+  const token = user.generateAuthToken();
+
+  // Increments the login count for the user
+  //await user.incrementLoginCount();
+
+  return token;
+};
 
 module.exports = {
-    Login,
+  Login,
   register,
   requestPasswordReset,
   resetPassword,

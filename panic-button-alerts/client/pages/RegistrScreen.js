@@ -10,6 +10,8 @@ import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
+import Loader from "../components/Loader";
+
 
 const RegisterScreen = ({ route }) => {
   // State variables to store form inputs,
@@ -21,6 +23,7 @@ const RegisterScreen = ({ route }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
 
+  const [loading, setLoading] = useState(false);
   const [validationResults, setValidationResults] = useState({
     length: false,
     number: false,
@@ -85,6 +88,7 @@ const RegisterScreen = ({ route }) => {
 
       // Make a POST request to your server endpoint
       const response = await axios.post("/auth/register", user);
+      setLoading(false);
 
       // Check if the registration was successful based on your server's response
       if (response.status === 200 || response.status === 201) {
@@ -124,6 +128,8 @@ const RegisterScreen = ({ route }) => {
           "Network error. Please check your internet connection."
         );
       } else {
+        setLoading(false);
+
         // Something happened in setting up the request that triggered an Error
         console.error("Error setting up the request:", error.message);
         // Update state with a more user-friendly error message
@@ -146,6 +152,7 @@ const RegisterScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <Loader loading={loading} />
       {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
       <TextInput
         style={styles.input}
@@ -168,7 +175,7 @@ const RegisterScreen = ({ route }) => {
       />
       <CustomButton
         label={"submit"}
-        style={[{ opacity: isFormValid ? 1 : 0.5 }]}
+        style={[{ opacity: isFormValid ? 1 : 0.3 }]}
         disabled={!isFormValid}
         onPress={handleSubmit}
       ></CustomButton>

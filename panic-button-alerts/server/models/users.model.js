@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const bcryptSalt = process.env.BCRYPT_SALT;
-const RateLimit = require("express-rate-limit");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new Schema({
   name: {
@@ -19,26 +19,29 @@ const userSchema = new Schema({
     required: true,
   },
 });
-const user = this;
 userSchema.pre("save", async function (next) {
-  if (!user.isModified("password")) {
+  if (!this.isModified("password")) {
     return next();
   }
-  const hash = await bcrypt.hash(user.password, Number(bcryptSalt));
-  user.password = hash;
+  const hash = await bcrypt.hash(this.password, Number(bcryptSalt));
+  this.password = hash;
   next();
 });
-UserSchema.methods.comparePassword = function (password) {
-  return bcrypt.compare(password, this.password);
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    throw error;
+  }
 };
 
-UserSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign({ _id: this._id }, env.process.JWT_SECRET, {
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign({ _id: this._id,name:this.name }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   return token;
 };
-UserSchema.statics.findByToken = function (token) {
+userSchema.static.findByToken = function (token) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     return this.findOne({ _id: decoded._id });
@@ -51,13 +54,11 @@ const User = mongoose.model("user", userSchema);
 const validate = (user) => {
   const schema = Joi.object({
     name: Joi.string().required(),
-    email: Joi.string().email().required().unique().trim(),
+    email: Joi.string().email({ minDomainSegments: 2}).required(),
     password: Joi.string()
+      .pattern(new RegExp("/^(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})$/"))
       .required()
-      .min(8)
-      .$_validate(
-        /(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]\\|:;'<>,.?/])[a-zA-Z\d!@#$%^&*()_\-+={}[\]\\|:;'<>,.?/]{8,}$/
-      ),
+      .min(8),
   });
   return schema.validate(user);
 };

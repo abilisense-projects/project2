@@ -22,8 +22,9 @@ const resetPasswordRequestController = async (req, res, next) => {
 };
 
 const resetPasswordController = async (req, res, next) => {
+  console.log("userId"+req.body.userid)
   const resetPasswordService = await resetPassword(
-    req.body.userId,
+    req.body.userid,
     req.body.token,
     req.body.password
   );
@@ -33,15 +34,13 @@ const LoginController = async (req, res) => {
   try {
     const token = await Login( req.body.email,req.body.password );
     if (token) {
+      res.send({ message: "Login Success", status: 1,token:token });
     }
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false,
-    }); // secure true to allow https only
-
-    res.json({ message: "Login Success", status: 1 });
-  } catch {}
+    
+   else {res.json({message: "Login failed", status: 0})}
+  } catch (error){
+    console.log(error)
+  }
 };
 
 module.exports = {
