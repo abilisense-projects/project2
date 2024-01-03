@@ -21,6 +21,7 @@
     "handlebars": "^4.7.8",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.44",
     "mongoose": "^7.2.4",
     "nodemailer": "^6.9.7",
     "nodemon": "^2.0.22",

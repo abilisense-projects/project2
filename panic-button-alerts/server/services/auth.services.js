@@ -54,7 +54,7 @@ const requestPasswordReset = async (email) => {
     createdAt: Date.now(),
   }).save();
 
-  const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
+  const link = `${clientURL}/Auth/passwordReset?token=${resetToken}&id=${user._id}`;
 
   sendEmail(
     user.email,
@@ -126,8 +126,7 @@ const Login = async (useremail, password) => {
 
   const token = user.generateAuthToken();
 
-  // Increments the login count for the user
-  //await user.incrementLoginCount();
+
 
   return token;
 };
