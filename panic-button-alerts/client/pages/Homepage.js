@@ -1,12 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-export default function Homepage() {
-    
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import React, { useState, useEffect } from 'react'
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, Text } from "react-native";
+import Alertscomp from '../components/alertcomps/Alerts';
+export default function Homepage({ route }) {
+    useEffect(() => {
+        updatemes();
+    }, []);
+    const [Mes, setMes] = useState(" ")
+    const [Name, setName] = useState("Malka")
+
+    async function updatemes() {
+        const time = new Date();
+        const hour = time.getHours()
+        if (hour < 13) {
+            setMes("Good morning!")
+        }
+        else if (hour < 18) {
+            setMes("Good after noon");
+        }
+        else {
+            setMes("Good night");
+        }
+    }
+    return (
+        <View style={styles.container}>
+            <Text>{Mes} {Name}</Text>
+            <Alertscomp />
+            <StatusBar style="auto" />
+        </View>
+    );
 }
+const styles = StyleSheet.create({
+    nav: {
+        display: 'flex'
+    },
+    containerAllCalls: {
+        left: '20%',
+        height: '100px',
+        width: '70px'
+    },
+    containerSpeCall: {
+        right: '20%',
+        height: '100px',
+        width: '70px'
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    text: {
+        fontSize: 'large',
+        color: 'black'
+    },
+})
+
+

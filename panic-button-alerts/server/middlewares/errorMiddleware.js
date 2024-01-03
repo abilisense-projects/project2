@@ -1,6 +1,14 @@
-module.exports=errorMiddleware = function (err, req, res, next) {
-    const status = err.statusCode || 500;
-    const msg = err.message || 'we have got some trouble 😒 ... try later';
-    res.status(status)
-        .send(`${msg}`)
-}
+const errorHandler = (err, req, res, next) => {
+    const statusCode = res.statusCode ? res.statusCode : 500;
+  
+    res.status(statusCode);
+  
+    res.json({
+      message: err.message,
+      stack: err.stack,
+    });
+  };
+  
+  module.exports = 
+    errorHandler
+  
