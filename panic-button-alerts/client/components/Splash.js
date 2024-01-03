@@ -24,7 +24,7 @@ const Splash = ({navigation}) => {
       //else send to Home Screen
       AsyncStorage.getItem('token').then((value) =>
         navigation.replace(
-          value === null ? 'Auth' : 'DrawerNavigationRoutes'
+          value === null ?  'DrawerNavigationRoutes':'Auth' 
         ),
       );
     }, 1800);

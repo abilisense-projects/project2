@@ -27,11 +27,13 @@ const Drawer = createDrawerNavigator();
 const icon = (
   <FontAwesome icon="fa-light fa-circle-user" style={{ color: "#83138b" }} />
 );
+
 //const Stack = createNativeStackNavigator();
 const Stack = createStackNavigator();
 const Auth = () => {
-  // Stack Navigator for Login and Sign up Screen
+
   return (
+    // <NavigationContainer linking={linking}>
     <Stack.Navigator initialRouteName="LoginScreen">
       <Stack.Screen
         name="LoginScreen"
@@ -68,23 +70,12 @@ const Auth = () => {
         }}
       />
     </Stack.Navigator>
+    // </NavigationContainer>
   );
 };
 
 const App = () => {
-  const linking = {
-    prefixes: ["localhost:19006://"],
-    config: {
-      screens: {
-        Home: "home",
-        Details: "details/:id",
-        Register: "register",
-        SendEmail: "sendEmail",
-        PasswordReset: "passwordreset",
-        Login: "login",
-      },
-    },
-  };
+
   const [initialState, setInitialState] = useState();
 
   useEffect(() => {
@@ -94,6 +85,19 @@ const App = () => {
 
     fetchInitialUrl();
   }, []);
+const linking = {
+  prefixes: [ 'http://localhost:19006'],
+  config: {
+    screens: {
+      Auth:
+        "auth",
+        DrawerNavigationRoutes:"drawerNavigationRoutes"
+      }
+       
+    }
+
+  }
+
 
   return (
     //  <Map/>
@@ -101,18 +105,18 @@ const App = () => {
     <NavigationContainer linking={linking}>
       <Stack.Navigator initialRouteName="SplashScreen">
         {/* SplashScreen which will come once for 5 Seconds */}
-        {/* <Stack.Screen
+        <Stack.Screen
           name="SplashScreen"
           component={Splash}
           // Hiding header for Splash Screen
           options={{ headerShown: false }}
-        /> */}
+        />
         {/* Auth Navigator: Include Login and Signup */}
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Auth"
           component={Auth}
           options={{ headerShown: false }}
-        /> */}
+        />
         {/* Navigation Drawer as a landing page */}
         <Stack.Screen
           name="DrawerNavigationRoutes"
@@ -123,7 +127,7 @@ const App = () => {
       </Stack.Navigator>
     </NavigationContainer>
 
-    
+
   );
 };
 

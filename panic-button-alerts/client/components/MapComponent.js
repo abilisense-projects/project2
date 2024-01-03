@@ -3,10 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
-import {YOUR_LOCATIONIQ_API_KEY,ISRAEL_CENTER_LAN,ISRAEL_CENTER_LON} from '@env'
+import { YOUR_LOCATIONIQ_API_KEY, ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON } from '@env'
 
 
-const MapComponent = () => {
+const MapComponent = ({ prop_Alerts }) => {
   const addresses = [
     { address: 'Jerusalem, Israel', severity: 'high', description: 'High Severity Issue' },
     { address: 'Tel Aviv, Israel', severity: 'medium', description: 'Medium Severity Issue' },
@@ -15,14 +15,17 @@ const MapComponent = () => {
   ];
 
   const [markers, setMarkers] = useState([]);
-  const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN,ISRAEL_CENTER_LON]); // Default center (Center of Israel)
+  const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON]); // Default center (Center of Israel)
 
   useEffect(() => {
     const fetchCoordinates = async () => {
-      console.log(ISRAEL_CENTER_LAN,ISRAEL_CENTER_LON)
+      console.log(ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON)
       const newMarkers = [];
 
-      for (const { address, severity, description } of addresses) {
+      for (const { location, level, distressDescription } of prop_Alerts) {
+        const address = (`${location.city}, ${location.country}`)
+        const severity = level
+        const description = distressDescription
         try {
           const response = await axios.get(
             `https://us1.locationiq.com/v1/search.php?key=${YOUR_LOCATIONIQ_API_KEY}&q=${encodeURIComponent(
@@ -49,11 +52,11 @@ const MapComponent = () => {
     fetchCoordinates();
   }, []); // Empty dependency array to run the effect only once
 
-  const getMarkerIcon = (severity) => {
+  const getMarkerIcon = (level) => {
     const colors = {
-      high: 'red',
-      medium: 'orange',
-      low: 'green',
+      Hard: 'red',
+      Medium: 'orange',
+      Easy: 'green',
       default: 'blue', // Default color if severity is not recognized
     };
 
@@ -82,7 +85,7 @@ const MapComponent = () => {
           position={[marker.lat, marker.lon]}
           icon={getMarkerIcon(marker.severity)}
         >
-         <Popup>
+          <Popup>
             <div>
               <strong>{marker.title}</strong>
               <p>{marker.address}</p>
