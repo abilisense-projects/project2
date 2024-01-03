@@ -150,6 +150,7 @@ export default function Homepage() {
                 </View>
                 {/* <Specificall prop_id={Id}/> */}
                 {Id && <Specificall prop_id={Id} />}
+                
             </View>
             <StatusBar style="auto" />
         </View>
