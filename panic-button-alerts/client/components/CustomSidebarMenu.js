@@ -1,31 +1,18 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  StyleSheet,
-  Image,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
-
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LogoutModal from "./LogoutModal";
-import { AntDesign } from '@expo/vector-icons';
-
+import MyModal from "./MyModal";
+import { AntDesign } from "@expo/vector-icons";
+import jwtDecode from "jwt-decode";
 
 const CustomSidebarMenu = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [name, setName] = useState("");
 
   const showModal = () => {
     setModalVisible(true);
@@ -43,6 +30,7 @@ const CustomSidebarMenu = (props) => {
       console.error("Error clearing AsyncStorage:", error);
     }
   };
+
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
@@ -62,30 +50,33 @@ const CustomSidebarMenu = (props) => {
             color: "#111",
           }}
         >
-          Isabella Joanna
+          {name}
         </Text>
       </View>
 
       <View style={stylesSidebar.profileHeaderLine} />
 
       <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props}/>
+        <DrawerItemList {...props} />
         <DrawerItem
-        label={({ color }) => <View style={stylesSidebar.logoutIcon} >
-        <AntDesign name="logout" size={20} color="#d8d8d8" />
-        <Text style={stylesSidebar.logoutLabel}>Logout</Text>
-      </View>}
-        onPress={showModal}
+          label={({ color }) => (
+            <View style={stylesSidebar.logoutIcon}>
+              <AntDesign name="logout" size={20} color="#d8d8d8" />
+              <Text style={stylesSidebar.logoutLabel}> Logout</Text>
+            </View>
+          )}
+          onPress={showModal}
         />
 
-      <LogoutModal
-        visible={modalVisible}
-        onConfirm={() => {
-          handleLogout();
-          hideModal();
-        }}
-        onCancel={hideModal}
-      />
+        <MyModal
+          text={"Are you sure you want to log out?"}
+          visible={modalVisible}
+          onConfirm={() => {
+            handleLogout();
+            hideModal();
+          }}
+          onCancel={hideModal}
+        />
       </DrawerContentScrollView>
     </View>
   );
@@ -132,12 +123,12 @@ const stylesSidebar = StyleSheet.create({
     marginTop: 15,
   },
   logoutIcon: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "flex-start",
     // padding: 10,
   },
   logoutLabel: {
     marginLeft: 10,
-    color: '#d8d8d8',
+    color: "#d8d8d8",
   },
 });

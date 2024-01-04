@@ -8,6 +8,7 @@ const {
   getAlertsController,
   getnewAlertController,
   getAlertController,
+  updateAlertController,
 } = require("../controllers/alert.controller");
 const ApiRateLimiter = require("../middlewares/ApiRateLimiter");
 const VerifyToken = require("../middlewares/VerifyToken");
@@ -24,6 +25,7 @@ router.post("/auth/resetPassword", resetPasswordController);
 router.get("/alerts/:lastAlertID", getnewAlertController);
 router.get("/alerts", getAlertsController);
 router.get("/alerts/details/:alertId", getAlertController);
+router.post("/alerts", updateAlertController);
 router.post("/auth/login", ApiRateLimiter, LoginController);
 
 module.exports = router;

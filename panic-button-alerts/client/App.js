@@ -1,26 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image, Linking, SafeAreaView, Text, View } from "react-native";
-import HomeScreen from "./pages/Homepage";
 import RegisterScreen from "./pages/RegistrScreen";
-import SendEmailScreen from "./components/forgetPassword/SendEmail";
-import ResetPasswordScreen from "./components/forgetPassword/ResetPassword";
-import Login from "./pages/LogIn";
+import SendEmailScreen from "./components/forgetPassword/SendEmailScreen";
+import ResetPasswordScreen from "./components/forgetPassword/ResetPasswordScreen";
+import Login from "./pages/LogInPage";
 import Map from "./components/MapComponent";
 import "react-native-gesture-handler";
-import {
-  SimpleLineIcons,
-  MaterialIcons,
-  MaterialCommunityIcons,
-  FontAwesome,
-} from "@expo/vector-icons";
-import "react-native-gesture-handler";
-import {
-  DrawerItemList,
-  createDrawerNavigator,
-} from "@react-navigation/drawer";
 import Splash from "./components/Splash";
 import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
 const Drawer = createDrawerNavigator();
@@ -41,13 +28,13 @@ const Auth = () => {
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
+       <Stack.Screen
         name="Register"
         component={RegisterScreen}
         options={{
           title: "Register", //Set Header Title
           headerStyle: {
-            backgroundColor: '#AD40AF', //Set Header color
+            backgroundColor: "#AD40AF", //Set Header color
           },
           headerTintColor: "#fff", //Set Header text color
           headerTitleStyle: {
@@ -61,7 +48,7 @@ const Auth = () => {
         options={{
           title: "SendEmail", //Set Header Title
           headerStyle: {
-            backgroundColor: '#AD40AF', //Set Header color
+            backgroundColor: "#AD40AF", //Set Header color
           },
           headerTintColor: "#fff", //Set Header text color
           headerTitleStyle: {
@@ -81,6 +68,10 @@ const App = () => {
   useEffect(() => {
     const fetchInitialUrl = async () => {
       const url = await Linking.getInitialURL();
+
+      if (url !== null) {
+        setInitialState(NavigationContainer.resolveRootScreen(linking, url));
+      }
     };
 
     fetchInitialUrl();
@@ -123,6 +114,13 @@ const linking = {
           component={DrawerNavigatorRoutes}
           // Hiding header for Navigation Drawer
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPasswordScreen}
+          options={{ headerShown: false }}
+        
+          
         />
       </Stack.Navigator>
     </NavigationContainer>

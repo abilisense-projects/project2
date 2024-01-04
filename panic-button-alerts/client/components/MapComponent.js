@@ -7,7 +7,7 @@ import { YOUR_LOCATIONIQ_API_KEY, ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON } from '@
 
 
 const MapComponent = ({ prop_Alerts }) => {
-  const addresses = [
+  const locationes = [
     { address: 'Jerusalem, Israel', severity: 'high', description: 'High Severity Issue' },
     { address: 'Tel Aviv, Israel', severity: 'medium', description: 'Medium Severity Issue' },
     { address: 'Haifa, Israel', severity: 'low', description: 'Low Severity Issue' },
@@ -22,19 +22,16 @@ const MapComponent = ({ prop_Alerts }) => {
       console.log(ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON)
       const newMarkers = [];
 
-      for (const { location, level, distressDescription } of prop_Alerts) {
-        const address = (`${location.city}, ${location.country}`)
-        const severity = level
-        const description = distressDescription
+      for (const { location, level, distressDescription } of locationes) {
         try {
           const response = await axios.get(
             `https://us1.locationiq.com/v1/search.php?key=${YOUR_LOCATIONIQ_API_KEY}&q=${encodeURIComponent(
-              address
+              location
             )}&format=json`
           );
 
           const { lat, lon } = response.data[0];
-          newMarkers.push({ lat, lon, title: description, severity });
+          newMarkers.push({ lat, lon, title: distressDescription, level });
 
           // Update center after each marker is loaded
           const avgLat = newMarkers.reduce((sum, marker) => sum + marker.lat, 0) / newMarkers.length;
@@ -44,7 +41,7 @@ const MapComponent = ({ prop_Alerts }) => {
           // Update markers state
           setMarkers(newMarkers);
         } catch (error) {
-          console.error(`Error geocoding address: ${address}`, error);
+          console.error(`Error geocoding location: ${location}`, error);
         }
       }
     };
@@ -54,14 +51,14 @@ const MapComponent = ({ prop_Alerts }) => {
 
   const getMarkerIcon = (level) => {
     const colors = {
-      Hard: 'red',
-      Medium: 'orange',
-      Easy: 'green',
-      default: 'blue', // Default color if severity is not recognized
+      high: 'red',
+      medium: 'orange',
+      low: 'green',
+      default: 'blue', // Default color if level is not recognized
     };
 
     return new L.Icon({
-      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${colors[severity]}.png`,
+      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${colors[level]}.png`,
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
@@ -83,12 +80,12 @@ const MapComponent = ({ prop_Alerts }) => {
         <Marker
           key={index}
           position={[marker.lat, marker.lon]}
-          icon={getMarkerIcon(marker.severity)}
+          icon={getMarkerIcon(marker.level)}
         >
           <Popup>
             <div>
               <strong>{marker.title}</strong>
-              <p>{marker.address}</p>
+              <p>{marker.location}</p>
             </div>
           </Popup>
         </Marker>

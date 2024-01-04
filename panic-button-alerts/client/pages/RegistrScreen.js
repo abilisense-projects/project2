@@ -153,7 +153,7 @@ const RegisterScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading} />
-      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -187,11 +187,11 @@ const RegisterScreen = ({ route }) => {
         </Text>
       ))}
       {registrationError && (
-        <Text style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+        <Text style={styles.error}>
           {registrationError}
         </Text>
       )}
-       <Text
+       <Text style={{alignSelf:"center"}}
           label={"go to login"}
           onPress={() => navigation.navigate("Login")}
         >
@@ -207,17 +207,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "center",
+    alignItems:'center'
   },
   input: {
-    height: 60,
-    borderColor: "#ccc",
+    width: "75%", // Adjusted width
+    height: 40, // Adjusted height
+    borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    fontSize: 16,
+    marginBottom: 10,
+    padding: 10,
   },
   error: {
+    // alignSelf:'center',
     color: "red",
     fontSize: 20,
     marginBottom: 12,

@@ -1,4 +1,3 @@
-
 // Import React
 import React from "react";
 
@@ -14,11 +13,11 @@ import NavigationDrawerHeader from "./NavigationDrawerHeader";
 import LogoutScreen from "../pages/LogoutScreen";
 
 //Import Icon
-import { FontAwesome5 } from '@expo/vector-icons'; // Import the appropriate icon component
-
+import { FontAwesome5 } from "@expo/vector-icons"; // Import the appropriate icon component
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
 
 const HomeScreenStack = ({ navigation }) => {
   return (
@@ -71,40 +70,13 @@ const SettingScreenStack = ({ navigation }) => {
     </Stack.Navigator>
   );
 };
-const LogoutScreenStack = ({ navigation }) => {
-  return (
-    <Stack.Navigator
-      initialRouteName="LogoutsScreen"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerHeader navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: "#307ecc", //Set Header color
-        },
-        headerTintColor: "#fff", //Set Header text color
-        headerTitleStyle: {
-          fontWeight: "bold", //Set Header text style
-        },
-      }}
-    >
-      <Stack.Screen
-        name="LogoutScreen"
-        component={LogoutScreen}
-        options={{
-          title: "", //Set Header Title
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
 
 const DrawerNavigatorRoutes = (props) => {
   return (
     <Drawer.Navigator
       drawerContentOptions={{
-        activeTintColor: "#cee1f2",
-        color: "#cee1f2",
+        activeTintColor: "#f8ecf8",
+        color: "#f8ecf8",
         itemStyle: { marginVertical: 5, color: "white" },
         labelStyle: {
           color: "#d8d8d8",
@@ -128,7 +100,6 @@ const DrawerNavigatorRoutes = (props) => {
         options={{ drawerLabel: "Setting Screen" }}
         component={SettingScreenStack}
       />
-      
     </Drawer.Navigator>
   );
 };
