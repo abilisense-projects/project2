@@ -5,7 +5,7 @@ import { NavigateFunction } from 'react-router-dom'; // Assuming you're using re
 
 
 // Replace YOUR_NODE_SERVER_ENDPOINT with the actual endpoint
-const API_BASE_URL = 'YOUR_NODE_SERVER_ENDPOINT';
+// const API_BASE_URL = 'YOUR_NODE_SERVER_ENDPOINT';
 
 // export const signup = async (payload, redirectTo) => {
 //   try {
