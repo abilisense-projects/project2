@@ -13,7 +13,7 @@ import { useRoute } from "@react-navigation/native";
 import CustomButton from "../../services/CustomButton";
 import ValidatePassword from "../../services/ValidatePassword";
 
-const ResetPassword = ({ route }) => {
+const ResetPassword = ({ route ,navigation}) => {
   //const route = useRoute();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,25 +27,10 @@ const ResetPassword = ({ route }) => {
     length: false,
     number: false,
     specialChar: false,
-    match: false,
+    // match: false,
   });
 
-  useEffect(() => {
-    const verify = async () => {
-      const token = route.params.token;
-      console.log("Reset Password Token:", token);
-
-      if (token) {
-        setResetToken(token);
-        setTokenVerified(await verifyToken(token));
-        navigation.navigate("password-reset", { email, resetToken });
-      } else {
-        setTokenVerified(false);
-        setMessage("token not valid");
-      }
-    };
-    verify();
-  }, [route]);
+ 
 
   const handleResetPassword = async () => {
     setMessage(null);
@@ -53,14 +38,18 @@ const ResetPassword = ({ route }) => {
       !(
         validationResults.length &
         validationResults.number &
-        validationResults.specialChar &
-        validationResults.match
+        validationResults.specialChar 
+        // validationResults.match
       )
     ) {
       return;
     }
-
+    if (confirmPassword!==password){
+      setMessage("confirmd password not matching")
+      return;
+    }
     try {
+      
       const response = await axios.post("/auth/resetPassword", {
         userid: route.params.id,
         token: route.params.token,
@@ -71,7 +60,10 @@ const ResetPassword = ({ route }) => {
         setMessage(
           "Password reset successful. You can now log in with your new password."
         );
+
         setIsResetSuccess(true);
+        navigation.navigate('LoginScreen')
+        
       } else {
         setMessage("Something went wrong. Please try again later.");
       }
@@ -85,12 +77,12 @@ const ResetPassword = ({ route }) => {
 
   const handlePasswordChange = (password) => {
     setPassword(password);
-    setValidationResults(ValidatePassword(password, confirmPassword));
+    setValidationResults(ValidatePassword(password));
   };
 
   const handleConfirmPasswordChange = (confirmPassword) => {
     setConfirmPassword(confirmPassword);
-    setValidationResults(ValidatePassword(password, confirmPassword));
+    
   };
 
   return (
@@ -115,6 +107,7 @@ const ResetPassword = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
+
       {renderValidationItem("Minimum 8 characters", validationResults.length)}
       {renderValidationItem("At least 1 number", validationResults.number)}
       {renderValidationItem(
@@ -140,7 +133,7 @@ const ResetPassword = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
-      {renderValidationItem("Passwords match", validationResults.match)}
+      {/* {renderValidationItem("Passwords match", password===confirmPassword)} */}
       <CustomButton label={"Reset Password"} onPress={handleResetPassword} />
 
       {isResetSuccess && (
@@ -148,7 +141,7 @@ const ResetPassword = ({ route }) => {
           <Text>
             Reset successfully.{" "}
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={{ color: "blue" }}>Login</Text>
+              <Text style={{ color: '#AD40AF' }}>Login</Text>
             </TouchableOpacity>
           </Text>
         </View>
@@ -173,9 +166,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
@@ -184,6 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderColor: "gray",
+    borderColor: "gray",
     borderWidth: 1,
     padding: 8,
   },
@@ -191,6 +189,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   validationItem: {
+    flexDirection: "row",
+    alignItems: "center",
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,

@@ -10,6 +10,8 @@ import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
+import Loader from "../components/Loader";
+
 
 const RegisterScreen = ({ route }) => {
   // State variables to store form inputs,
@@ -21,11 +23,12 @@ const RegisterScreen = ({ route }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
 
+  const [loading, setLoading] = useState(false);
   const [validationResults, setValidationResults] = useState({
     length: false,
     number: false,
     specialChar: false,
-    match: false,
+    // match: false,
   });
 
   useEffect(() => {
@@ -85,6 +88,7 @@ const RegisterScreen = ({ route }) => {
 
       // Make a POST request to your server endpoint
       const response = await axios.post("/auth/register", user);
+      setLoading(false);
 
       // Check if the registration was successful based on your server's response
       if (response.status === 200 || response.status === 201) {
@@ -124,6 +128,8 @@ const RegisterScreen = ({ route }) => {
           "Network error. Please check your internet connection."
         );
       } else {
+        setLoading(false);
+
         // Something happened in setting up the request that triggered an Error
         console.error("Error setting up the request:", error.message);
         // Update state with a more user-friendly error message
@@ -146,7 +152,8 @@ const RegisterScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>} 
+      <Loader loading={loading} />
+      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -180,11 +187,11 @@ const RegisterScreen = ({ route }) => {
         </Text>
       ))}
       {registrationError && (
-        <Text style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+        <Text style={styles.error}>
           {registrationError}
         </Text>
       )}
-       <Text
+       <Text style={{alignSelf:"center"}}
           label={"go to login"}
           onPress={() => navigation.navigate("Login")}
         >
@@ -200,17 +207,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "center",
+    alignItems:'center'
   },
   input: {
-    height: 60,
-    borderColor: "#ccc",
+    width: "75%", // Adjusted width
+    height: 40, // Adjusted height
+    borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    fontSize: 16,
+    marginBottom: 10,
+    padding: 10,
   },
   error: {
+    // alignSelf:'center',
     color: "red",
     fontSize: 20,
     marginBottom: 12,

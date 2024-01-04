@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const bcryptSalt = process.env.BCRYPT_SALT;
-const  jwt = require("jsonwebtoken") ;
+const jwt = require("jsonwebtoken");
 
 const userSchema = new Schema({
   name: {
@@ -28,19 +28,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 userSchema.methods.comparePassword = async function (candidatePassword) {
-    try {
-      return await bcrypt.compare(candidatePassword, this.password);
-    } catch (error) {
-      throw error;
-    }
-  };
-  
-// const comparePassword = function (userPassword,password) {
-//   return bcrypt.compare(password, userPassword);
-// };
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    throw error;
+  }
+};
 
 userSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ _id: this._id,name:this.name }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   return token;
@@ -58,11 +54,11 @@ const User = mongoose.model("user", userSchema);
 const validate = (user) => {
   const schema = Joi.object({
     name: Joi.string().required(),
-    email: Joi.string().email().required(),
+    email: Joi.string().email({ minDomainSegments: 2}).required(),
     password: Joi.string()
+      .pattern(new RegExp("/^(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})$/"))
       .required()
-      .min(8)
-      
+      .min(8),
   });
   return schema.validate(user);
 };
