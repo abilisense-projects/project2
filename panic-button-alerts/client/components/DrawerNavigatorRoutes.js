@@ -6,8 +6,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // Import Screens
-import HomeScreen from "../pages/Homepage";
-import SettingsScreen from "../pages/Homepage";
+import HomeScreen from "../pages/HomePage";
+import SettingsScreen from "../pages/HomePage";
 import CustomSidebarMenu from "./CustomSidebarMenu";
 import NavigationDrawerHeader from "./NavigationDrawerHeader";
 import LogoutScreen from "../pages/LogoutScreen";
@@ -17,7 +17,6 @@ import { FontAwesome5 } from "@expo/vector-icons"; // Import the appropriate ico
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
 
 const HomeScreenStack = ({ navigation }) => {
   return (
@@ -100,6 +99,7 @@ const DrawerNavigatorRoutes = (props) => {
         options={{ drawerLabel: "Setting Screen" }}
         component={SettingScreenStack}
       />
+      
     </Drawer.Navigator>
   );
 };

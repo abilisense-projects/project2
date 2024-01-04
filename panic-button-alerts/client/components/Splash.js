@@ -22,7 +22,7 @@ const Splash = ({navigation}) => {
       //Check if user_id is set or not
       //If not then send for Authentication
       //else send to Home Screen
-      AsyncStorage.getItem('token').then((value) =>
+      AsyncStorage.getItem('accessToken').then((value) =>
         navigation.replace(
           value === null ? 'Auth' : 'DrawerNavigationRoutes'
         ),

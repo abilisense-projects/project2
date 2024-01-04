@@ -1,5 +1,6 @@
 import axios from './axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 import { NavigateFunction } from 'react-router-dom'; // Assuming you're using react-router-dom in your React app
 
 
@@ -82,6 +83,15 @@ const API_BASE_URL = 'YOUR_NODE_SERVER_ENDPOINT';
     console.error('Error storing tokens:', error);
   }
 };
+export const decodeToken =async()=>{
+  try {
+   const token= await AsyncStorage.getItem('accessToken');
+    const decode = jwtDecode(token)
+    return decode
+  } catch (error) {
+    
+  }
+}
 
 //  const clearTokens = async () => {
 //   try {

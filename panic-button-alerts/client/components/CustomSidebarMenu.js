@@ -6,13 +6,31 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyModal from "./MyModal";
+import MyModal from "./Modal";
 import { AntDesign } from "@expo/vector-icons";
-import jwtDecode from "jwt-decode";
+const { jwtDecode } = require('jwt-decode');
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CustomSidebarMenu = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
+  useEffect(() => {
+    // Function to get and decode the token from AsyncStorage
+    const fetchTokenAndDecode = async () => {
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+        console.log(token)
+        if (token) {
+          console.log(jwtDecode(token))
+          const decodedToken = jwtDecode(token);
+          console.log(decodedToken)
+          setName(decodedToken.name);
+        }
+      } catch (error) {
+        console.error("Error retrieving and decoding token:", error);
+      }
+    }; fetchTokenAndDecode(); // Call the function on component mount
+  }, []); // Empty dependency array ensures this effect runs only once
 
   const showModal = () => {
     setModalVisible(true);
@@ -78,6 +96,7 @@ const CustomSidebarMenu = (props) => {
           onCancel={hideModal}
         />
       </DrawerContentScrollView>
+      
     </View>
   );
 };
