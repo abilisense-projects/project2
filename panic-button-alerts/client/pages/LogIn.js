@@ -4,6 +4,7 @@ import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
 import axios from '../services/axiosInstance';
+import HomePage from "../pages/Homepage";
 // import { storeTokens } from "../services/authService"
 const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
@@ -104,7 +105,8 @@ const Login = ({ navigation, route }) => {
       <View style={{ flexDirection: "row" }}>
         <Text
           style={styles.forgotPassword}
-          onPress={() => navigation.navigate("SendEmail")}
+          onPress={() => <HomePage/>}
+          //navigation.navigate("SendEmail")
             // replace('DrawerNavigationRoutes')}
         >
           Forgot Password?

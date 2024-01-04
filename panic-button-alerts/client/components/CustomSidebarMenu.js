@@ -6,7 +6,7 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyModal from "./Modal";
+import MyModal from "../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
 const { jwtDecode } = require('jwt-decode');
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

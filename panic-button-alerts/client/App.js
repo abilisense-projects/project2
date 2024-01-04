@@ -11,85 +11,42 @@ import "react-native-gesture-handler";
 import Splash from "./components/Splash";
 import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
 import { Auth } from "./components/Auth";
-import Homepage from "./pages/HomePage";
+import Homepage from "../pages/HomePage";
 
 const Stack = createStackNavigator();
-const Auth = () => {
 
-  return (
-    // <NavigationContainer linking={linking}>
-    <Stack.Navigator initialRouteName="LoginScreen">
-      <Stack.Screen
-        name="LoginScreen"
-        component={Login}
-        options={{ headerShown: false }}
-      />
-
-       <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{
-          title: "Register", //Set Header Title
-          headerStyle: {
-            backgroundColor: "#AD40AF", //Set Header color
-          },
-          headerTintColor: "#fff", //Set Header text color
-          headerTitleStyle: {
-            fontWeight: "bold", //Set Header text style
-          },
-        }}
-      />
-      <Stack.Screen
-        name="SendEmail"
-        component={SendEmailScreen}
-        options={{
-          title: "SendEmail", //Set Header Title
-          headerStyle: {
-            backgroundColor: "#AD40AF", //Set Header color
-          },
-          headerTintColor: "#fff", //Set Header text color
-          headerTitleStyle: {
-            fontWeight: "bold", //Set Header text style
-          },
-        }}
-      />
-    </Stack.Navigator>
-    // </NavigationContainer>
-  );
-};
 
 const App = () => {
   
-  // const linking = {
-  //   prefixes: ["localhost:19006:/"],
-  //   config: {
-  //     screens: {
-  //       Login: "login",
-  //       Details: "details/:id",
-  //       Register: "register",
-  //       SendEmail: "sendEmail",
-  //       PasswordReset: "passwordReset",
-  //       Home: "home",
-  //     },
-  //   },
-  // };
-  // const [initialState, setInitialState] = useState();
+  const linking = {
+    prefixes: ['localhost:19006://'],
+    config: {
+      screens: {
+        Login: 'login',
+        Details: 'details/:id',
+        Register: 'register',
+        SendEmail: 'sendEmail',
+        PasswordReset: 'passwordReset',
+        Home: 'home'
+      },
+    },
+  };
+  const [initialState, setInitialState] = useState();
 
-  // useEffect(() => {
-  //   const fetchInitialUrl = async () => {
-  //     const url = await Linking.getInitialURL();
+  useEffect(() => {
+    const fetchInitialUrl = async () => {
+      const url = await Linking.getInitialURL();
 
-  //     if (url !== null) {
-  //       setInitialState(NavigationContainer.resolveRootScreen(linking, url));
-  //     }
-  //   };
+      if (url !== null) {
+        setInitialState(NavigationContainer.resolveRootScreen(linking, url));
+      }
+    };
 
-  //   fetchInitialUrl();
-  // }, []);
-
+    fetchInitialUrl();
+  }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator >
+      <Stack.Navigator initialRouteName="SplashScreen" linking={linking}>
         {/* SplashScreen which will come once for 5 Seconds */}
         {/* <Stack.Screen
           name="SplashScreen"
