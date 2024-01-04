@@ -11,7 +11,7 @@ import "react-native-gesture-handler";
 import Splash from "./components/Splash";
 import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
 import { Auth } from "./components/Auth";
-import Homepage from "../pages/HomePage";
+
 
 const Stack = createStackNavigator();
 

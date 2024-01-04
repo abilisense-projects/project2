@@ -6,6 +6,7 @@ import "react-native-gesture-handler";
 import ResetPassword from "./forgetPassword/ResetPasswordScreen";
 import { Linking } from "react-native";
 import { useEffect } from "react";
+import Homepage from "../pages/Homepage";
 const Stack = createStackNavigator();
 
 export const Auth = ({navigation}) => {
@@ -49,7 +50,7 @@ export const Auth = ({navigation}) => {
     <Stack.Navigator initialRouteName="login" >
       <Stack.Screen
         name="Login"
-        component={Login}
+        component={Homepage}
         options={{ headerShown: false }}
       />
       <Stack.Screen
