@@ -2,39 +2,29 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const Snackbar = ({
+  message,
   actionText,
   onActionPress,
-  position = "bottom",
+  duration = 3000, // Default duration in milliseconds
+  position = "bottom", // Default position
   containerStyle,
   messageStyle,
   actionTextStyle,
+  backgroundColor,
+  textColor,
+  actionTextColor,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [snackbarState, setSnackbarState] = useState({
-    message: "",
-    backgroundColor: "",
-    textColor: "",
-  });
-
-  const showSnackbar = (message, backgroundColor, textColor) => {
-    setSnackbarState({
-      message,
-      backgroundColor,
-      textColor,
-    });
-
-    setIsVisible(true);
-
-    setTimeout(() => {
-      setIsVisible(false);
-    }, 3000); // Default duration in milliseconds
-  };
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // You can perform additional actions when the Snackbar is visible or hidden
-    // For example, you might want to do something when the Snackbar is hidden
-    // by calling `onHide` prop here.
-  }, [isVisible]);
+    if (isVisible) {
+      const timeout = setTimeout(() => {
+        setIsVisible(false);
+      }, duration);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isVisible, duration]);
 
   return isVisible ? (
     <View
@@ -42,15 +32,23 @@ const Snackbar = ({
         styles.container,
         position === "top" ? styles.topContainer : styles.bottomContainer,
         containerStyle,
-        { backgroundColor: snackbarState.backgroundColor },
+        { backgroundColor: backgroundColor },
       ]}
     >
-      <Text style={[styles.messageText, messageStyle, { color: snackbarState.textColor }]}>
-        {snackbarState.message}
+      <Text style={[styles.messageText, messageStyle, { color: textColor }]}>
+        {message}
       </Text>
       {actionText && (
         <TouchableOpacity onPress={onActionPress}>
-          <Text style={[styles.actionText, actionTextStyle]}>{actionText}</Text>
+          <Text
+            style={[
+              styles.actionText,
+              actionTextStyle,
+              { color: actionTextColor },
+            ]}
+          >
+            {actionText}
+          </Text>
         </TouchableOpacity>
       )}
     </View>
@@ -82,6 +80,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
 
 export default Snackbar;

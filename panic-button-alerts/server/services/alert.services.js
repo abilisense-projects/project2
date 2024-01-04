@@ -2,7 +2,6 @@ const { Alert } = require("../models/alerts.model");
 const {
   find,
   findByID,
-  aggregate,
   findOne,
   findOneAndUpdate,
 } = require("../dal/dal");
@@ -57,13 +56,16 @@ const getnewAlerts = async (lastIdAlert,updateIdAlert) => {
     (pagination = {}),
     sort
   );
-  console.log(lastItemsresult); // Sort in ascending order based on the date
+  // console.log(lastItemsresult); // Sort in ascending order based on the date
   const updateItemsresult = await find(
     Alert,
-    { update: { $gt: lastItemDate.date } ,date:{$lt:lastItemDate.date}},
+   { $and: [
+      { update: { $gt: lastItemDate.date } },
+      { date: { $lt: lastItemDate.date } }]},
     (pagination = {}),
     sort
-  ); // Sort in ascending order based on the date
+  );
+  console.log("update" + updateItemsresult) // Sort in ascending order based on the date
   return { new: lastItemsresult, update: updateItemsresult };
 };
 const updateAlertStatus = async (alertId, status) => {

@@ -28,7 +28,7 @@ const RegisterScreen = ({ route }) => {
     length: false,
     number: false,
     specialChar: false,
-    match: false,
+    // match: false,
   });
 
   useEffect(() => {
