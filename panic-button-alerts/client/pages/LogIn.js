@@ -392,6 +392,8 @@ const Login = ({ navigation }) => {
       }
       setErrorMessage('user name or password invalid');
     }
+
+
   };
   
   return (
@@ -446,12 +448,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
   },
   input: {
+    width: "75%", // Adjusted width
+    height: 40, // Adjusted height
+    borderColor: "gray",
     width: "75%", // Adjusted width
     height: 40, // Adjusted height
     borderColor: "gray",
@@ -465,8 +472,10 @@ const styles = StyleSheet.create({
   },
   invalidInput: {
     borderColor: "red",
+    borderColor: "red",
   },
   warningText: {
+    color: "red",
     color: "red",
     fontSize: 12,
     marginBottom: 5,
