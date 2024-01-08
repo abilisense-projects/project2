@@ -34,6 +34,7 @@ const LoginController = async (req, res) => {
   try {
     const token = await Login( req.body.email,req.body.password );
     if (token) {
+      console.log("token", token)
       res.json({ message: "Login Success", status: 1,token:token });
     }
     

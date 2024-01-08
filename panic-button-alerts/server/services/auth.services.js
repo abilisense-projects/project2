@@ -109,8 +109,8 @@ const resetPassword = async (user_Id, token, password) => {
   return { success: "Password reset was successful" };
 };
 const Login = async (useremail, password) => {
-  const user = await findOne(User, { email: useremail });
-  console.log(user);
+  const user = await findOne(User, {email: useremail });
+  console.log("user", user);
 
   if (!user) {
     // Username not found

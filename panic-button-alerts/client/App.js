@@ -41,10 +41,10 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
     <NavigationContainer linking={linking} initialState={initialState}>
       <Stack.Navigator>
-      <Stack.Screen name="try" component={YourComponent} />
+     
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="SendEmail" component={SendEmailScreen} />
@@ -52,7 +52,7 @@ const App = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-    </Provider >
+    // </Provider >
   );
 };
 
