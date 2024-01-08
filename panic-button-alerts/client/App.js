@@ -37,9 +37,9 @@ const App = () => {
     const fetchInitialUrl = async () => {
       const url = await Linking.getInitialURL();
 
-      if (url !== null) {
-        setInitialState(NavigationContainer.resolveRootScreen(linking, url));
-      }
+      // if (url !== null) {
+      //   setInitialState(NavigationContainer.resolveRootScreen(linking, url));
+      // }
     };
 
     fetchInitialUrl();

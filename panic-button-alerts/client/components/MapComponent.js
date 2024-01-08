@@ -6,6 +6,7 @@ import axios from 'axios';
 import { YOUR_LOCATIONIQ_API_KEY, ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON } from '@env'
 
 
+
 const MapComponent = ({ prop_Alerts }) => {
   const locationes = [
     { address: 'Jerusalem, Israel', severity: 'high', description: 'High Severity Issue' },
@@ -16,7 +17,7 @@ const MapComponent = ({ prop_Alerts }) => {
 
   const [markers, setMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON]); // Default center (Center of Israel)
-
+console.log(prop_Alerts);
   useEffect(() => {
     const fetchCoordinates = async () => {
       console.log(ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON)

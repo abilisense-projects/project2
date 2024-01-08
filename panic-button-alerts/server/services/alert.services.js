@@ -69,6 +69,7 @@ const getnewAlerts = async (lastIdAlert,updateIdAlert) => {
   return { new: lastItemsresult, update: updateItemsresult };
 };
 const updateAlertStatus = async (alertId, status) => {
+  console.log("update Aler tStatus"+alertId);
   const moment = require("moment-timezone");
   const localTimeZone = moment.tz.guess();
   const currentTime = moment().tz(localTimeZone);

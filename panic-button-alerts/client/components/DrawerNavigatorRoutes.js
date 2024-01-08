@@ -6,14 +6,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // Import Screens
-import HomeScreen from "../pages/HomePage";
-import SettingsScreen from "../pages/HomePage";
+
 import CustomSidebarMenu from "./CustomSidebarMenu";
 import NavigationDrawerHeader from "./NavigationDrawerHeader";
 import LogoutScreen from "../pages/LogoutScreen";
 
 //Import Icon
 import { FontAwesome5 } from "@expo/vector-icons"; // Import the appropriate icon component
+import Homepage from "../pages/Homepage";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -23,7 +23,7 @@ const HomeScreenStack = ({ navigation }) => {
     <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen
         name="HomeScreen"
-        component={HomeScreen}
+        component={Homepage}
         options={{
           title: "Home", //Set Header Title
           headerLeft: () => (
@@ -61,7 +61,7 @@ const SettingScreenStack = ({ navigation }) => {
     >
       <Stack.Screen
         name="SettingsScreen"
-        component={SettingsScreen}
+        component={Homepage}
         options={{
           title: "Settings", //Set Header Title
         }}

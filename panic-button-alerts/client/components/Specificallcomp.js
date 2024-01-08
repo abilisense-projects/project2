@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
+import axios from '../services/axiosInstance';
 import { StyleSheet, View, Button, FlatList, Image,Text } from "react-native";
 
 export default function Specificall({prop_id}) {
@@ -23,7 +24,8 @@ export default function Specificall({prop_id}) {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>קריאה ספציפית</Text>
-           {data&& <Text style={styles.text}>{data}</Text>}
+            <Text>{prop_id}</Text>
+           {data&& <Text style={styles.text}>"data"+{data[0].patient}</Text>}
             
             <StatusBar style="auto" />
         </View>

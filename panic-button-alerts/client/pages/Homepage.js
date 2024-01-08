@@ -129,10 +129,10 @@ export default function Homepage() {
         }
     }
     function updateAlerts(value) {
-        if(value.state=="created"){
+        if(value.status=="created"){
             setAlerts(value.arr)
         }
-        else if (value.state=="add"){
+        else if (value.status=="add"){
             setAlerts(current => [value.arr, ...current])
         }
         
@@ -178,6 +178,21 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // const styles = StyleSheet.create({
 //     container: {
 //         flex: 1,
