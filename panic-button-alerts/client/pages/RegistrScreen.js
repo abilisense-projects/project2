@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   Text,
   StyleSheet,
 } from "react-native";
@@ -77,6 +77,11 @@ const RegisterScreen = ({ route }) => {
     // Set the errors and update form validity
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+       handleSubmit();
+    }
   };
   const registration = async () => {
     try {
@@ -159,18 +164,21 @@ const RegisterScreen = ({ route }) => {
         placeholder="Name"
         value={name}
         onChangeText={setName}
+        onKeyPress={handleKeyPress}
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        onKeyPress={handleKeyPress}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
+        onKeyPress={handleKeyPress}
         secureTextEntry
       />
       <CustomButton

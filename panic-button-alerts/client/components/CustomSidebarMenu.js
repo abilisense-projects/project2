@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet,Switch } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -14,6 +14,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const CustomSidebarMenu = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+
   useEffect(() => {
     // Function to get and decode the token from AsyncStorage
     const fetchTokenAndDecode = async () => {
@@ -39,7 +41,11 @@ const CustomSidebarMenu = (props) => {
   const hideModal = () => {
     setModalVisible(false);
   };
-
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // You can add logic here to change the app theme based on the darkMode state
+    // For example, you can use a library like react-native-appearance or change your styles dynamically
+  };
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
@@ -77,10 +83,10 @@ const CustomSidebarMenu = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          label={({ color }) => (
+          label={() => (
             <View style={stylesSidebar.logoutIcon}>
               <AntDesign name="logout" size={20} color="#d8d8d8" />
-              <Text style={stylesSidebar.logoutLabel}> Logout</Text>
+              <Text style={stylesSidebar.logoutLabel}>Logout</Text>
             </View>
           )}
           onPress={showModal}
@@ -94,6 +100,17 @@ const CustomSidebarMenu = (props) => {
             hideModal();
           }}
           onCancel={hideModal}
+        />
+           <DrawerItem
+          label="Dark Mode"
+          onPress={toggleDarkMode}
+          icon={({ focused, color, size }) => (
+            <Icon
+              name={darkMode ? "weather-night" : "weather-sunny"}
+              size={size}
+              color={color}
+            />
+          )}
         />
       </DrawerContentScrollView>
       

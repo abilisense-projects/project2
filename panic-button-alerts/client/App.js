@@ -14,76 +14,10 @@ import { Auth } from "./components/Auth";
 import Homepage from "./pages/HomePage";
 
 const Stack = createStackNavigator();
-// const Auth = () => {
-//   // Stack Navigator for Login and Sign up Screen
-//   return (
-//     <Stack.Navigator initialRouteName="LoginScreen">
-//       <Stack.Screen
-//         name="LoginScreen"
-//         component={Login}
-//         options={{ headerShown: false }}
-//       />
-
-//       <Stack.Screen
-//         name="Register"
-//         component={RegisterScreen}
-//         options={{
-//           title: "Register", //Set Header Title
-//           headerStyle: {
-//             backgroundColor: "#AD40AF", //Set Header color
-//           },
-//           headerTintColor: "#fff", //Set Header text color
-//           headerTitleStyle: {
-//             fontWeight: "bold", //Set Header text style
-//           },
-//         }}
-//       />
-//       <Stack.Screen
-//         name="SendEmail"
-//         component={SendEmailScreen}
-//         options={{
-//           title: "SendEmail", //Set Header Title
-//           headerStyle: {
-//             backgroundColor: "#AD40AF", //Set Header color
-//           },
-//           headerTintColor: "#fff", //Set Header text color
-//           headerTitleStyle: {
-//             fontWeight: "bold", //Set Header text style
-//           },
-//         }}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
 
 const App = () => {
   
-  // const linking = {
-  //   prefixes: ["localhost:19006:/"],
-  //   config: {
-  //     screens: {
-  //       Login: "login",
-  //       Details: "details/:id",
-  //       Register: "register",
-  //       SendEmail: "sendEmail",
-  //       PasswordReset: "passwordReset",
-  //       Home: "home",
-  //     },
-  //   },
-  // };
-  // const [initialState, setInitialState] = useState();
-
-  // useEffect(() => {
-  //   const fetchInitialUrl = async () => {
-  //     const url = await Linking.getInitialURL();
-
-  //     if (url !== null) {
-  //       setInitialState(NavigationContainer.resolveRootScreen(linking, url));
-  //     }
-  //   };
-
-  //   fetchInitialUrl();
-  // }, []);
+  
 
   return (
     <NavigationContainer>

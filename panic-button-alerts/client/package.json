@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.20",
+    "@teovilla/react-native-web-maps": "^0.9.4",
     "axios": "^1.6.2",
     "expo": "~49.0.15",
     "expo-dev-client": "^2.4.12",
