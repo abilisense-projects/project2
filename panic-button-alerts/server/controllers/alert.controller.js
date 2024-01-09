@@ -17,7 +17,7 @@ const getAlertsController = async (req, res) => {
 const getAlertController = async (req, res) => {
   try {
     const alertDetails = await getAlertDetails(req.params.alertId);
-    console.log()
+    console.log(alertDetails)
     res.send(alertDetails);
   } catch (error) {
     res.status(500).send(error);

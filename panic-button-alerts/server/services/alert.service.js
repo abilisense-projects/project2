@@ -25,10 +25,7 @@ const getAlertDetails = async (alertId) => {
   if (!alert) {
     throw new Error("Alert not foun");
   }
-  const patient = await findOne(Patient, {
-    _id: alert.patient._id,
-  });
-  console.log(patient);
+
   // Find the medical conditions for the patient associated with the alert
   const patientMedicalConditions = await find(MedicalConditions, {
     patient: alert.patient._id,
@@ -38,7 +35,7 @@ const getAlertDetails = async (alertId) => {
   if (!patientMedicalConditions) {
     throw new Error("Medical conditions not found for the patient");
   }
-  return patientMedicalConditions[0].medicalConditions;
+  return {medicalConditions:patientMedicalConditions[0].medicalConditions,alert:alert};
 };
 
 const getnewAlerts = async (lastIdAlert,updateIdAlert) => {
