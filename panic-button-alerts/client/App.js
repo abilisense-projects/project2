@@ -15,38 +15,13 @@ import { Auth } from "./components/Auth";
 
 const Stack = createStackNavigator();
 
-
 const App = () => {
   
-  const linking = {
-    prefixes: ['localhost:19006://'],
-    config: {
-      screens: {
-        Login: 'login',
-        Details: 'details/:id',
-        Register: 'register',
-        SendEmail: 'sendEmail',
-        PasswordReset: 'passwordReset',
-        Home: 'home'
-      },
-    },
-  };
-  const [initialState, setInitialState] = useState();
+  
 
-  useEffect(() => {
-    const fetchInitialUrl = async () => {
-      const url = await Linking.getInitialURL();
-
-      // if (url !== null) {
-      //   setInitialState(NavigationContainer.resolveRootScreen(linking, url));
-      // }
-    };
-
-    fetchInitialUrl();
-  }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SplashScreen" linking={linking}>
+      <Stack.Navigator initialRouteName="SplashScreen" >
         {/* SplashScreen which will come once for 5 Seconds */}
         {/* <Stack.Screen
           name="SplashScreen"

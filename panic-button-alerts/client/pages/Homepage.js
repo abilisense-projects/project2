@@ -146,7 +146,7 @@ export default function Homepage() {
             <View style={styles.contentContainer}>
                 <Alertscomp onIdchange={updateId} onAlertchange={updateAlerts} />
                 <View style={styles.mapContainer}>
-                    <MapComponent prop_Alerts={Alerts}/>
+                    <MapComponent alerts={Alerts}/>
                 </View>
                 {/* <Specificall prop_id={Id}/> */}
                 {Id && <Specificall prop_id={Id} />}

@@ -8,6 +8,11 @@ const SendEmail = ({ route }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSendResetEmail();
+    }
+  };
 
   const handleSendResetEmail = async () => {
     if (!validateEmail(email)) {
@@ -51,8 +56,13 @@ const SendEmail = ({ route }) => {
         placeholder="Enter Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
+        onKeyPress={handleKeyPress}
       />
-      <CustomButton label="Send Reset Email" onPress={handleSendResetEmail} />
+      <CustomButton
+        label="Send Reset Email"
+       
+        onPress={handleSendResetEmail}
+      />
       {message ? (
         <Text
           style={[

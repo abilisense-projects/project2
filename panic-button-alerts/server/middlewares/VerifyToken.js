@@ -1,7 +1,7 @@
 const  { User } = require("../models/users.model") ;
 const VerifyToken = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const token = req.params.token;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }

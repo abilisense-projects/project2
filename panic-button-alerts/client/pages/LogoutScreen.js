@@ -1,6 +1,6 @@
 // LogoutScreen.js
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { View, Text, Pressable, Modal, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -43,12 +43,12 @@ const LogoutScreen = ({ navigation }) => {
               Are you sure you want to log out?
             </Text>
             <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={hideModal}>
+              <Pressable onPress={hideModal}>
                 <AntDesign name="closecircle" size={30} color="red" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleLogout}>
+              </Pressable>
+              <Pressable onPress={handleLogout}>
                 <AntDesign name="checkcircle" size={30} color="green" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>

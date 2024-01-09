@@ -23,8 +23,7 @@ const getAlertDetails = async (alertId) => {
   const alert = await findByID(Alert, alertId);
 
   if (!alert) {
-    console.log("Alert not found");
-    return [];
+    throw new Error("Alert not foun");
   }
   const patient = await findOne(Patient, {
     _id: alert.patient._id,
@@ -37,10 +36,9 @@ const getAlertDetails = async (alertId) => {
 
   console.log(patientMedicalConditions);
   if (!patientMedicalConditions) {
-    console.log("Medical conditions not found for the patient");
-    return [];
+    throw new Error("Medical conditions not found for the patient");
   }
-  return patientMedicalConditions;
+  return patientMedicalConditions[0].medicalConditions;
 };
 
 const getnewAlerts = async (lastIdAlert,updateIdAlert) => {
@@ -61,7 +59,8 @@ const getnewAlerts = async (lastIdAlert,updateIdAlert) => {
     Alert,
    { $and: [
       { update: { $gt: lastItemDate.date } },
-      { date: { $lt: lastItemDate.date } }]},
+      { date: { $lt: lastItemDate.date } }
+      ]},
     (pagination = {}),
     sort
   );
@@ -80,7 +79,6 @@ const updateAlertStatus = async (alertId, status) => {
   update.setUTCHours(utcHours, utcMinutes, utcSeconds);
   const filter = { _id: alertId };
   const body = { status: status, update: update };
-  console.log(update);
   const result = await findOneAndUpdate(Alert, filter, body);
   console.log(result);
   return result;

@@ -72,6 +72,7 @@ const SettingScreenStack = ({ navigation }) => {
 
 const DrawerNavigatorRoutes = (props) => {
   return (
+    <Drawer.section>
     <Drawer.Navigator
       drawerContentOptions={{
         activeTintColor: "#f8ecf8",
@@ -101,6 +102,7 @@ const DrawerNavigatorRoutes = (props) => {
       />
       
     </Drawer.Navigator>
+    </Drawer.section>
   );
 };
 

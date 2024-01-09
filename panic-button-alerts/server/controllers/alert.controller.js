@@ -3,23 +3,24 @@ const {
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
-} = require("../services/alert.services");
+} = require("../services/alert.service");
 
 const getAlertsController = async (req, res) => {
   try {
     const alerts = await getAlerts();
     res.send(alerts);
   } catch (error) {
-    res.status(500).send("An error occurred");
+    res.status(500).send(error);
     console.error(error);
   }
 };
 const getAlertController = async (req, res) => {
   try {
     const alertDetails = await getAlertDetails(req.params.alertId);
+    console.log()
     res.send(alertDetails);
   } catch (error) {
-    res.status(500).send("An error occurred");
+    res.status(500).send(error);
     console.error(error);
   }
 };
@@ -55,7 +56,7 @@ const getnewAlertController = async (req, res) => {
         });
     } else res.send({ isNew: false, isUpdate: false });
   } catch (error) {
-    res.status(500).send("An error occurred");
+    res.status(500).send(error);
     console.error(error);
   }
 };
@@ -65,9 +66,9 @@ const updateAlertController = async (req, res) => {
     const { id, status } = req.body;
     const result = await updateAlertStatus(id, status);
     console.log(result);
-    result != undefined ? res.send("updated") : res.send("not updated");
+    result !== undefined ? res.send("updated") : res.send("not updated");
   } catch (error) {
-    res.status(500).send("An error occurred");
+    res.status(500).send(error);
     console.error(error);
   }
 };

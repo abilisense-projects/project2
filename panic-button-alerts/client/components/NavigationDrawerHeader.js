@@ -3,7 +3,7 @@
 
 // Import React and Component
 import React from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import {View, Image, Pressable} from 'react-native';
 
 const NavigationDrawerHeader = (props) => {
   const toggleDrawer = () => {
@@ -12,7 +12,7 @@ const NavigationDrawerHeader = (props) => {
 
   return (
     <View style={{flexDirection: 'row'}}>
-      <TouchableOpacity onPress={toggleDrawer}>
+      <Pressable onPress={toggleDrawer}>
         <Image
           source={{
             uri:
@@ -20,7 +20,7 @@ const NavigationDrawerHeader = (props) => {
           }}
           style={{width: 25, height: 25, marginLeft: 5}}
         />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

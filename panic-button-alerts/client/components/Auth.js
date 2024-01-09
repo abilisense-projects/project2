@@ -9,24 +9,26 @@ import { useEffect } from "react";
 import Homepage from "../pages/Homepage";
 const Stack = createStackNavigator();
 
-export const Auth = ({navigation}) => {
-
+export const Auth = ({ navigation }) => {
   // Stack Navigator for Login and Sign up Screen
- 
+
   useEffect(() => {
     // Add event listener to handle deep linking
-    const handleDeepLink = ({ url }) => {
+    const handleDeepLink = async ({ url }) => {
       const route = url.replace(/.*?:\/\//g, "");
-      const id = route.match(/\/([^\/]+)\/?$/)[1];
-      console.log(id);
-      if (id === "ResetPassword") {
-        console.log("came");
-        // Navigate to the PasswordResetScreen
-
-        navigation.navigate('ResetPassword');
+      console.log(route);
+      if (route.includes("ResetPassword")) {
+      if (route.includes("token")) {
+          // Navigate to the PasswordResetScreen
+          navigation.navigate("ResetPassword");
+        } else {
+          // Handle missing token in the URL (e.g., show an error message)
+          console.error("Token missing in the URL");
+        }
       }
-      if(id=== "Register"){
-        navigation.navigate('Register');
+
+      if (route.includes("Register")) {
+        navigation.navigate("Register");
       }
     };
 
@@ -41,13 +43,18 @@ export const Auth = ({navigation}) => {
     });
 
     // Clean up the event listener
-    return () => Linking.removeEventListener("url", handleDeepLink);
+    // return () => Linking.removeEventListener("url", handleDeepLink);
   }, []);
-  
 
-  
+  //   const validateToken = async (token) => {
+  //     // Implement your token validation logic here
+  //     // You might need to make an API request to your server to validate the token
+  //     // Return true if the token is valid, false otherwise
+  //     return true; // Replace with your actual logic
+  //   };
+
   return (
-    <Stack.Navigator initialRouteName="login" >
+    <Stack.Navigator initialRouteName="login">
       <Stack.Screen
         name="Login"
         component={Homepage}

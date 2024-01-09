@@ -7,29 +7,85 @@ import { YOUR_LOCATIONIQ_API_KEY, ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON } from '@
 
 
 
-const MapComponent = ({ prop_Alerts }) => {
-  const locationes = [
-    { address: 'Jerusalem, Israel', severity: 'high', description: 'High Severity Issue' },
-    { address: 'Tel Aviv, Israel', severity: 'medium', description: 'Medium Severity Issue' },
-    { address: 'Haifa, Israel', severity: 'low', description: 'Low Severity Issue' },
-    // Add more addresses as needed
-  ];
+const MapComponent = ({alerts}) => {
+  // const alerts = [
+  //   {
+  //     "_id": "659a76cc4a2d1045b0316fdc",
+  //     "patient": "658bdfff217a5a3a41958a65",
+  //     "date": "2024-01-07T12:02:52.550Z",
+  //     "update": "2024-01-07T12:02:52.550Z",
+  //     "distressDescription": "health event",
+  //     "status": "not treated",
+  //     "location": {
+  //       "country": "Israel",
+  //       "city": "רחובות",
+  //       "street": "עזרא",
+  //       "buildingNumber": 3,
+  //       "floor": 4,
+  //       "apartmentNumber": 10,
+  //       "comments": "",
+  //       "_id": "658bdfff217a5a3a41958a66"
+  //     },
+  //     "level": "Medium",
+  //     "__v": 0
+  //   },
+  //   {
+  //     "_id": "659a76e44a2d1045b0316fdf",
+  //     "patient": "658bdfff217a5a3a41958a65",
+  //     "date": "2024-01-07T12:03:16.305Z",
+  //     "update": "2024-01-07T12:03:16.305Z",
+  //     "distressDescription": "Injury",
+  //     "status": "not treated",
+  //     "location": {
+  //       "country": "Israel",
+  //       "city": "רחובות",
+  //       "street": "מנדלי מוכר ספרים ",
+  //       "buildingNumber": 3,
+  //       "_id": "659a76e44a2d1045b0316fe0"
+  //     },
+  //     "level": "Easy",
+  //     "__v": 0
+  //   },
+  
+    
+  //   {
+  //     "_id": "659a77004a2d1045b0316fe8",
+  //     "patient": "658bdfff217a5a3a41958a65",
+  //     "date": "2024-01-07T12:03:44.321Z",
+  //     "update": "2024-01-07T12:03:44.321Z",
+  //     "distressDescription": "Injury",
+  //     "status": "not treated",
+  //     "location": {
+  //       "country": "Israel",
+  //       "city": "בני ברק",
+  //       "street": "רשי ",
+  //       "buildingNumber": 10,
+  //       "_id": "659a77004a2d1045b0316fe9"
+  //     },
+  //     "level": "Hard",
+  //     "__v": 0
+  //   }
+  // ]
+  
+  console.log(alerts)
 
   const [markers, setMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON]); // Default center (Center of Israel)
-console.log(prop_Alerts);
+
   useEffect(() => {
     const fetchCoordinates = async () => {
       console.log(ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON)
       const newMarkers = [];
 
-      for (const { location, level, distressDescription } of locationes) {
+      for (const { location, level, distressDescription } of alerts) 
+        {
         try {
           const response = await axios.get(
             `https://us1.locationiq.com/v1/search.php?key=${YOUR_LOCATIONIQ_API_KEY}&q=${encodeURIComponent(
-              location
+             location["city"],location['street']
             )}&format=json`
           );
+           console.log(level)
 
           const { lat, lon } = response.data[0];
           newMarkers.push({ lat, lon, title: distressDescription, level });
@@ -48,24 +104,27 @@ console.log(prop_Alerts);
     };
 
     fetchCoordinates();
-  }, []); // Empty dependency array to run the effect only once
+  }, [alerts]); // Empty dependency array to run the effect only once
 
   const getMarkerIcon = (level) => {
     const colors = {
-      high: 'red',
-      medium: 'orange',
-      low: 'green',
+      Hard: 'red',
+      Medium: 'orange',
+      Easy: 'green',
       default: 'blue', // Default color if level is not recognized
     };
-
+  
+    const color = colors[level] || colors.default;
+  
     return new L.Icon({
-      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${colors[level]}.png`,
+      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       shadowSize: [41, 41],
     });
   };
+  
 
   return (
     <MapContainer

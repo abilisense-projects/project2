@@ -4,7 +4,7 @@ import {
   TextInput,
   StyleSheet,
   AsyncStorage,
-  TouchableOpacity,
+  
 } from "react-native";
 import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
