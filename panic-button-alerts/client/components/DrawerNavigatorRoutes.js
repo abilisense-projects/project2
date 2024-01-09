@@ -72,7 +72,7 @@ const SettingScreenStack = ({ navigation }) => {
 
 const DrawerNavigatorRoutes = (props) => {
   return (
-    <Drawer.section>
+   
     <Drawer.Navigator
       drawerContentOptions={{
         activeTintColor: "#f8ecf8",
@@ -88,7 +88,7 @@ const DrawerNavigatorRoutes = (props) => {
       <Drawer.Screen
         name="HomeScreenStack"
         options={{
-          drawerLabel: "Home Screen",
+          drawerLabel:"Home Screen",
           drawerIcon: ({ color }) => (
             <FontAwesome5 name="home" size={20} color={color} />
           ),
@@ -97,12 +97,12 @@ const DrawerNavigatorRoutes = (props) => {
       />
       <Drawer.Screen
         name="SettingScreenStack"
-        options={{ drawerLabel: "Setting Screen" }}
+        options={{ drawerLabel:"Setting Screen" }}
         component={SettingScreenStack}
       />
       
     </Drawer.Navigator>
-    </Drawer.section>
+   
   );
 };
 

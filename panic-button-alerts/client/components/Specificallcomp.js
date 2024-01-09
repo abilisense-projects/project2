@@ -22,24 +22,39 @@ export default function Specificall({prop_id}) {
             console.log(error)
         }
     }
-
-
+    console.log(data)
+    // "alert": {
+    //     "_id": "659d3cac4a2d1045b0317003",
+    //     "patient": "658bdfff217a5a3a41958a65",
+    //     "date": "2024-01-09T14:31:40.470Z",
+    //     "update": "2024-01-09T14:31:40.470Z",
+    //     "distressDescription": "Injury",
+    //     "status": "not treated",
+    //     "location": {
+    //       "_id": "659d3cac4a2d1045b0317004"
+    //     },
     return (
         <View style={styles.container}>
-             <View style={styles.header}>
+             {/* <View style={styles.header}>
                <TouchableOpacity style={styles.helpButton}>
-                   <Text style={styles.helpButtonText}>Stop i need help</Text>
+                   <Text style={styles.helpButtonText}>{data.alert.level}</Text>
+                   <Text style={styles.helpButtonText}>open</Text>
                  </TouchableOpacity>
                </View>
              
               <View style={styles.body}>
-                 <Text style={styles.dateText}>Date: Sep 25, 2023</Text>
-                 <Text style={styles.timeText}>Time: 06:42 PM (GMT +2)</Text>
+
+              <TouchableOpacity style={styles.helpButton}>
+              <Text style={styles.helpButtonText}>Stop i need help</Text>
+            </TouchableOpacity>
+
+                 <Text style={styles.dateText}>Date: {data.alert.date.split('T')[0]}</Text>
+                 <Text style={styles.timeText}>Time: {data.alert.date.split('T')[1].split('.')[0]}</Text>
                
-                 <View style={styles.partContainer}>
-                   <Text style={styles.partText}>Part 1</Text>
-                   <Text style={styles.partTime}>06:42</Text>
-                 </View>
+                //  <View style={styles.partContainer}>
+                //    <Text style={styles.partText}>Part 1</Text>
+                //    <Text style={styles.partTime}>06:42</Text>
+                //  </View>
                
                  {/* <View style={styles.iconContainer}>
                    <FontAwesomeIcon icon={faMap} style={styles.icon} />
@@ -47,7 +62,7 @@ export default function Specificall({prop_id}) {
                    {/* Other icons */}
                  {/* </View> */}
                
-                 <View style={styles.footer}>
+                 {/* <View style={styles.footer}>
                    <TouchableOpacity style={styles.applyButton}>
                      <Text style={styles.applyButtonText}>Apply</Text>
                    </TouchableOpacity>
@@ -55,11 +70,10 @@ export default function Specificall({prop_id}) {
                      <Text style={styles.closeButtonText}>Close</Text>
                    </TouchableOpacity>
                  </View>
-               </View>
+               </View> */} 
              
-            <Text style={styles.text}>קריאה ספציפית</Text>
-            <Text>{prop_id}</Text>
-           {data&& <Text style={styles.text}>"data"+{data[0].patient}</Text>}
+            
+           {data&& <Text style={styles.text}>{data[0]}</Text>}
             
             <StatusBar style="auto" />
         </View>

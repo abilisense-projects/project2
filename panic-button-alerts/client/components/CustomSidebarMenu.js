@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet,Switch } from "react-native";
+import { View, Text, Image, StyleSheet, Switch } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyModal from "../components/Modal";
-import { AntDesign } from "@expo/vector-icons";
-const { jwtDecode } = require('jwt-decode');
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MyModal from "./Modal";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const { jwtDecode } = require("jwt-decode");
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const CustomSidebarMenu = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -21,17 +22,18 @@ const CustomSidebarMenu = (props) => {
     const fetchTokenAndDecode = async () => {
       try {
         const token = await AsyncStorage.getItem("accessToken");
-        console.log(token)
+        console.log(token);
         if (token) {
-          console.log(jwtDecode(token))
+          console.log(jwtDecode(token));
           const decodedToken = jwtDecode(token);
-          console.log(decodedToken)
+          console.log(decodedToken);
           setName(decodedToken.name);
         }
       } catch (error) {
         console.error("Error retrieving and decoding token:", error);
       }
-    }; fetchTokenAndDecode(); // Call the function on component mount
+    };
+    fetchTokenAndDecode(); // Call the function on component mount
   }, []); // Empty dependency array ensures this effect runs only once
 
   const showModal = () => {
@@ -83,25 +85,14 @@ const CustomSidebarMenu = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          label={() => (
-            <View style={stylesSidebar.logoutIcon}>
-              <AntDesign name="logout" size={20} color="#d8d8d8" />
-              <Text style={stylesSidebar.logoutLabel}>Logout</Text>
-            </View>
-          )}
+          label="Log out"
           onPress={showModal}
+          icon={({ focused, color, size }) => (
+            <MaterialCommunityIcons name="logout" size={size} color={color} />
+          )}
         />
 
-        <MyModal
-          text={"Are you sure you want to log out?"}
-          visible={modalVisible}
-          onConfirm={() => {
-            handleLogout();
-            hideModal();
-          }}
-          onCancel={hideModal}
-        />
-           <DrawerItem
+        <DrawerItem
           label="Dark Mode"
           onPress={toggleDarkMode}
           icon={({ focused, color, size }) => (
@@ -113,7 +104,15 @@ const CustomSidebarMenu = (props) => {
           )}
         />
       </DrawerContentScrollView>
-      
+      <MyModal
+        text={"Are you sure you want to log out?"}
+        visible={modalVisible}
+        onConfirm={() => {
+          handleLogout();
+          hideModal();
+        }}
+        onCancel={hideModal}
+      />
     </View>
   );
 };
