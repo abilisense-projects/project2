@@ -6,14 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMap, faSensor, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 
-export default function Specificall({prop_id}) {
+export default function Specificall({ prop_id }) {
     useEffect(() => {
         getInfoAlerts()
     }, []);
-    const [data ,setdata]=useState(null)
+    const [data, setdata] = useState(null)
     async function getInfoAlerts() {
         try {
-           
+
             const response = await axios.get(`/alerts/details/${prop_id}`);
             const result = response.data
             console.log(result)
@@ -22,7 +22,7 @@ export default function Specificall({prop_id}) {
             console.log(error)
         }
     }
-    console.log(data)
+
     // "alert": {
     //     "_id": "659d3cac4a2d1045b0317003",
     //     "patient": "658bdfff217a5a3a41958a65",
@@ -35,7 +35,8 @@ export default function Specificall({prop_id}) {
     //     },
     return (
         <View style={styles.container}>
-             {/* <View style={styles.header}>
+           {data && <View>
+                <View style={styles.header}>
                <TouchableOpacity style={styles.helpButton}>
                    <Text style={styles.helpButtonText}>{data.alert.level}</Text>
                    <Text style={styles.helpButtonText}>open</Text>
@@ -51,18 +52,18 @@ export default function Specificall({prop_id}) {
                  <Text style={styles.dateText}>Date: {data.alert.date.split('T')[0]}</Text>
                  <Text style={styles.timeText}>Time: {data.alert.date.split('T')[1].split('.')[0]}</Text>
                
-                //  <View style={styles.partContainer}>
+                {/* //  <View style={styles.partContainer}>
                 //    <Text style={styles.partText}>Part 1</Text>
                 //    <Text style={styles.partTime}>06:42</Text>
                 //  </View>
-               
+                */}
                  {/* <View style={styles.iconContainer}>
                    <FontAwesomeIcon icon={faMap} style={styles.icon} />
                    <FontAwesomeIcon icon={faSensor} style={styles.icon} /> */}
                    {/* Other icons */}
                  {/* </View> */}
                
-                 {/* <View style={styles.footer}>
+                  <View style={styles.footer}>
                    <TouchableOpacity style={styles.applyButton}>
                      <Text style={styles.applyButtonText}>Apply</Text>
                    </TouchableOpacity>
@@ -70,12 +71,11 @@ export default function Specificall({prop_id}) {
                      <Text style={styles.closeButtonText}>Close</Text>
                    </TouchableOpacity>
                  </View>
-               </View> */} 
-             
-            
-           {data&& <Text style={styles.text}>{data[0]}</Text>}
-            
-            <StatusBar style="auto" />
+               </View>
+            </View>}
+
+
+         
         </View>
     );
 }
@@ -102,22 +102,22 @@ export default function Specificall({prop_id}) {
 //           <Text style={styles.helpButtonText}>Stop i need help</Text>
 //         </TouchableOpacity>
 //       </View>
-     
+
 //       <View style={styles.body}>
 //         <Text style={styles.dateText}>Date: Sep 25, 2023</Text>
 //         <Text style={styles.timeText}>Time: 06:42 PM (GMT +2)</Text>
-       
+
 //         <View style={styles.partContainer}>
 //           <Text style={styles.partText}>Part 1</Text>
 //           <Text style={styles.partTime}>06:42</Text>
 //         </View>
-       
+
 //         <View style={styles.iconContainer}>
 //           <FontAwesomeIcon icon={faMap} style={styles.icon} />
 //           <FontAwesomeIcon icon={faSensor} style={styles.icon} />
 //           {/* Other icons */}
 //         </View>
-       
+
 //         <View style={styles.footer}>
 //           <TouchableOpacity style={styles.applyButton}>
 //             <Text style={styles.applyButtonText}>Apply</Text>
@@ -139,19 +139,19 @@ export default function Specificall({prop_id}) {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'pink', // Assuming the background is black
-  },
-  header: {
-    // Style for header
-  },
-  helpButton: {
-    // Style for help button
-  },
-  helpButtonText: {
-    color: 'white', // Assuming the text is white
-    // Other text styling
-  },
-  // Other styles for dateText, timeText, partContainer, etc.
+    container: {
+        flex: 1,
+        backgroundColor: 'pink', // Assuming the background is black
+    },
+    header: {
+        // Style for header
+    },
+    helpButton: {
+        // Style for help button
+    },
+    helpButtonText: {
+        color: 'white', // Assuming the text is white
+        // Other text styling
+    },
+    // Other styles for dateText, timeText, partContainer, etc.
 });
