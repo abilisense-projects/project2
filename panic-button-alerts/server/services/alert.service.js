@@ -1,19 +1,15 @@
+const moment = require("moment-timezone");
+
 const { Alert } = require("../models/alerts.model");
-const {
-  find,
-  findByID,
-  findOne,
-  findOneAndUpdate,
-} = require("../dal/dal");
-const mongoose = require("mongoose");
+const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
-const { Patient } = require("../models/patient.model");
+
 const sort = {
   date: 1,
 };
 
 const getAlerts = async () => {
-  const filters = { status: { $nin: [ "treated", "cancel"] } };
+  const filters = { status: { $nin: ["treated", "cancel"] } };
   const alerts = await find((model = Alert), filters, (pagination = {}), sort);
   return alerts;
 };
@@ -35,36 +31,44 @@ const getAlertDetails = async (alertId) => {
   if (!patientMedicalConditions) {
     throw new Error("Medical conditions not found for the patient");
   }
-  return {medicalConditions:patientMedicalConditions[0].medicalConditions,alert:alert};
+  return {
+    medicalConditions: patientMedicalConditions[0].medicalConditions,
+    alert: alert,
+  };
 };
 
-const getnewAlerts = async (lastIdAlert,updateIdAlert) => {
-  const filters = { date: 1,update:1, _id: 0 };
-  const lastItemDate = await findByID(Alert, lastIdAlert, filters);
-  const updateItem = findByID(Alert, lastIdAlert, filters);
-  console.error(lastItemDate.date);
+const getnewAlerts = async (lastIdAlert, updateIdAlert) => {
+  const filters = { date: 1, update: 1, _id: 0 };
+  const lastItem = await findByID(Alert, lastIdAlert, filters);
+  const updateItem = findByID(Alert, updateIdAlert, filters);
+  console.error(lastItem.date);
   // Find documents that came after the last item based on the date
   const lastItemsresult = await find(
     Alert,
-    { date: { $gt: lastItemDate.date } },
-    (pagination = {}),
+    {
+      $and: [
+        { date: { $gt: lastItem.date } },
+        { status: { $nin: ["treated", "cancel"] } },
+      ],
+    },((pagination = {})),
     sort
   );
   // console.log(lastItemsresult); // Sort in ascending order based on the date
   const updateItemsresult = await find(
     Alert,
-   { $and: [
-      { update: { $gt: lastItemDate.date } },
-      { date: { $lt: lastItemDate.date } }
-      ]},
+    {
+      $and: [
+        { update: { $gt: updateItem.date } },
+        // { date: { $lt: lastItem.date } },
+      ],
+    },
     (pagination = {}),
     sort
   );
-  console.log("update" + updateItemsresult) // Sort in ascending order based on the date
+  console.log("update" + updateItemsresult); // Sort in ascending order based on the date
   return { new: lastItemsresult, update: updateItemsresult };
 };
 const updateAlertStatus = async (alertId, status) => {
-  const moment = require("moment-timezone");
   const localTimeZone = moment.tz.guess();
   const currentTime = moment().tz(localTimeZone);
   const update = new Date();
