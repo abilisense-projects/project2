@@ -27,7 +27,7 @@ const getAlertController = async (req, res) => {
 
 const getnewAlertController = async (req, res) => {
   try {
-    const { lastId, updateId } = req.params.lastAlertID;
+    const { lastId, updateId } = req.params;
 
     if (!lastId || updateId) {
      return res.status(404).send("id not valid");
