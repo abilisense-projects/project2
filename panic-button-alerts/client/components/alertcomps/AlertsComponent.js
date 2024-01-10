@@ -83,7 +83,7 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
     async function getnewAlert() {
         if (lastIdAlert) {
             try {
-                const response = await axios.get(`alerts/${lastIdAlert}/${lastIdUPdateAlert}`,);
+                const response = await axios.get(`alerts/${lastIdAlert}`,);
                 const result = response.data
                 
                 //new
