@@ -1,22 +1,15 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  AsyncStorage,
-  
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, AsyncStorage, TouchableOpacity } from "react-native";
 import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
-import axios from "../services/axiosInstance";
-import InputField from "../services/InputField"
-import { storeTokens } from "../services/authService"
-import { save } from "../components/Storage";
+import axios from '../services/axiosInstance';
+import HomePage from "../pages/Homepage";
+// import { storeTokens } from "../services/authService"
 const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // Added confirmPassword state
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [validationResults, setValidationResults] = useState({
     length: true,
@@ -24,14 +17,15 @@ const Login = ({ navigation, route }) => {
     specialChar: true,
     match: true,
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   const updateValidationResult = (fieldName, value) => {
-    setValidationResults((prevState) => ({
+    setValidationResults(prevState => ({
       ...prevState,
       [fieldName]: value,
     }));
   };
+
 
   const handleLogin = async () => {
     try {
@@ -41,20 +35,23 @@ const Login = ({ navigation, route }) => {
         console.error("Invalid email format");
         return;
       }
+      setConfirmPassword(password)
       const isPasswordValid = ValidatePassword(password);
       if (!isPasswordValid) {
         console.error("Invalid password format");
         return;
       }
 
-      const response = await axios.post("/auth/login", { email, password });
-      if (response.data.message === "Login Success") {
+      const response = await axios.post("/auth/login", { email, password })
+      if (response.data.message === 'Login Success') {
         // dispatch(loginSuccess(response.user));
-       await save('accessToken',response.data.token);
-        navigation.replace("DrawerNavigationRoutes");
+        // storeTokens(response.data.token, {})
+        navigation.replace('DrawerNavigationRoutes');
+       
       } else {
-        setErrorMessage("user name or password invalid");
+        setErrorMessage('user name or password invalid');
       }
+
 
       const token = "example_token"; // Example token
 
@@ -62,6 +59,8 @@ const Login = ({ navigation, route }) => {
     } catch (error) {
       // console.error(error.message);
     }
+
+
   };
 
   return (
@@ -80,12 +79,16 @@ const Login = ({ navigation, route }) => {
         <Text style={styles.warningText}>Invalid email format</Text>
       )}
       <TextInput
-        style={[styles.input, !validationResults.length && styles.invalidInput]}
+        style={[
+          styles.input,
+          !validationResults.length && styles.invalidInput,
+        ]}
         placeholder="Password"
         secureTextEntry
         onChangeText={(text) => {
           setPassword(text);
-          // לדוגמא, מעדכן את הערך של length להיות false
+          updateValidationResult('length', true); // לדוגמא, מעדכן את הערך של length להיות false
+
         }}
         value={password}
       />
@@ -99,18 +102,26 @@ const Login = ({ navigation, route }) => {
       {!validationResults.match && (
         <Text style={styles.warningText}>Passwords do not match.</Text>
       )}
-      <View style={{ flexDirection: "row", }}>
-        <Text style={styles.forgotPassword} onPress={() => <HomePage />}>
-
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={styles.forgotPassword}
+          onPress={() => <HomePage/>}
+          //navigation.navigate("SendEmail")
+            // replace('DrawerNavigationRoutes')}
+        >
           Forgot Password?
         </Text>
-{/* navigation.navigate("SendEmail") */}
-        <Text style={styles.register} onPress={() => navigation.navigate("Register")}>new here?</Text>
+
+        <Text
+          style={styles.register}
+          onPress={() => navigation.navigate("Register")}
+        >
+          new here?
+        </Text>
+
       </View>
-      {errorMessage ? (
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
-      ) : null}
-      <CustomButton label={"Login"} onPress={handleLogin}></CustomButton>
+      {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
+      <CustomButton label={"Login"} onPress={handleLogin} ></CustomButton>
     </View>
   );
 };
@@ -142,14 +153,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   forgotPassword: {
-    // fontSize: 16,
-    // color: "blue",
+    fontSize: 16,
+    color: "blue",
     textDecorationLine: "underline",
     marginBottom: 10,
   },
   register: {
-    // fontSize: 16,
-    // color: "blue",
+    fontSize: 16,
+    color: "blue",
     textDecorationLine: "underline",
     marginLeft: 20,
   },

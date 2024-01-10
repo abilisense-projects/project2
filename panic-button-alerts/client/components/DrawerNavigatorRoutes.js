@@ -26,7 +26,7 @@ const HomeScreenStack = ({ navigation }) => {
     <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen
         name="HomeScreen"
-        component={HomeScreen}
+        component={Homepage}
         options={{
           title: "Home", //Set Header Title
           headerLeft: () => (

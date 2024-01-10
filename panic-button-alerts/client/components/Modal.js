@@ -33,7 +33,7 @@ const MyModal = ({ text, visible, onConfirm, onCancel }) => {
     </Modal>
   );
 };
-
+export default MyModal;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyModal;
+
