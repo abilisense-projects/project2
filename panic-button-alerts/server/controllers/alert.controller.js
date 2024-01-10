@@ -64,7 +64,7 @@ const updateAlertController = async (req, res) => {
     const { id, status } = req.body;
     const result = await updateAlertStatus(id, status);
     console.log(result);
-    result !== undefined ? res.send("updated") : res.send("not updated");
+    result !== null ? res.send("updated") : res.send("not updated");
   } catch (error) {
     res.status(500).send(error);
     console.error(error);

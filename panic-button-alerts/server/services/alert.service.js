@@ -4,7 +4,7 @@ const { Alert } = require("../models/alerts.model");
 const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
 
-const isUpdate = [];
+var isUpdate = [];
 const status = { $nin: ["treated", "cancel"] };
 const sort = {
   date: 1,
@@ -53,21 +53,20 @@ const getnewAlerts = async (lastIdAlert) => {
     sort
   );
   // Sort in ascending order based on the date
-  console.log(isUpdate);
-  const updateItemsresult = [];
-  console.log(isUpdate.length!=0)
-  if(isUpdate.length != 0)
-    {console.log("came to if")
-      (updateItemsresult = await find(
-        Alert,
-        { _id: { $in: isUpdate } },
-        (pagination = {}),
-        sort
-      ))
-      isUpdate.splice(0, isUpdate.length);
-    }
- 
-  console.log("came")
+  let updateItemsresult = [];
+  if (isUpdate.length != 0) {
+    console.log("came to if");
+    updateItemsresult = await find(
+      Alert,
+      {
+        _id: { $in: isUpdate },
+      },
+      (pagination = {}),
+      sort
+    );
+    isUpdate=[]
+  }
+  console.log("came");
   return { new: lastItemsresult, update: updateItemsresult };
 };
 

@@ -6,7 +6,6 @@ import "react-native-gesture-handler";
 import ResetPassword from "./forgetPassword/ResetPasswordScreen";
 import { Linking } from "react-native";
 import { useEffect } from "react";
-import Homepage from "../pages/Homepage";
 const Stack = createStackNavigator();
 export const Auth = ({ navigation }) => {
   // Stack Navigator for Login and Sign up Screen
@@ -36,15 +35,9 @@ export const Auth = ({ navigation }) => {
         handleDeepLink({ url });
       }
     });
-    // Clean up the event listener
-    // return () => Linking.removeEventListener("url", handleDeepLink);
+    
   }, []);
-  //   const validateToken = async (token) => {
-  //     // Implement your token validation logic here
-  //     // You might need to make an API request to your server to validate the token
-  //     // Return true if the token is valid, false otherwise
-  //     return true; // Replace with your actual logic
-  //   };
+  
   return (
     <Stack.Navigator initialRouteName="login">
       <Stack.Screen
