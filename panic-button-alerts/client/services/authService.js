@@ -75,14 +75,14 @@ import { NavigateFunction } from 'react-router-dom'; // Assuming you're using re
 //   redirectTo('/login');
 // };
 
- export const storeTokens = async (accessToken, refreshToken={}) => {
-  try {
-    await AsyncStorage.setItem('accessToken', accessToken);
-    // await AsyncStorage.setItem('refreshToken', refreshToken);
-  } catch (error) {
-    console.error('Error storing tokens:', error);
-  }
-};
+//  export const storeTokens = async (accessToken, refreshToken={}) => {
+//   try {
+//     await AsyncStorage.setItem('accessToken', accessToken);
+//     // await AsyncStorage.setItem('refreshToken', refreshToken);
+//   } catch (error) {
+//     console.error('Error storing tokens:', error);
+//   }
+// };
 export const decodeToken =async()=>{
   try {
    const token= await AsyncStorage.getItem('accessToken');

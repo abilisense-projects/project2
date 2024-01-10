@@ -1,14 +1,13 @@
-const errorHandler = (err, req, res, next) => {
-    const statusCode = res.statusCode ? res.statusCode : 500;
-  
-    res.status(statusCode);
-  
-    res.json({
-      message: err.message,
-      stack: err.stack,
-    });
-  };
-  
-  module.exports = 
-    errorHandler
-  
+const ErrorHandler = (err, req, res, next) => {
+  console.log("Middleware Error Hadnling");
+  const errStatus = err.statusCode || 500;
+  const errMsg = err.message || "Something went wrong";
+  res.status(errStatus).json({
+    success: false,
+    status: errStatus,
+    message: errMsg,
+    stack: process.env.NODE_ENV === "development" ? err.stack : {},
+  });
+};
+
+module.exports = ErrorHandler;

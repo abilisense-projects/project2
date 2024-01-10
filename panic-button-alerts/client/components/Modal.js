@@ -35,23 +35,38 @@ const MyModal = ({ text, visible, onConfirm, onCancel }) => {
 };
 export default MyModal;
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  logoutButton: {
+    alignSelf: 'flex-end',
+    padding: 10,
+    backgroundColor: 'lightblue',
+    borderRadius: 5,
+  },
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
   modalText: {
     marginBottom: 20,
   },
   modalButtons: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 20,
   },
 });
