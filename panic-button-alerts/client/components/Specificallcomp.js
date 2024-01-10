@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import axios from '../services/axiosInstance';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faMap, faSensor, faTicket } from '@fortawesome/free-solid-svg-icons';
-
-
 export default function Specificall({ prop_id ,onIdchange}) {
     useEffect(() => {
         getInfoAlerts()

@@ -50,7 +50,7 @@ const RegisterScreen = ({ route }) => {
       errors.email = "Email is required.";
     } else if (!ValidateEmail(email)) {
       errors.email = "Email is invalid.";
-      console.warn(!validationResults === false);
+     
     }
     setValidationResults(validatePassword(password));
     // Validate password field
@@ -103,22 +103,25 @@ const RegisterScreen = ({ route }) => {
       } else {
         // Handle unexpected server response
         console.error("Unexpected server response:", response);
+        setRegistrationError(error.response.data);
       }
     } catch (error) {
       // Handle errors (e.g., display an error message)
       console.error("Registration failed:", error.message);
+      setRegistrationError(error.response.data);
 
       // Check the type of error and provide appropriate feedback to the user
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
+        setRegistrationError(error.response.data);
         console.error(
           "Server responded with:",
           error.response.status,
           error.response.data
         );
         if (error.response.status === 400) {
-          setRegistrationError(error.response.data);
+          setRegistrationError(error);
         }
         // Update state with a more user-friendly error message
         else

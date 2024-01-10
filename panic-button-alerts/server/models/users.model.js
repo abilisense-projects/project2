@@ -56,7 +56,6 @@ const validate = (user) => {
     name: Joi.string().required(),
     email: Joi.string().email({ minDomainSegments: 2}).required(),
     password: Joi.string()
-      .pattern(new RegExp("/^(?=.*[0-9])(?=.*[!@#$%^&*])(.{7,})$/"))
       .required()
       .min(8),
   });
