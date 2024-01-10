@@ -64,8 +64,9 @@ const getnewAlerts = async (lastIdAlert) => {
         (pagination = {}),
         sort
       ))
+      isUpdate.splice(0, isUpdate.length);
     }
-  isUpdate.length=0;
+ 
   console.log("came")
   return { new: lastItemsresult, update: updateItemsresult };
 };

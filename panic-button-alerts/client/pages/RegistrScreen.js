@@ -14,8 +14,6 @@ import Loader from "../components/Loader";
 
 
 const RegisterScreen = ({ route }) => {
-  // State variables to store form inputs,
-  // errors, and form validity
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +26,6 @@ const RegisterScreen = ({ route }) => {
     length: false,
     number: false,
     specialChar: false,
-    // match: false,
   });
 
   useEffect(() => {
@@ -161,7 +158,6 @@ const RegisterScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading} />
-      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -184,14 +180,6 @@ const RegisterScreen = ({ route }) => {
         onKeyPress={handleKeyPress}
         secureTextEntry
       />
-      <CustomButton
-        label={"submit"}
-        style={[{ opacity: isFormValid ? 1 : 0.3 }]}
-        disabled={!isFormValid}
-        onPress={handleSubmit}
-      ></CustomButton>
-
-      {/* Display error messages */}
       {Object.values(errors).map((error, index) => (
         <Text key={index} style={styles.error}>
           {error}
@@ -202,6 +190,12 @@ const RegisterScreen = ({ route }) => {
           {registrationError}
         </Text>
       )}
+      <CustomButton
+        label={"submit"}
+        style={[{ opacity: isFormValid ? 1 : 0.3 }]}
+        disabled={!isFormValid}
+        onPress={handleSubmit}
+      ></CustomButton>      
        <Text style={{alignSelf:"center"}}
           label={"go to login"}
           onPress={() => navigation.navigate("Login")}

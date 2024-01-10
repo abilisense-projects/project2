@@ -15,51 +15,64 @@ import DarkTheme from "./components/theme/DarkTheme";
 import DefaultTheme from "./components/theme/DefaultTheme";
 import { StatusBar } from "expo-status-bar";
 
-
 const Stack = createStackNavigator();
 
-
-const App=()=> {
-
+const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // State to track loading state
+  const [token, setToken] = useState(null); // State to store the token
 
   const appContext = useMemo(() => {
     return {
       isDarkTheme,
-      setIsDarkTheme
-    }
+      setIsDarkTheme,
+      setToken, // You may want to pass this to the context as well if needed
+    };
   });
 
+  useEffect(() => {
+    // Perform async check for the token
+    const checkToken = async () => {
+      try {
+        const storedToken = await get("accessToken"); // Replace with your actual token key
+        setToken(storedToken);
+      } catch (error) {
+        console.error("Error checking token:", error);
+      } finally {
+        setIsLoading(false); // Mark loading as complete
+      }
+    };
+
+    checkToken();
+  }, []); // Empty dependency array to run the effect only once on component mount
+
+  if (isLoading) {
+    // Render a loading indicator, splash screen, or any placeholder while checking the token
+    return <Splash />;
+  }
 
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
-    <StatusBar style={isDarkTheme ? 'light' : 'dark'} />
-    <NavigationContainer theme={isDarkTheme ? DarkTheme : DefaultTheme}>
-      <AppContext.Provider value={appContext}>
-      <Stack.Navigator >
-        {/* SplashScreen which will come once for 5 Seconds */}
-        {/* <Stack.Screen
-          name="SplashScreen"
-          component={Splash}
-          // Hiding header for Splash Screen
-          options={{ headerShown: false }}
-        /> */}
-        {/* Auth Navigator: Include Login and Signup */}
-        <Stack.Screen
-          name="Auth"
-          component={Auth}
-          options={{ headerShown: false }}
-        />
-        {/* Navigation Drawer as a landing page */}
-        <Stack.Screen
-          name="DrawerNavigationRoutes"
-          component={DrawerNavigatorRoutes}
-          // Hiding header for Navigation Drawer
-          options={{ headerShown: false }}
-        />
-       
-      </Stack.Navigator>
-      </AppContext.Provider>
+      <StatusBar style={isDarkTheme ? 'light' : 'dark'} />
+      <NavigationContainer theme={isDarkTheme ? DarkTheme : DefaultTheme}>
+        <AppContext.Provider value={appContext}>
+          <Stack.Navigator>
+            {token ? ( // If token exists, navigate to DrawerNavigationRoutes
+              <Stack.Screen
+                name="DrawerNavigationRoutes"
+                component={DrawerNavigatorRoutes}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              // If no token, navigate to Auth screen
+              <Stack.Screen
+                name="Auth"
+                component={Auth}
+                options={{ headerShown: false }}
+              />
+            )}
+          </Stack.Navigator>
+        </AppContext.Provider>
       </NavigationContainer>
     </SafeAreaProvider>
   );
