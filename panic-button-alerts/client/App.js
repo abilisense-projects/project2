@@ -8,7 +8,13 @@ import "react-native-gesture-handler";
 import Splash from "./components/Splash";
 import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
 import { Auth } from "./components/Auth";
-import Homepage from "./pages/HomePage";
+import { get, save } from "./components/Storage";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AppContext } from "./components/context/AppContext";
+import DarkTheme from "./components/theme/DarkTheme";
+import DefaultTheme from "./components/theme/DefaultTheme";
+import { StatusBar } from "expo-status-bar";
+
 
 const Stack = createStackNavigator();
 
@@ -26,7 +32,10 @@ const App=()=> {
 
 
   return (
-    <NavigationContainer>
+    <SafeAreaProvider style={{ flex: 1 }}>
+    <StatusBar style={isDarkTheme ? 'light' : 'dark'} />
+    <NavigationContainer theme={isDarkTheme ? DarkTheme : DefaultTheme}>
+      <AppContext.Provider value={appContext}>
       <Stack.Navigator >
         {/* SplashScreen which will come once for 5 Seconds */}
         {/* <Stack.Screen
@@ -50,7 +59,9 @@ const App=()=> {
         />
        
       </Stack.Navigator>
-    </NavigationContainer>
+      </AppContext.Provider>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

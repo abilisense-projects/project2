@@ -8,17 +8,15 @@ import { Linking } from "react-native";
 import { useEffect } from "react";
 import Homepage from "../pages/Homepage";
 const Stack = createStackNavigator();
-
 export const Auth = ({ navigation }) => {
   // Stack Navigator for Login and Sign up Screen
-
   useEffect(() => {
     // Add event listener to handle deep linking
     const handleDeepLink = async ({ url }) => {
       const route = url.replace(/.*?:\/\//g, "");
       console.log(route);
       if (route.includes("ResetPassword")) {
-      if (route.includes("token")) {
+        if (route.includes("token")) {
           // Navigate to the PasswordResetScreen
           navigation.navigate("ResetPassword");
         } else {
@@ -26,38 +24,32 @@ export const Auth = ({ navigation }) => {
           console.error("Token missing in the URL");
         }
       }
-
       if (route.includes("Register")) {
         navigation.navigate("Register");
       }
     };
-
     // Subscribe to deep linking events
     Linking.addEventListener("url", handleDeepLink);
-
     // Check if the app was opened via deep linking
     Linking.getInitialURL().then((url) => {
       if (url) {
         handleDeepLink({ url });
       }
     });
-
     // Clean up the event listener
     // return () => Linking.removeEventListener("url", handleDeepLink);
   }, []);
-
   //   const validateToken = async (token) => {
   //     // Implement your token validation logic here
   //     // You might need to make an API request to your server to validate the token
   //     // Return true if the token is valid, false otherwise
   //     return true; // Replace with your actual logic
   //   };
-
   return (
     <Stack.Navigator initialRouteName="login">
       <Stack.Screen
         name="Login"
-        component={Homepage}
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -47,25 +47,7 @@ const getnewAlerts = async (lastIdAlert) => {
   const lastItemsresult = await find(
     Alert,
     {
-<<<<<<< HEAD
-      $and: [
-        { date: { $gt: lastItem.date } },
-        { status: { $nin: ["treated", "cancel"] } },
-      ],
-    },((pagination = {})),
-    sort
-  );
-  // console.log(lastItemsresult); // Sort in ascending order based on the date
-  const updateItemsresult = await find(
-    Alert,
-    {
-      $and: [
-        { update: { $gte: updateItem.date } },
-         //{ date: { $lte: lastItem.date } },
-      ],
-=======
       $and: [{ date: { $gt: lastItem.date } }, { status: status }],
->>>>>>> 2fe21e663ecbd3475363ec9552b512c00d805c85
     },
     (pagination = {}),
     sort

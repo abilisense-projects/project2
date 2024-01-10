@@ -23,14 +23,6 @@ router.post(
   resetPasswordRequestController
 );
 router.post("/auth/resetPassword", VerifyToken,resetPasswordController);
-<<<<<<< HEAD
-router.get("/alerts/details/:alertId", getAlertController);
-router.get("/alerts/:lastAlertID/:updateAlertID", getnewAlertController);
-router.get("/alerts", getAlertsController);
-
-router.post("/alerts", updateAlertController);
-=======
->>>>>>> 2fe21e663ecbd3475363ec9552b512c00d805c85
 router.post("/auth/login", ApiRateLimiter, LoginController);
 router.use(Auth)
 router.get("/alerts/details/:alertId", getAlertDetailController);
