@@ -58,8 +58,8 @@ const getnewAlerts = async (lastIdAlert, updateIdAlert) => {
     Alert,
     {
       $and: [
-        { update: { $gt: updateItem.date } },
-        // { date: { $lt: lastItem.date } },
+        { update: { $gte: updateItem.date } },
+         //{ date: { $lte: lastItem.date } },
       ],
     },
     (pagination = {}),
