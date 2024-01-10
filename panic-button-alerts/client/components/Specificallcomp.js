@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMap, faSensor, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 
-export default function Specificall({ prop_id }) {
+export default function Specificall({ prop_id ,onIdchange}) {
     useEffect(() => {
         getInfoAlerts()
     }, []);
@@ -23,6 +23,16 @@ export default function Specificall({ prop_id }) {
         }
     }
 
+    async function updateAlert(IdAlert, msgState) {
+        try {
+
+            const response = await axios.post(`alerts/`, { id: IdAlert, status: msgState },);
+            const result = response.data
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
     // "alert": {
     //     "_id": "659d3cac4a2d1045b0317003",
     //     "patient": "658bdfff217a5a3a41958a65",
@@ -46,7 +56,7 @@ export default function Specificall({ prop_id }) {
               <View style={styles.body}>
 
               <TouchableOpacity style={styles.helpButton}>
-              <Text style={styles.helpButtonText}>Stop i need help</Text>
+              <Text style={styles.helpButtonText}>{data.alert.distressDescription}</Text>
             </TouchableOpacity>
 
                  <Text style={styles.dateText}>Date: {data.alert.date.split('T')[0]}</Text>
@@ -67,7 +77,8 @@ export default function Specificall({ prop_id }) {
                    <TouchableOpacity style={styles.applyButton}>
                      <Text style={styles.applyButtonText}>Apply</Text>
                    </TouchableOpacity>
-                   <TouchableOpacity style={styles.closeButton}>
+                   <TouchableOpacity style={styles.closeButton}
+                   onPress={() =>{updateAlert(data.alert._id,"treated"), onIdchange(null)}}>
                      <Text style={styles.closeButtonText}>Close</Text>
                    </TouchableOpacity>
                  </View>
@@ -142,6 +153,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'pink', // Assuming the background is black
+        height:'65%'
+       //width:'15%'
     },
     header: {
         // Style for header

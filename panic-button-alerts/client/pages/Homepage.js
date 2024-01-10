@@ -149,7 +149,7 @@ export default function Homepage() {
                     <MapComponent alerts={Alerts}/>
                 </View>
                 {/* <Specificall prop_id={Id}/> */}
-                {Id && <Specificall prop_id={Id} />}
+                {Id && <Specificall prop_id={Id} onIdchange={updateId} />}
                 
             </View>
             <StatusBar style="auto" />

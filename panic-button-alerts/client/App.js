@@ -8,7 +8,6 @@ import "react-native-gesture-handler";
 import Splash from "./components/Splash";
 import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
 import { Auth } from "./components/Auth";
-import Homepage from "./pages/HomePage";
 import { get, save } from "./components/Storage";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppContext } from "./components/context/AppContext";
