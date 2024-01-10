@@ -57,7 +57,7 @@ export const Auth = ({ navigation }) => {
     <Stack.Navigator initialRouteName="login">
       <Stack.Screen
         name="Login"
-        component={Homepage}
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen
