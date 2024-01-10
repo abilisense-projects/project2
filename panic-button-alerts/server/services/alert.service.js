@@ -4,15 +4,18 @@ const { Alert } = require("../models/alerts.model");
 const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
 
+const isUpdate = [];
+const status = { $nin: ["treated", "cancel"] };
 const sort = {
   date: 1,
 };
 
 const getAlerts = async () => {
-  const filters = { status: { $nin: ["treated", "cancel"] } };
+  const filters = { status: status };
   const alerts = await find((model = Alert), filters, (pagination = {}), sort);
   return alerts;
 };
+
 const getAlertDetails = async (alertId) => {
   console.log(alertId);
 
@@ -37,38 +40,38 @@ const getAlertDetails = async (alertId) => {
   };
 };
 
-const getnewAlerts = async (lastIdAlert, updateIdAlert) => {
+const getnewAlerts = async (lastIdAlert) => {
   const filters = { date: 1, update: 1, _id: 0 };
   const lastItem = await findByID(Alert, lastIdAlert, filters);
-  const updateItem = findByID(Alert, updateIdAlert, filters);
-  console.error(lastItem.date);
   // Find documents that came after the last item based on the date
   const lastItemsresult = await find(
     Alert,
     {
-      $and: [
-        { date: { $gt: lastItem.date } },
-        { status: { $nin: ["treated", "cancel"] } },
-      ],
-    },((pagination = {})),
-    sort
-  );
-  // console.log(lastItemsresult); // Sort in ascending order based on the date
-  const updateItemsresult = await find(
-    Alert,
-    {
-      $and: [
-        { update: { $gt: updateItem.date } },
-        // { date: { $lt: lastItem.date } },
-      ],
+      $and: [{ date: { $gt: lastItem.date } }, { status: status }],
     },
     (pagination = {}),
     sort
   );
-  console.log("update" + updateItemsresult); // Sort in ascending order based on the date
+  // Sort in ascending order based on the date
+  console.log(isUpdate);
+  const updateItemsresult = [];
+  console.log(isUpdate.length!=0)
+  if(isUpdate.length != 0)
+    {console.log("came to if")
+      (updateItemsresult = await find(
+        Alert,
+        { _id: { $in: isUpdate } },
+        (pagination = {}),
+        sort
+      ))
+    }
+  isUpdate.length=0;
+  console.log("came")
   return { new: lastItemsresult, update: updateItemsresult };
 };
+
 const updateAlertStatus = async (alertId, status) => {
+  isUpdate.push(alertId);
   const localTimeZone = moment.tz.guess();
   const currentTime = moment().tz(localTimeZone);
   const update = new Date();

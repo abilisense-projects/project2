@@ -13,6 +13,7 @@ import { useState } from "react";
 import axios from "../services/axiosInstance";
 import InputField from "../services/InputField"
 import { storeTokens } from "../services/authService"
+import { save } from "../components/Storage";
 const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,7 @@ const Login = ({ navigation, route }) => {
       const response = await axios.post("/auth/login", { email, password });
       if (response.data.message === "Login Success") {
         // dispatch(loginSuccess(response.user));
-        storeTokens(response.data.token);
+       await save('accessToken',response.data.token);
         navigation.replace("DrawerNavigationRoutes");
       } else {
         setErrorMessage("user name or password invalid");

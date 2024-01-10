@@ -14,7 +14,7 @@ const getAlertsController = async (req, res) => {
     console.error(error);
   }
 };
-const getAlertController = async (req, res) => {
+const getAlertDetailController = async (req, res) => {
   try {
     const alertDetails = await getAlertDetails(req.params.alertId);
     console.log(alertDetails);
@@ -27,13 +27,12 @@ const getAlertController = async (req, res) => {
 
 const getnewAlertController = async (req, res) => {
   try {
-    const {  lastAlertID, updateAlertID } = req.params;
-    
-    if (!lastAlertID || !updateAlertID) {
+    const {  lastAlertID } = req.params;
+    if (!lastAlertID ) {
      return res.status(404).send("id not valid");
     }
-    const result = await getnewAlerts(lastAlertID, updateAlertID);
-    // console.log(result.new, result.update);
+    const result = await getnewAlerts(lastAlertID);
+     console.log(result.new, result.update);
     const newAlerts = result.new;
     const updateAlerts = result.update;
     if (updateAlerts.length !== 0 || newAlerts.length !== 0) {
@@ -56,7 +55,7 @@ const getnewAlertController = async (req, res) => {
     } else return res.send({ isNew: false, isUpdate: false });
   } catch (error) {
     return res.status(500).send(error);
-    console.error(error);
+   
   }
 };
 
@@ -75,5 +74,5 @@ module.exports = {
   updateAlertController,
   getnewAlertController,
   getAlertsController,
-  getAlertController,
+  getAlertDetailController,
 };

@@ -5,18 +5,22 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import { useTheme } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyModal from "./Modal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 const { jwtDecode } = require("jwt-decode");
+
+import MyModal from "./Modal";
+import { AppContext } from '../components/context/AppContext';
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 const CustomSidebarMenu = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
-
+  const { colors } = useTheme();
+  const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext)
   useEffect(() => {
     // Function to get and decode the token from AsyncStorage
     const fetchTokenAndDecode = async () => {
@@ -93,11 +97,11 @@ const CustomSidebarMenu = (props) => {
         />
 
         <DrawerItem
-          label="Dark Mode"
-          onPress={toggleDarkMode}
+          label={isDarkTheme ? "Dark mode" : "Light mode"}
+         onPress={() => setIsDarkTheme(current => !current)}
           icon={({ focused, color, size }) => (
             <Icon
-              name={darkMode ? "weather-night" : "weather-sunny"}
+              name={isDarkTheme ? "weather-night" : "weather-sunny"}
               size={size}
               color={color}
             />
