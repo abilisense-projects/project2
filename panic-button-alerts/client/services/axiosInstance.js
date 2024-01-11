@@ -1,13 +1,19 @@
 // axiosInstance.js
 import axios from 'axios';
+import {baseURL} from  '@env'
+import { get } from '../components/Storage';
+const Token = await get('accessToken')
+const headers = {
+      
+  'Content-Type': 'application/json',
+  'x-auth-token':Token,
+ 
+ // Add any other headers you need
+} 
 
 const axiosInstance = axios.create({
-  // You can configure your default base URL, headers, etc. here
-  baseURL: 'http://localhost:8120/api',
-  headers: {
-    'Content-Type': 'application/json',
-    // Add any other headers you need
-  },
+  baseURL: baseURL,
+  headers:headers ,
 });
 
 export default axiosInstance;

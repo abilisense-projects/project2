@@ -5,19 +5,17 @@ import {
   Button,
   Text,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
+  
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "../../services/axiosInstance";
-import { useRoute } from "@react-navigation/native";
 import CustomButton from "../../services/CustomButton";
 import ValidatePassword from "../../services/ValidatePassword";
 
-const ResetPassword = ({ route }) => {
-  //const route = useRoute();
+const ResetPassword = ({ route, navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [tokenVerified, setTokenVerified] = useState(false);
@@ -27,43 +25,35 @@ const ResetPassword = ({ route }) => {
     length: false,
     number: false,
     specialChar: false,
-    match: false,
+    // match: false,
   });
-
-  useEffect(() => {
-    const verify = async () => {
-      const token = route.params.token;
-      console.log("Reset Password Token:", token);
-
-      if (token) {
-        setResetToken(token);
-        setTokenVerified(await verifyToken(token));
-        navigation.navigate("password-reset", { email, resetToken });
-      } else {
-        setTokenVerified(false);
-        setMessage("token not valid");
-      }
-    };
-    verify();
-  }, [route]);
-
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleResetPassword();
+    }
+  };
   const handleResetPassword = async () => {
     setMessage(null);
     if (
       !(
         validationResults.length &
         validationResults.number &
-        validationResults.specialChar &
-        validationResults.match
+        validationResults.specialChar
       )
     ) {
       return;
     }
-
+    if (confirmPassword !== password) {
+      setMessage("confirmd password not matching");
+      return;
+    }
     try {
+      var parsedUrl = new URL(window.location.href);
+      const token = parsedUrl.searchParams.get("token");
+      const id = parsedUrl.searchParams.get("id");
       const response = await axios.post("/auth/resetPassword", {
-        userid: route.params.id,
-        token: route.params.token,
+        userid: id,
+        token: token,
         password,
       });
 
@@ -71,7 +61,9 @@ const ResetPassword = ({ route }) => {
         setMessage(
           "Password reset successful. You can now log in with your new password."
         );
+
         setIsResetSuccess(true);
+        navigation.navigate("LoginScreen");
       } else {
         setMessage("Something went wrong. Please try again later.");
       }
@@ -85,17 +77,15 @@ const ResetPassword = ({ route }) => {
 
   const handlePasswordChange = (password) => {
     setPassword(password);
-    setValidationResults(ValidatePassword(password, confirmPassword));
+    setValidationResults(ValidatePassword(password));
   };
 
   const handleConfirmPasswordChange = (confirmPassword) => {
     setConfirmPassword(confirmPassword);
-    setValidationResults(ValidatePassword(password, confirmPassword));
   };
 
   return (
     <View style={styles.container}>
-      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}
@@ -103,8 +93,10 @@ const ResetPassword = ({ route }) => {
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={handlePasswordChange}
+          onKeyPress={handleKeyPress}
+
         />
-        <TouchableOpacity
+        <Pressable
           style={styles.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}
         >
@@ -113,8 +105,9 @@ const ResetPassword = ({ route }) => {
             size={24}
             color="black"
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
+
       {renderValidationItem("Minimum 8 characters", validationResults.length)}
       {renderValidationItem("At least 1 number", validationResults.number)}
       {renderValidationItem(
@@ -128,8 +121,10 @@ const ResetPassword = ({ route }) => {
           secureTextEntry={!showPassword}
           value={confirmPassword}
           onChangeText={handleConfirmPasswordChange}
+          onKeyPress={handleKeyPress}
+
         />
-        <TouchableOpacity
+        <Pressable
           style={styles.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}
         >
@@ -138,18 +133,18 @@ const ResetPassword = ({ route }) => {
             size={24}
             color="black"
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
-      {renderValidationItem("Passwords match", validationResults.match)}
-      <CustomButton label={"Reset Password"} onPress={handleResetPassword} />
+      {/* {renderValidationItem("Passwords match", password===confirmPassword)} */}
+      <CustomButton label={"Send me link"} onPress={handleResetPassword} />
 
       {isResetSuccess && (
         <View>
           <Text>
             Reset successfully.{" "}
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={{ color: "blue" }}>Login</Text>
-            </TouchableOpacity>
+            <Pressable onPress={() => navigation.navigate("Login")}>
+              <Text style={{ color: "#AD40AF" }}>Login</Text>
+            </Pressable>
           </Text>
         </View>
       )}
@@ -173,9 +168,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
@@ -184,6 +183,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderColor: "gray",
+    borderColor: "gray",
     borderWidth: 1,
     padding: 8,
   },
@@ -191,6 +191,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   validationItem: {
+    flexDirection: "row",
+    alignItems: "center",
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,

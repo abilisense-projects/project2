@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const addressSchema = mongoose.Schema({
     address: {
         type: String,
@@ -38,6 +39,7 @@ const addressSchema = mongoose.Schema({
         require: false
     }
 });
+
 const alertsSchema = new Schema({
     patient: {
         type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +47,10 @@ const alertsSchema = new Schema({
         ref: 'Patient'
     },
     date: {
+        type: Date,
+        required: true,
+    },
+    update:{
         type: Date,
         required: true,
     },
