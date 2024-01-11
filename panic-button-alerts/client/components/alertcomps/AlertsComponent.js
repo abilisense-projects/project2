@@ -45,7 +45,7 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
                         setflag(false)
                 }
                 getnewAlert();
-            }, 10000);
+            }, 1000);
             return () => clearInterval(interval);
         }
         getListAlerts();

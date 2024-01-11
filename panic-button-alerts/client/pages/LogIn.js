@@ -46,7 +46,22 @@ const Login = ({ navigation, route }) => {
       if (response.data.message === 'Login Success') {
         // dispatch(loginSuccess(response.user));
         // storeTokens(response.data.token, {})
-        navigation.replace('DrawerNavigationRoutes');
+        <Snackbar
+        message="This is a custom Snackbar"
+        actionText="Dismiss"
+        onActionPress={() => {
+          // Implement the action logic here.
+        }}
+        duration={5000} // Customize duration
+        position="bottom" // Change the position to 'top'/'bottom'
+        backgroundColor="#2E67F8" // Customize background color
+        textColor="white" // Change text color
+        actionTextColor="white" // Customize action text color
+        containerStyle={{ marginHorizontal: 12 }} // Apply additional styling
+        messageStyle={{ }} // Adjust message text styling
+        actionTextStyle={{ }} // Customize action text styling
+      />
+        navigation.navigate('DrawerNavigationRoutes');
        
       } else {
         setErrorMessage('user name or password invalid');

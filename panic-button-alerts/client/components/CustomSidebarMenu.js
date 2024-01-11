@@ -55,7 +55,7 @@ const CustomSidebarMenu = (props) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      props.navigation.replace("Auth");
+      props.navigation.navigate("Auth");
     } catch (error) {
       console.error("Error clearing AsyncStorage:", error);
     }

@@ -27,27 +27,32 @@ const getAlertDetailController = async (req, res) => {
 
 const getnewAlertController = async (req, res) => {
   try {
-    const {  lastAlertID } = req.params;
-    if (!lastAlertID ) {
-     return res.status(404).send("id not valid");
+    const { lastAlertID } = req.params;
+    if (!lastAlertID) {
+      return res.status(404).send("id not valid");
     }
     const result = await getnewAlerts(lastAlertID);
-     console.log(result.new, result.update);
+    console.log(result.new, result.update);
     const newAlerts = result.new;
     const updateAlerts = result.update;
     if (updateAlerts.length !== 0 || newAlerts.length !== 0) {
       if (newAlerts.length !== 0) {
         if (updateAlerts.length !== 0) {
           console.log(updateAlerts);
-        return   res.send({
+          return res.send({
             isNew: true,
             newAlerts: newAlerts,
             isUpdate: true,
             updateAlerts: updateAlerts,
           });
-        } else return res.send({ isNew: true, newAlerts: newAlerts, isUpdate: false });
+        } else
+          return res.send({
+            isNew: true,
+            newAlerts: newAlerts,
+            isUpdate: false,
+          });
       } else
-       return  res.send({
+        return res.send({
           isNew: false,
           isUpdate: true,
           updateAlerts: updateAlerts,
@@ -55,7 +60,6 @@ const getnewAlertController = async (req, res) => {
     } else return res.send({ isNew: false, isUpdate: false });
   } catch (error) {
     return res.status(500).send(error);
-   
   }
 };
 

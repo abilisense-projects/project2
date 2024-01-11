@@ -142,7 +142,7 @@ export default function Homepage() {
     }
     return (
         <View style={styles.container}>
-            <Text>{Mes} {Name}</Text>
+            {/* <Text>{Mes} {Name}</Text> */}
             <View style={styles.contentContainer}>
                 <Alertscomp onIdchange={updateId} onAlertchange={updateAlerts} />
                 <View style={styles.mapContainer}>

@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  Pressable,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, TextInput, Pressable, Text, StyleSheet } from "react-native";
 import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
 import Loader from "../components/Loader";
-
+import Snackbar from "../services/snackbar";
 
 const RegisterScreen = ({ route }) => {
   const [name, setName] = useState("");
@@ -47,7 +41,6 @@ const RegisterScreen = ({ route }) => {
       errors.email = "Email is required.";
     } else if (!ValidateEmail(email)) {
       errors.email = "Email is invalid.";
-     
     }
     setValidationResults(validatePassword(password));
     // Validate password field
@@ -77,7 +70,7 @@ const RegisterScreen = ({ route }) => {
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-       handleSubmit();
+      handleSubmit();
     }
   };
   const registration = async () => {
@@ -96,6 +89,7 @@ const RegisterScreen = ({ route }) => {
       if (response.status === 200 || response.status === 201) {
         console.log("Registration successful:", response.data);
         // Optionally, navigate to a success screen or perform other actions
+        <Snackbar snackBarType="Success" message="register successfuly" />;
         navigation.navigate("Login");
       } else {
         // Handle unexpected server response
@@ -186,22 +180,21 @@ const RegisterScreen = ({ route }) => {
         </Text>
       ))}
       {registrationError && (
-        <Text style={styles.error}>
-          {registrationError}
-        </Text>
+        <Text style={styles.error}>{registrationError}</Text>
       )}
       <CustomButton
         label={"submit"}
         style={[{ opacity: isFormValid ? 1 : 0.3 }]}
         disabled={!isFormValid}
         onPress={handleSubmit}
-      ></CustomButton>      
-       <Text style={{alignSelf:"center"}}
-          label={"go to login"}
-          onPress={() => navigation.navigate("Login")}
-        >
-         already register ? login!
-        </Text>
+      ></CustomButton>
+      <Text
+        style={{ alignSelf: "center" }}
+        label={"go to login"}
+        onPress={() => navigation.navigate("Login")}
+      >
+        already register ? login!
+      </Text>
     </View>
   );
 };
@@ -212,7 +205,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "center",
-    alignItems:'center'
+    alignItems: "center",
   },
   input: {
     width: "75%", // Adjusted width
