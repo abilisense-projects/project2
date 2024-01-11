@@ -6,31 +6,34 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // Import Screens
-import HomeScreen from "../pages/HomePage";
-import SettingsScreen from "../pages/HomePage";
+import HomeScreen from "../pages/Homepage";
+import SettingScreen from "../pages/SettingScreen";
 import CustomSidebarMenu from "./CustomSidebarMenu";
 import NavigationDrawerHeader from "./NavigationDrawerHeader";
-import LogoutScreen from "../pages/LogoutScreen";
+
 
 //Import Icon
-import { FontAwesome5 } from "@expo/vector-icons"; // Import the appropriate icon component
+import { FontAwesome5,Ionicons } from "@expo/vector-icons"; // Import the appropriate icon component
+import { useTheme } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
 const HomeScreenStack = ({ navigation }) => {
+  const { colors } = useTheme();
+
+
   return (
     <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen
         name="HomeScreen"
-        component={HomeScreen}
+        component={Homepage}
         options={{
           title: "Home", //Set Header Title
           headerLeft: () => (
             <NavigationDrawerHeader navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#307ecc", //Set Header color
+            backgroundColor: colors.background, //Set Header color
           },
           headerTintColor: "#fff", //Set Header text color
           headerTitleStyle: {
@@ -61,7 +64,7 @@ const SettingScreenStack = ({ navigation }) => {
     >
       <Stack.Screen
         name="SettingsScreen"
-        component={SettingsScreen}
+        component={SettingScreen}
         options={{
           title: "Settings", //Set Header Title
         }}
@@ -71,7 +74,10 @@ const SettingScreenStack = ({ navigation }) => {
 };
 
 const DrawerNavigatorRoutes = (props) => {
+  const { colors } = useTheme();
+
   return (
+   
     <Drawer.Navigator
       drawerContentOptions={{
         activeTintColor: "#f8ecf8",
@@ -87,20 +93,24 @@ const DrawerNavigatorRoutes = (props) => {
       <Drawer.Screen
         name="HomeScreenStack"
         options={{
-          drawerLabel: "Home Screen",
+          drawerLabel:"Home Screen",
           drawerIcon: ({ color }) => (
-            <FontAwesome5 name="home" size={20} color={color} />
+            <FontAwesome5 name="home" size={20} color={colors.text} />
           ),
         }}
         component={HomeScreenStack}
       />
       <Drawer.Screen
         name="SettingScreenStack"
-        options={{ drawerLabel: "Setting Screen" }}
+        options={{ drawerLabel:"Setting Screen",drawerIcon: ({ color }) => (
+          <Ionicons name='settings-sharp' size={20} color={colors.text} />
+
+        ), }}
         component={SettingScreenStack}
       />
       
     </Drawer.Navigator>
+   
   );
 };
 

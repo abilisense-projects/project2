@@ -1,35 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Switch } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import { useTheme } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+const { jwtDecode } = require("jwt-decode");
+
 import MyModal from "./Modal";
-import { AntDesign } from "@expo/vector-icons";
-const { jwtDecode } = require('jwt-decode');
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AppContext } from '../components/context/AppContext';
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 const CustomSidebarMenu = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
+  const { colors } = useTheme();
+  const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext)
   useEffect(() => {
     // Function to get and decode the token from AsyncStorage
     const fetchTokenAndDecode = async () => {
       try {
         const token = await AsyncStorage.getItem("accessToken");
-        console.log(token)
+        console.log(token);
         if (token) {
-          console.log(jwtDecode(token))
+          console.log(jwtDecode(token));
           const decodedToken = jwtDecode(token);
-          console.log(decodedToken)
+          console.log(decodedToken);
           setName(decodedToken.name);
         }
       } catch (error) {
         console.error("Error retrieving and decoding token:", error);
       }
-    }; fetchTokenAndDecode(); // Call the function on component mount
+    };
+    fetchTokenAndDecode(); // Call the function on component mount
   }, []); // Empty dependency array ensures this effect runs only once
 
   const showModal = () => {
@@ -39,7 +47,11 @@ const CustomSidebarMenu = (props) => {
   const hideModal = () => {
     setModalVisible(false);
   };
-
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // You can add logic here to change the app theme based on the darkMode state
+    // For example, you can use a library like react-native-appearance or change your styles dynamically
+  };
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
@@ -77,26 +89,34 @@ const CustomSidebarMenu = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          label={({ color }) => (
-            <View style={stylesSidebar.logoutIcon}>
-              <AntDesign name="logout" size={20} color="#d8d8d8" />
-              <Text style={stylesSidebar.logoutLabel}> Logout</Text>
-            </View>
-          )}
+          label="Log out"
           onPress={showModal}
+          icon={({ focused, color, size }) => (
+            <MaterialCommunityIcons name="logout" size={size} color={color} />
+          )}
         />
 
-        <MyModal
-          text={"Are you sure you want to log out?"}
-          visible={modalVisible}
-          onConfirm={() => {
-            handleLogout();
-            hideModal();
-          }}
-          onCancel={hideModal}
+        <DrawerItem
+          label={isDarkTheme ? "Dark mode" : "Light mode"}
+         onPress={() => setIsDarkTheme(current => !current)}
+          icon={({ focused, color, size }) => (
+            <Icon
+              name={isDarkTheme ? "weather-night" : "weather-sunny"}
+              size={size}
+              color={color}
+            />
+          )}
         />
       </DrawerContentScrollView>
-      
+      <MyModal
+        text={"Are you sure you want to log out?"}
+        visible={modalVisible}
+        onConfirm={() => {
+          handleLogout();
+          hideModal();
+        }}
+        onCancel={hideModal}
+      />
     </View>
   );
 };

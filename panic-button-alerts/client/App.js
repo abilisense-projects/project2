@@ -1,92 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import {  NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Image, Linking, SafeAreaView, Text, View } from "react-native";
-import RegisterScreen from "./pages/RegistrScreen";
-import SendEmailScreen from "./components/forgetPassword/SendEmailScreen";
-import ResetPasswordScreen from "./components/forgetPassword/ResetPasswordScreen";
-import Login from "./pages/LogInPage";
+import { Image, Linking, SafeAreaView, Text, View, useColorScheme } from "react-native";
+
 import Map from "./components/MapComponent";
 import "react-native-gesture-handler";
 import Splash from "./components/Splash";
 import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
 import { Auth } from "./components/Auth";
-import Homepage from "./pages/HomePage";
+import { get, save } from "./components/Storage";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AppContext } from "./components/context/AppContext";
+import DarkTheme from "./components/theme/DarkTheme";
+import DefaultTheme from "./components/theme/DefaultTheme";
+import { StatusBar } from "expo-status-bar";
+
 
 const Stack = createStackNavigator();
-// const Auth = () => {
-//   // Stack Navigator for Login and Sign up Screen
-//   return (
-//     <Stack.Navigator initialRouteName="LoginScreen">
-//       <Stack.Screen
-//         name="LoginScreen"
-//         component={Login}
-//         options={{ headerShown: false }}
-//       />
 
-//       <Stack.Screen
-//         name="Register"
-//         component={RegisterScreen}
-//         options={{
-//           title: "Register", //Set Header Title
-//           headerStyle: {
-//             backgroundColor: "#AD40AF", //Set Header color
-//           },
-//           headerTintColor: "#fff", //Set Header text color
-//           headerTitleStyle: {
-//             fontWeight: "bold", //Set Header text style
-//           },
-//         }}
-//       />
-//       <Stack.Screen
-//         name="SendEmail"
-//         component={SendEmailScreen}
-//         options={{
-//           title: "SendEmail", //Set Header Title
-//           headerStyle: {
-//             backgroundColor: "#AD40AF", //Set Header color
-//           },
-//           headerTintColor: "#fff", //Set Header text color
-//           headerTitleStyle: {
-//             fontWeight: "bold", //Set Header text style
-//           },
-//         }}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
 
-const App = () => {
-  
-  // const linking = {
-  //   prefixes: ["localhost:19006:/"],
-  //   config: {
-  //     screens: {
-  //       Login: "login",
-  //       Details: "details/:id",
-  //       Register: "register",
-  //       SendEmail: "sendEmail",
-  //       PasswordReset: "passwordReset",
-  //       Home: "home",
-  //     },
-  //   },
-  // };
-  // const [initialState, setInitialState] = useState();
+const App=()=> {
 
-  // useEffect(() => {
-  //   const fetchInitialUrl = async () => {
-  //     const url = await Linking.getInitialURL();
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  //     if (url !== null) {
-  //       setInitialState(NavigationContainer.resolveRootScreen(linking, url));
-  //     }
-  //   };
+  const appContext = useMemo(() => {
+    return {
+      isDarkTheme,
+      setIsDarkTheme
+    }
+  });
 
-  //   fetchInitialUrl();
-  // }, []);
 
   return (
-    <NavigationContainer>
+    <SafeAreaProvider style={{ flex: 1 }}>
+    <StatusBar style={isDarkTheme ? 'light' : 'dark'} />
+    <NavigationContainer theme={isDarkTheme ? DarkTheme : DefaultTheme}>
+      <AppContext.Provider value={appContext}>
       <Stack.Navigator >
         {/* SplashScreen which will come once for 5 Seconds */}
         {/* <Stack.Screen
@@ -108,13 +57,11 @@ const App = () => {
           // Hiding header for Navigation Drawer
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="ResetPassword"
-          component={ResetPasswordScreen}
-          options={{ headerShown: false }}
-        />
+       
       </Stack.Navigator>
-    </NavigationContainer>
+      </AppContext.Provider>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

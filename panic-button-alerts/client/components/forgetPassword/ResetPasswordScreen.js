@@ -5,19 +5,17 @@ import {
   Button,
   Text,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
+  
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "../../services/axiosInstance";
-import { useRoute } from "@react-navigation/native";
 import CustomButton from "../../services/CustomButton";
 import ValidatePassword from "../../services/ValidatePassword";
 
-const ResetPassword = ({ route ,navigation}) => {
-  //const route = useRoute();
+const ResetPassword = ({ route, navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [tokenVerified, setTokenVerified] = useState(false);
@@ -29,30 +27,33 @@ const ResetPassword = ({ route ,navigation}) => {
     specialChar: false,
     // match: false,
   });
-
- 
-
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleResetPassword();
+    }
+  };
   const handleResetPassword = async () => {
     setMessage(null);
     if (
       !(
         validationResults.length &
         validationResults.number &
-        validationResults.specialChar 
-        // validationResults.match
+        validationResults.specialChar
       )
     ) {
       return;
     }
-    if (confirmPassword!==password){
-      setMessage("confirmd password not matching")
+    if (confirmPassword !== password) {
+      setMessage("confirmd password not matching");
       return;
     }
     try {
-      
+      var parsedUrl = new URL(window.location.href);
+      const token = parsedUrl.searchParams.get("token");
+      const id = parsedUrl.searchParams.get("id");
       const response = await axios.post("/auth/resetPassword", {
-        userid: route.params.id,
-        token: route.params.token,
+        userid: id,
+        token: token,
         password,
       });
 
@@ -62,8 +63,7 @@ const ResetPassword = ({ route ,navigation}) => {
         );
 
         setIsResetSuccess(true);
-        navigation.navigate('LoginScreen')
-        
+        navigation.navigate("LoginScreen");
       } else {
         setMessage("Something went wrong. Please try again later.");
       }
@@ -82,12 +82,10 @@ const ResetPassword = ({ route ,navigation}) => {
 
   const handleConfirmPasswordChange = (confirmPassword) => {
     setConfirmPassword(confirmPassword);
-    
   };
 
   return (
     <View style={styles.container}>
-      {/* {route.params && <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>}  */}
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}
@@ -95,8 +93,10 @@ const ResetPassword = ({ route ,navigation}) => {
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={handlePasswordChange}
+          onKeyPress={handleKeyPress}
+
         />
-        <TouchableOpacity
+        <Pressable
           style={styles.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}
         >
@@ -105,7 +105,7 @@ const ResetPassword = ({ route ,navigation}) => {
             size={24}
             color="black"
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {renderValidationItem("Minimum 8 characters", validationResults.length)}
@@ -121,8 +121,10 @@ const ResetPassword = ({ route ,navigation}) => {
           secureTextEntry={!showPassword}
           value={confirmPassword}
           onChangeText={handleConfirmPasswordChange}
+          onKeyPress={handleKeyPress}
+
         />
-        <TouchableOpacity
+        <Pressable
           style={styles.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}
         >
@@ -131,18 +133,18 @@ const ResetPassword = ({ route ,navigation}) => {
             size={24}
             color="black"
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       {/* {renderValidationItem("Passwords match", password===confirmPassword)} */}
-      <CustomButton label={"Reset Password"} onPress={handleResetPassword} />
+      <CustomButton label={"Send me link"} onPress={handleResetPassword} />
 
       {isResetSuccess && (
         <View>
           <Text>
             Reset successfully.{" "}
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={{ color: '#AD40AF' }}>Login</Text>
-            </TouchableOpacity>
+            <Pressable onPress={() => navigation.navigate("Login")}>
+              <Text style={{ color: "#AD40AF" }}>Login</Text>
+            </Pressable>
           </Text>
         </View>
       )}

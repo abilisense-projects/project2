@@ -4,7 +4,7 @@ import {
   TextInput,
   StyleSheet,
   AsyncStorage,
-  TouchableOpacity,
+  
 } from "react-native";
 import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
@@ -13,6 +13,7 @@ import { useState } from "react";
 import axios from "../services/axiosInstance";
 import InputField from "../services/InputField"
 import { storeTokens } from "../services/authService"
+import { save } from "../components/Storage";
 const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,7 @@ const Login = ({ navigation, route }) => {
       const response = await axios.post("/auth/login", { email, password });
       if (response.data.message === "Login Success") {
         // dispatch(loginSuccess(response.user));
-        storeTokens(response.data.token);
+       await save('accessToken',response.data.token);
         navigation.replace("DrawerNavigationRoutes");
       } else {
         setErrorMessage("user name or password invalid");
@@ -84,7 +85,7 @@ const Login = ({ navigation, route }) => {
         secureTextEntry
         onChangeText={(text) => {
           setPassword(text);
-           // לדוגמא, מעדכן את הערך של length להיות false
+          // לדוגמא, מעדכן את הערך של length להיות false
         }}
         value={password}
       />
@@ -98,12 +99,13 @@ const Login = ({ navigation, route }) => {
       {!validationResults.match && (
         <Text style={styles.warningText}>Passwords do not match.</Text>
       )}
-      <View style={{ flexDirection: "row",}}>
-        <Text style ={styles.forgotPassword} onPress={() => navigation.navigate("SendEmail")}>
+      <View style={{ flexDirection: "row", }}>
+        <Text style={styles.forgotPassword} onPress={() => <HomePage />}>
+
           Forgot Password?
         </Text>
-
-        <Text style ={styles.register} onPress={() => navigation.navigate("Register")}>new here?</Text>
+{/* navigation.navigate("SendEmail") */}
+        <Text style={styles.register} onPress={() => navigation.navigate("Register")}>new here?</Text>
       </View>
       {errorMessage ? (
         <Text style={styles.errorMessage}>{errorMessage}</Text>

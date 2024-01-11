@@ -3,7 +3,7 @@ import React from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   Modal,
   StyleSheet,
 } from "react-native";
@@ -21,39 +21,54 @@ const MyModal = ({ text, visible, onConfirm, onCancel }) => {
         <View style={styles.modalContent}>
           <Text style={styles.modalText}>{text}</Text>
           <View style={styles.modalButtons}>
-            <TouchableOpacity onPress={onCancel}>
+            <Pressable onPress={onCancel}>
               <AntDesign name="closecircle" size={30} color="red" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onConfirm}>
+            </Pressable>
+            <Pressable onPress={onConfirm}>
               <AntDesign name="checkcircle" size={30} color="green" />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>
     </Modal>
   );
 };
-
+export default MyModal;
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  logoutButton: {
+    alignSelf: 'flex-end',
+    padding: 10,
+    backgroundColor: 'lightblue',
+    borderRadius: 5,
+  },
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
   modalText: {
     marginBottom: 20,
   },
   modalButtons: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 20,
   },
 });
 
-export default MyModal;
+
