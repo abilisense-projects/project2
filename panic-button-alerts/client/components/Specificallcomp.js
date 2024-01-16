@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import axios from '../services/axiosInstance';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import Time from '../components/Time'
+// run animation... (`runAfterInteractions` tasks are queued)
+// later, on animation completion:
+//InteractionManager.clearInteractionHandle(handle);
+// queued tasks run if all handles were cleared
 export default function Specificall({ prop_id ,onIdchange}) {
     useEffect(() => {
+
         getInfoAlerts()
+        
     }, []);
     const [data, setdata] = useState(null)
+    //const handle = InteractionManager.createInteractionHandle();
     async function getInfoAlerts() {
         try {
 
@@ -29,138 +38,118 @@ export default function Specificall({ prop_id ,onIdchange}) {
             console.log(error);
         }
     }
-    // "alert": {
-    //     "_id": "659d3cac4a2d1045b0317003",
-    //     "patient": "658bdfff217a5a3a41958a65",
-    //     "date": "2024-01-09T14:31:40.470Z",
-    //     "update": "2024-01-09T14:31:40.470Z",
-    //     "distressDescription": "Injury",
-    //     "status": "not treated",
-    //     "location": {
-    //       "_id": "659d3cac4a2d1045b0317004"
-    //     },
-    return (
-        <View style={styles.container}>
-           {data && <View>
-                <View style={styles.header}>
-               <TouchableOpacity style={styles.helpButton}>
-                   <Text style={styles.helpButtonText}>{data.alert.level}</Text>
-                   <Text style={styles.helpButtonText}>open</Text>
-                 </TouchableOpacity>
-               </View>
-             
-              <View style={styles.body}>
-
-              <TouchableOpacity style={styles.helpButton}>
-              <Text style={styles.helpButtonText}>{data.alert.distressDescription}</Text>
-            </TouchableOpacity>
-
-                 <Text style={styles.dateText}>Date: {data.alert.date.split('T')[0]}</Text>
-                 <Text style={styles.timeText}>Time: {data.alert.date.split('T')[1].split('.')[0]}</Text>
-               
-                {/* //  <View style={styles.partContainer}>
-                //    <Text style={styles.partText}>Part 1</Text>
-                //    <Text style={styles.partTime}>06:42</Text>
-                //  </View>
-                */}
-                 {/* <View style={styles.iconContainer}>
-                   <FontAwesomeIcon icon={faMap} style={styles.icon} />
-                   <FontAwesomeIcon icon={faSensor} style={styles.icon} /> */}
-                   {/* Other icons */}
-                 {/* </View> */}
-               
-                  <View style={styles.footer}>
-                   <TouchableOpacity style={styles.applyButton}>
-                     <Text style={styles.applyButtonText}>Apply</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity style={styles.closeButton}
-                   onPress={() =>{updateAlert(data.alert._id,"treated"), onIdchange(null)}}>
-                     <Text style={styles.closeButtonText}>Close</Text>
-                   </TouchableOpacity>
-                 </View>
-               </View>
-            </View>}
-
-
-         
-        </View>
-    );
-}
-
-// const styles = StyleSheet.create({
-//     container: {
-//       height:'50%',
-//       width: '20%',
-//       backgroundColor:'blue'
-//     },
-//     text: {
-//         fontSize: 'large',
-//         color: 'white'
-//     },
-//   })
-
-
-
-// const App = () => {
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.header}>
-//         <TouchableOpacity style={styles.helpButton}>
-//           <Text style={styles.helpButtonText}>Stop i need help</Text>
-//         </TouchableOpacity>
-//       </View>
-
-//       <View style={styles.body}>
-//         <Text style={styles.dateText}>Date: Sep 25, 2023</Text>
-//         <Text style={styles.timeText}>Time: 06:42 PM (GMT +2)</Text>
-
-//         <View style={styles.partContainer}>
-//           <Text style={styles.partText}>Part 1</Text>
-//           <Text style={styles.partTime}>06:42</Text>
-//         </View>
-
-//         <View style={styles.iconContainer}>
-//           <FontAwesomeIcon icon={faMap} style={styles.icon} />
-//           <FontAwesomeIcon icon={faSensor} style={styles.icon} />
-//           {/* Other icons */}
-//         </View>
-
-//         <View style={styles.footer}>
-//           <TouchableOpacity style={styles.applyButton}>
-//             <Text style={styles.applyButtonText}>Apply</Text>
-//           </TouchableOpacity>
-//           <TouchableOpacity style={styles.closeButton}>
-//             <Text style={styles.closeButtonText}>Close</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// //const styles = StyleSheet.create({
-//   // Define your styles here
-// //});
-
-// export default App;
-
-
+  return (
+    <View style={styles.container}>
+    {data && <View>
+      <Time/>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>{data.alert.level}</Text>
+        <TouchableOpacity style={styles.headerButton}>
+          <Text style={styles.headerButtonText}>Open</Text>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.helpButton}>
+        <Text style={styles.helpButtonText}>{data.alert.distressDescription}</Text>
+      </TouchableOpacity>
+      <View style={styles.dateTime}>
+        <Text style={styles.dateText}>Date: {data.alert.date.split('T')[0]}</Text>
+        <Text style={styles.timeText}>Time: {data.alert.date.split('T')[1].split('.')[0]}</Text>
+      </View>
+      <TouchableOpacity style={styles.audioButton}>
+        <Ionicons name="play" size={24} color="white" />
+        <Text style={styles.audioText}>Part 1 06:42</Text>
+      </TouchableOpacity>
+      <View style={styles.menu}>
+        <Ionicons name="map" size={24} color="white" />
+        <FontAwesome5 name="sensor" size={24} color="white" />
+        <FontAwesome5 name="balance-scale" size={24} color="white" />
+        <Ionicons name="information-circle" size={24} color="white" />
+        <FontAwesome5 name="ticket-alt" size={24} color="white" />
+      </View>
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.footerButton}>
+          <Ionicons name="checkmark" size={24} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}
+         onPress={() =>{updateAlert(data.alert._id,"treated"), onIdchange(null)}}>
+          <Ionicons name="close" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+      </View>}
+    </View>
+  );
+};
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'pink', // Assuming the background is black
-        height:'65%'
-       //width:'15%'
-    },
-    header: {
-        // Style for header
-    },
-    helpButton: {
-        // Style for help button
-    },
-    helpButtonText: {
-        color: 'white', // Assuming the text is white
-        // Other text styling
-    },
-    // Other styles for dateText, timeText, partContainer, etc.
+  container: {
+    flex: 1,
+    backgroundColor: '#333',
+    borderRadius: 10,
+   // padding: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  headerText: {
+    color: 'white',
+    fontSize: 20,
+  },
+  headerButton: {
+    backgroundColor: 'red',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  headerButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  helpButton: {
+    backgroundColor: 'pink',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginBottom: 10,
+  },
+  helpButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  dateTime: {
+    marginBottom: 10,
+  },
+  dateText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  timeText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  audioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  audioText: {
+    color: 'white',
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  menu: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  footerButton: {
+    padding: 10,
+  },
 });

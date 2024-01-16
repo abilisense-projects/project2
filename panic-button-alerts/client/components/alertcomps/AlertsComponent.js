@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, TouchableOpacity, Text, View, } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, Text, View, Dimensions, Alert } from 'react-native';
 import axios from '../../services/axiosInstance';
 import MyModal from "../Modal";
+import { Icon } from 'react-native-elements';
+import { AntDesign } from '@expo/vector-icons';
 export default function Alertscomp({ onIdchange, onAlertchange }) {
-
+    //   const icons = [
+    //     { name: 'heart', type: 'font-awesome' },
+    //     { name: 'star', type: 'material' },
+    //     { name: 'rocket', type: 'octicon' },
+    //     // Add more icons as needed
+    //   ];
     const [ListLow, setListLow] = useState([])
     const [ListMedium, setListMedium] = useState([])
     const [ListHigh, setListHigh] = useState([])
@@ -17,11 +24,16 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
     const [flag, setflag] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
     const [AllList, setAllList] = useState([...ListHigh, ...ListMedium, ...ListLow])
+    const isSmallDevice = Dimensions.get('window').width < 768
+    console.log((isSmallDevice && occupied.flag))
     const showModal = () => {
         setModalVisible(true);
     };
     const hideModal = () => {
         setModalVisible(false);
+    };
+    const handleIconClick = (iconName) => {
+        Alert.alert(`Clicked on ${iconName}`);
     };
 
     const colorHi = {
@@ -55,7 +67,7 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
     async function getListAlerts() {
         try {
             console.log("enter")
-            const response = await axios.get('alerts');
+            const response = await axios.get('http://localhost:8120/api/alerts');
             const result = response.data
             {
                 result &&
@@ -85,7 +97,7 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
             try {
                 const response = await axios.get(`alerts/${lastIdAlert}`,);
                 const result = response.data
-                
+
                 //new
                 if (result.isNew) {
                     onAlertchange({ status: "add", arr: result })
@@ -180,7 +192,7 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
     }
     return (
         <View style={styles.container}>
-            <View style={styles.buttons}>
+           {isSmallDevice|| <View style={styles.buttons}>
                 <TouchableOpacity style={styles.button} onPress={() => { changeState("High") }}
                 ><Text style={styles.textb}>High</Text>
                 </TouchableOpacity>
@@ -193,39 +205,48 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
                 <TouchableOpacity style={styles.button} onPress={() => { changeState("All") }}
                 ><Text style={styles.textb}>All</Text>
                 </TouchableOpacity>
-            </View>
+            </View>}
             <View style={styles.containerCalls}>
                 {State.map((call, index) => {
 
                     return (
-                        <TouchableOpacity
-                            key={call._id}
+<View  key={call._id}>
+                       { (isSmallDevice && occupied.flag) ?
+                            <View  style={styles.ListIcon} >
+                                <AntDesign name="exclamationcircleo" size={24} color={call.level == "Hard" ? "red" :
+                                        call.level == "Medium" ? "orange" : "yellow"} />
+                            </View>
 
-                            disabled={call.status === "in treatment" ? true : false}
-                            style={[
-                                (call.status == "in treatment" ?
-                                    [styles.alert, styles.inTreatment] : styles.alert),
-                                call.level == "Hard" ? colorHi :
-                                    call.level == "Medium" ? colorMed : colorLow
-                            ]}
-                            onPress={() => { handleAlertPress(call._id) }}
-                        >
-                            {/* {call.level == "Hard" ? <Image style={styles.img}
+                            : <TouchableOpacity
+                               
+
+                                disabled={call.status === "in treatment" ? true : false}
+                                style={[
+                                    (call.status == "in treatment" ?
+                                        [styles.alert, styles.inTreatment] : styles.alert),
+                                    call.level == "Hard" ? colorHi :
+                                        call.level == "Medium" ? colorMed : colorLow
+                                ]}
+                                onPress={() => { handleAlertPress(call._id) }}
+                            >
+                                {/* {call.level == "Hard" ? <Image style={styles.img}
                                 source={{ uri: '/static/media/hi.b2fd8eed21094cc1e0ef.png' }} /> :
                                 call.level == "Medium" ? <Image style={styles.img}
                                     source={{ uri: '/static/media/med.645af0b7b0645b787cb8.png' }} /> :
                                     <Image style={styles.img}
                                         source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />} */}
 
+                                {(call._id === occupied.Id) ?
+                                    <Text style={styles.text}>you care</Text> : <Text style={styles.text}>{call.status}</Text>}
+                                {/* <Text style={styles.text}>{call.location}</Text> */}
 
-                            {(call._id === occupied.Id )? <Text style={styles.text}>you care</Text> : <Text style={styles.text}>{call.status}</Text>}
-                            {/* <Text style={styles.text}>{call.location}</Text> */}
+                                <Text style={styles.text}>{call.distressDescription}</Text>
+                                <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}  ${call.update.split('T')[1].split('.')[0]}`} </Text>
 
-                            <Text style={styles.text}>{call.distressDescription}</Text>
-                            <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}  ${call.update.split('T')[1].split('.')[0]}`} </Text>
-                            {/* <Text style={styles.text}>{call.update.split('T')[1].split('.')[0]}</Text> */}
-                        </TouchableOpacity>
-                    )
+                                {/* <Text style={styles.text}>{call.update.split('T')[1].split('.')[0]}</Text> */}
+                            </TouchableOpacity>}
+
+                   </View> )
                 }) || <Text>"No distress alerts"</Text>}
             </View>
             <MyModal
@@ -244,7 +265,7 @@ export default function Alertscomp({ onIdchange, onAlertchange }) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 30,
+      //  marginTop: 30,
         flex: 1, // Add flex: 1 to make the container take the entire screen height
         alignItems: 'center', // Center items horizontally
     },
@@ -305,4 +326,8 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: 'white',
     },
+    ListIcon: {
+        alignItems: 'flex-start',
+        justifyFontent: 'space-around'
+    }
 });
