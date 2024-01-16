@@ -35,21 +35,7 @@ const Login = ({ navigation }) => {
       if (response.data.message === 'Login Success') {
         // dispatch(loginSuccess(response.user));
         // storeTokens(response.data.token, {})
-        <Snackbar
-        message="This is a custom Snackbar"
-        actionText="Dismiss"
-        onActionPress={() => {
-          // Implement the action logic here.
-        }}
-        duration={5000} // Customize duration
-        position="bottom" // Change the position to 'top'/'bottom'
-        backgroundColor="#2E67F8" // Customize background color
-        textColor="white" // Change text color
-        actionTextColor="white" // Customize action text color
-        containerStyle={{ marginHorizontal: 12 }} // Apply additional styling
-        messageStyle={{ }} // Adjust message text styling
-        actionTextStyle={{ }} // Customize action text styling
-      />
+       
         navigation.navigate('DrawerNavigationRoutes');
        
       } else {
@@ -116,6 +102,7 @@ const Login = ({ navigation }) => {
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+      
     </View>
   );
 };

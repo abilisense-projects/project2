@@ -11,6 +11,16 @@ module.exports = function (api) {
         },
       ],
       "react-native-reanimated/plugin",
+      [
+        "i18next-extract",
+        {
+          locales: ["en"],
+          outputPath: "locales/{{locale}}/{{ns}}.json",
+          keyAsDefaultValue: ["en"],
+          keySeparator: null,
+          nsSeparator: null,
+        },
+      ],
     ],
   };
 };

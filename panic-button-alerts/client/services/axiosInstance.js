@@ -9,7 +9,6 @@ const headers = {
 
   // Add any other headers you need
 };
-
 const axiosInstance = axios.create({
   baseURL: baseURL,
   headers: headers,

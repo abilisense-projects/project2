@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, Pressable, Text, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  Pressable,
+  Text,
+  StyleSheet,
+  I18nManager,
+} from "react-native";
 import CustomButton from "../services/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
 import Loader from "../components/Loader";
 import Snackbar from "../services/snackbar";
+import { useTranslation } from "react-i18next";
 
 const RegisterScreen = ({ route }) => {
   const [name, setName] = useState("");
@@ -21,6 +29,7 @@ const RegisterScreen = ({ route }) => {
     number: false,
     specialChar: false,
   });
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     // Trigger form validation when name,
@@ -33,19 +42,19 @@ const RegisterScreen = ({ route }) => {
 
     // Validate name field
     if (!name) {
-      errors.name = "Name is required.";
+      errors.name = t("Name is required.");
     }
 
     // Validate email field
     if (!email) {
-      errors.email = "Email is required.";
+      errors.email = t("Email is required.");
     } else if (!ValidateEmail(email)) {
-      errors.email = "Email is invalid.";
+      errors.email = t("Email is invalid.");
     }
     setValidationResults(validatePassword(password));
     // Validate password field
     if (!password) {
-      errors.password = "Password is required.";
+      errors.password = t("Password is required.");
     } else if (
       !(
         validationResults.length &
@@ -54,13 +63,13 @@ const RegisterScreen = ({ route }) => {
       )
     ) {
       if (!validationResults.length)
-        errors.passwordlength = "Password must be at least 8 characters. ";
+        errors.passwordlength = t("Password must be at least 8 characters. ");
       if (!validationResults.number) {
-        errors.passwordnumber = "password must contain 1 number;";
+        errors.passwordnumber = t("password must contain 1 number;");
       }
 
       if (!validationResults.specialChar) {
-        errors.passwordchar = "password must contain 1 special carracter;";
+        errors.passwordchar = t("password must contain 1 special carracter;");
       }
     }
 
@@ -89,17 +98,15 @@ const RegisterScreen = ({ route }) => {
       if (response.status === 200 || response.status === 201) {
         console.log("Registration successful:", response.data);
         // Optionally, navigate to a success screen or perform other actions
-        <Snackbar snackBarType="Success" message="register successfuly" />;
         navigation.navigate("Login");
       } else {
         // Handle unexpected server response
         console.error("Unexpected server response:", response);
-        setRegistrationError(error.response.data);
       }
     } catch (error) {
       // Handle errors (e.g., display an error message)
       console.error("Registration failed:", error.message);
-      setRegistrationError(error.response.data);
+      setRegistrationError(t(error.response.data));
 
       // Check the type of error and provide appropriate feedback to the user
       if (error.response) {
@@ -117,14 +124,14 @@ const RegisterScreen = ({ route }) => {
         // Update state with a more user-friendly error message
         else
           setRegistrationError(
-            "Registration failed. Please check your details and try again."
+            t("Registration failed. Please check your details and try again.")
           );
       } else if (error.request) {
         // The request was made but no response was received
         console.error("No response received:", error.request);
         // Update state with a more user-friendly error message
         setRegistrationError(
-          "Network error. Please check your internet connection."
+          t("Network error. Please check your internet connection.")
         );
       } else {
         setLoading(false);
@@ -142,33 +149,35 @@ const RegisterScreen = ({ route }) => {
   const handleSubmit = () => {
     if (isFormValid) {
       registration();
+      
+      
       console.log("Form submitted successfully!");
     } else {
       // Form is invalid, display error messages
       console.log("Form has errors. Please correct them.");
     }
   };
-
+  const isHebrew = i18n.language === "he";
   return (
     <View style={styles.container}>
       <Loader loading={loading} />
       <TextInput
-        style={styles.input}
-        placeholder="Name"
+        style={[styles.input, isHebrew && styles.rtlInput]}
+        placeholder={t("Name")}
         value={name}
         onChangeText={setName}
         onKeyPress={handleKeyPress}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Email"
+        style={[styles.input, isHebrew && styles.rtlInput]}
+        placeholder={t("Email")}
         value={email}
         onChangeText={setEmail}
         onKeyPress={handleKeyPress}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Password"
+        style={[styles.input, isHebrew && styles.rtlInput]}
+        placeholder={t("Password")}
         value={password}
         onChangeText={setPassword}
         onKeyPress={handleKeyPress}
@@ -183,7 +192,7 @@ const RegisterScreen = ({ route }) => {
         <Text style={styles.error}>{registrationError}</Text>
       )}
       <CustomButton
-        label={"submit"}
+        label={t("submit")}
         style={[{ opacity: isFormValid ? 1 : 0.3 }]}
         disabled={!isFormValid}
         onPress={handleSubmit}
@@ -193,7 +202,7 @@ const RegisterScreen = ({ route }) => {
         label={"go to login"}
         onPress={() => navigation.navigate("Login")}
       >
-        already register ? login!
+        {t("already register ? login!")}
       </Text>
     </View>
   );
@@ -208,15 +217,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: "75%", // Adjusted width
-    height: 40, // Adjusted height
+    width: "75%",
+    height: 40,
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     padding: 10,
   },
+  rtlInput: {
+    textAlign: "right",
+  },
   error: {
-    // alignSelf:'center',
     color: "red",
     fontSize: 20,
     marginBottom: 12,

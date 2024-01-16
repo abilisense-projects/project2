@@ -12,26 +12,28 @@ const { jwtDecode } = require("jwt-decode");
 import MyModal from "./Modal";
 import { AppContext } from '../components/context/AppContext';
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons,FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { get, remove } from "./Storage";
+import { useTranslation } from "react-i18next";
 
 
 const CustomSidebarMenu = (props) => {
+  const { t, i18n } = useTranslation();
+  const { colors } = useTheme();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
-  const { colors } = useTheme();
   const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext)
+
   useEffect(() => {
     // Function to get and decode the token from AsyncStorage
     const fetchTokenAndDecode = async () => {
       try {
-        const token = await AsyncStorage.getItem("accessToken");
-        console.log(token);
+        const token = await get("accessToken");
         if (token) {
-          console.log(jwtDecode(token));
           const decodedToken = jwtDecode(token);
-          console.log(decodedToken);
-          setName(decodedToken.name);
+          setName(decodedToken.name);         
         }
       } catch (error) {
         console.error("Error retrieving and decoding token:", error);
@@ -47,14 +49,10 @@ const CustomSidebarMenu = (props) => {
   const hideModal = () => {
     setModalVisible(false);
   };
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    // You can add logic here to change the app theme based on the darkMode state
-    // For example, you can use a library like react-native-appearance or change your styles dynamically
-  };
+
   const handleLogout = async () => {
     try {
-      await AsyncStorage.clear();
+      await remove("accessToken");
       props.navigation.navigate("Auth");
     } catch (error) {
       console.error("Error clearing AsyncStorage:", error);
@@ -80,7 +78,7 @@ const CustomSidebarMenu = (props) => {
             color: "#111",
           }}
         >
-          {name}
+          {t(name.toString())}
         </Text>
       </View>
 
@@ -89,7 +87,7 @@ const CustomSidebarMenu = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          label="Log out"
+          label={t("Log out")}
           onPress={showModal}
           icon={({ focused, color, size }) => (
             <MaterialCommunityIcons name="logout" size={size} color={color} />
@@ -97,7 +95,7 @@ const CustomSidebarMenu = (props) => {
         />
 
         <DrawerItem
-          label={isDarkTheme ? "Dark mode" : "Light mode"}
+        label={isDarkTheme ? t("Light mode"):t("Dark mode") }
          onPress={() => setIsDarkTheme(current => !current)}
           icon={({ focused, color, size }) => (
             <Icon
@@ -107,9 +105,16 @@ const CustomSidebarMenu = (props) => {
             />
           )}
         />
+        <DrawerItem
+          label={i18n.language=="he" ?  "English": "עברית" }
+         onPress={() => i18n.language=="he"?i18n.changeLanguage("en"):i18n.changeLanguage("he")}
+          icon={({ focused, color, size }) => (
+            <FontAwesome name="language" size={size} color={color} />
+          )}
+        />
       </DrawerContentScrollView>
       <MyModal
-        text={"Are you sure you want to log out?"}
+        text={t("Are you sure you want to log out?")}
         visible={modalVisible}
         onConfirm={() => {
           handleLogout();
