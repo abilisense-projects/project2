@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "../../services/axiosInstance";
 import CustomButton from "../../services/CustomButton";
 import ValidatePassword from "../../services/ValidatePassword";
+import Snackbar from "../../services/snackbar";
 
 const ResetPassword = ({ route, navigation }) => {
   const [password, setPassword] = useState("");
@@ -44,7 +45,7 @@ const ResetPassword = ({ route, navigation }) => {
       return;
     }
     if (confirmPassword !== password) {
-      setMessage("confirmd password not matching");
+      setMessage(t("confirmd password not matching"));
       return;
     }
     try {
@@ -58,19 +59,20 @@ const ResetPassword = ({ route, navigation }) => {
       });
 
       if (response.data.success) {
+       
         setMessage(
-          "Password reset successful. You can now log in with your new password."
+          t("Password reset successful. You can now log in with your new password.")
         );
-
+        
         setIsResetSuccess(true);
         navigation.navigate("LoginScreen");
       } else {
-        setMessage("Something went wrong. Please try again later.");
+        setMessage(t("Something went wrong. Please try again later."));
       }
     } catch (error) {
       console.error("Error resetting password:", error.message);
       setMessage(
-        "An error occurred while resetting the password,check password again..."
+       t( "An error occurred while resetting the password,check password again...")
       );
     }
   };
@@ -89,7 +91,7 @@ const ResetPassword = ({ route, navigation }) => {
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Enter New Password"
+          placeholder={t("Enter New Password")}
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={handlePasswordChange}
@@ -108,16 +110,16 @@ const ResetPassword = ({ route, navigation }) => {
         </Pressable>
       </View>
 
-      {renderValidationItem("Minimum 8 characters", validationResults.length)}
-      {renderValidationItem("At least 1 number", validationResults.number)}
+      {renderValidationItem(t("Minimum 8 characters"), validationResults.length)}
+      {renderValidationItem(t("At least 1 number"), validationResults.number)}
       {renderValidationItem(
-        "At least 1 special character",
+        t("At least 1 special character"),
         validationResults.specialChar
       )}
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Confirm New Password"
+          placeholder={t("Confirm New Password")}
           secureTextEntry={!showPassword}
           value={confirmPassword}
           onChangeText={handleConfirmPasswordChange}
@@ -136,19 +138,9 @@ const ResetPassword = ({ route, navigation }) => {
         </Pressable>
       </View>
       {/* {renderValidationItem("Passwords match", password===confirmPassword)} */}
-      <CustomButton label={"Send me link"} onPress={handleResetPassword} />
+      <CustomButton label={t("Send me link")} onPress={handleResetPassword} />
 
-      {isResetSuccess && (
-        <View>
-          <Text>
-            Reset successfully.{" "}
-            <Pressable onPress={() => navigation.navigate("Login")}>
-              <Text style={{ color: "#AD40AF" }}>Login</Text>
-            </Pressable>
-          </Text>
-        </View>
-      )}
-
+      
       {message && <Text style={styles.message}>{message}</Text>}
     </View>
   );

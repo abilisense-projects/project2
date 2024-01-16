@@ -3,7 +3,7 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  AsyncStorage,
+  
   
 } from "react-native";
 import CustomButton from "../services/CustomButton";
@@ -100,11 +100,11 @@ const Login = ({ navigation, route }) => {
         <Text style={styles.warningText}>Passwords do not match.</Text>
       )}
       <View style={{ flexDirection: "row", }}>
-        <Text style={styles.forgotPassword} onPress={() => <HomePage />}>
+        <Text style={styles.forgotPassword} onPress={() =>navigation.navigate("SendEmail")
+}>
 
           Forgot Password?
         </Text>
-{/* navigation.navigate("SendEmail") */}
         <Text style={styles.register} onPress={() => navigation.navigate("Register")}>new here?</Text>
       </View>
       {errorMessage ? (

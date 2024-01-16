@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
+import { useTranslation } from "react-i18next";
+
 import axios from "../../services/axiosInstance";
 import validateEmail from "../../services/ValidateEmail";
 import CustomButton from "../../services/CustomButton";
 
 const SendEmail = ({ route }) => {
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -16,7 +19,7 @@ const SendEmail = ({ route }) => {
 
   const handleSendResetEmail = async () => {
     if (!validateEmail(email)) {
-      setMessage("Please enter a valid email address.");
+      setMessage(t("Please enter a valid email address."));
       setIsError(true);
       return;
     }
@@ -29,18 +32,18 @@ const SendEmail = ({ route }) => {
 
       if (response.data != null) {
         setMessage(
-          "Reset email sent. Check your email for further instructions."
+          t("Reset email sent. Check your email for further instructions.")
         );
         setIsError(false);
       } else {
         setMessage(
-          "An error occurred while sending the reset email. Please try again."
+         t( "An error occurred while sending the reset email. Please try again.")
         );
         setIsError(true);
       }
     } catch (error) {
       console.error("Error sending reset email:", error.message);
-      setMessage("An error occurred while sending the reset email.");
+      setMessage(t("An error occurred while sending the reset email."));
       setIsError(true);
     }
   };
@@ -53,13 +56,13 @@ const SendEmail = ({ route }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Enter Email"
+        placeholder={t("Enter Email")}
         value={email}
         onChangeText={(text) => setEmail(text)}
         onKeyPress={handleKeyPress}
       />
       <CustomButton
-        label="Send Reset Email"
+        label={t("Send Reset Email")}
        
         onPress={handleSendResetEmail}
       />

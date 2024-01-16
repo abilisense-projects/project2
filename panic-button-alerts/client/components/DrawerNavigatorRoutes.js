@@ -11,16 +11,18 @@ import SettingScreen from "../pages/SettingScreen";
 import CustomSidebarMenu from "./CustomSidebarMenu";
 import NavigationDrawerHeader from "./NavigationDrawerHeader";
 
-
-//Import Icon
-import { FontAwesome5,Ionicons } from "@expo/vector-icons"; // Import the appropriate icon component
+// Import Icon
+import { FontAwesome5, Ionicons } from "@expo/vector-icons"; // Import the appropriate icon component
 import { useTheme } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const HomeScreenStack = ({ navigation }) => {
   const { colors } = useTheme();
+  const { t, i18n } = useTranslation();
 
+  const isHebrew = i18n.language === "he";
 
   return (
     <Stack.Navigator initialRouteName="HomeScreen">
@@ -28,16 +30,17 @@ const HomeScreenStack = ({ navigation }) => {
         name="HomeScreen"
         component={HomeScreen}
         options={{
-          title: "Home", //Set Header Title
-          headerLeft: () => (
-            <NavigationDrawerHeader navigationProps={navigation} />
-          ),
+          title:false, // Set Header Title
+          headerLeft: () => (isHebrew ? undefined : <NavigationDrawerHeader navigationProps={navigation} />),
+          headerRight: isHebrew ? (
+           ()=> <NavigationDrawerHeader navigationProps={navigation} />
+          ) : undefined,
           headerStyle: {
-            backgroundColor: colors.background, //Set Header color
+            backgroundColor: colors.background, // Set Header color
           },
-          headerTintColor: "#fff", //Set Header text color
+          headerTintColor: colors.text, // Set Header text color
           headerTitleStyle: {
-            fontWeight: "bold", //Set Header text style
+            fontWeight: "bold", // Set Header text style
           },
         }}
       />
@@ -46,27 +49,30 @@ const HomeScreenStack = ({ navigation }) => {
 };
 
 const SettingScreenStack = ({ navigation }) => {
+  const { colors } = useTheme();
+  const { t, i18n } = useTranslation();
+
+  const isHebrew = i18n.language === "he";
+
   return (
-    <Stack.Navigator
-      initialRouteName="SettingsScreen"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerHeader navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: "#307ecc", //Set Header color
-        },
-        headerTintColor: "#fff", //Set Header text color
-        headerTitleStyle: {
-          fontWeight: "bold", //Set Header text style
-        },
-      }}
-    >
+    <Stack.Navigator>
       <Stack.Screen
-        name="SettingsScreen"
+        name="SettingScreen"
         component={SettingScreen}
         options={{
-          title: "Settings", //Set Header Title
+          title: false,
+
+          headerLeft: () => (isHebrew ? undefined : <NavigationDrawerHeader navigationProps={navigation} />),
+          headerRight: isHebrew ? (
+            ()=><NavigationDrawerHeader navigationProps={navigation} />
+          ) : undefined,
+          headerStyle: {
+            backgroundColor: colors.background, // Set Header color
+          },
+          headerTintColor: colors.text, // Set Header text color
+          headerTitleStyle: {
+            fontWeight: "bold", // Set Header text style
+          },
         }}
       />
     </Stack.Navigator>
@@ -75,9 +81,11 @@ const SettingScreenStack = ({ navigation }) => {
 
 const DrawerNavigatorRoutes = (props) => {
   const { colors } = useTheme();
+  const { t, i18n } = useTranslation();
+
+  const isHebrew = i18n.language === "he";
 
   return (
-   
     <Drawer.Navigator
       drawerContentOptions={{
         activeTintColor: "#f8ecf8",
@@ -87,13 +95,16 @@ const DrawerNavigatorRoutes = (props) => {
           color: "#d8d8d8",
         },
       }}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+        drawerPosition: isHebrew ? 'right' : 'left', // Set drawer position to right if language is Hebrew
+      }}
       drawerContent={CustomSidebarMenu}
     >
       <Drawer.Screen
         name="HomeScreenStack"
         options={{
-          drawerLabel:"Home Screen",
+          drawerLabel: t("Home Screen"),
           drawerIcon: ({ color }) => (
             <FontAwesome5 name="home" size={20} color={colors.text} />
           ),
@@ -102,15 +113,15 @@ const DrawerNavigatorRoutes = (props) => {
       />
       <Drawer.Screen
         name="SettingScreenStack"
-        options={{ drawerLabel:"Setting Screen",drawerIcon: ({ color }) => (
-          <Ionicons name='settings-sharp' size={20} color={colors.text} />
-
-        ), }}
+        options={{
+          drawerLabel: t("Setting Screen"),
+          drawerIcon: ({ color }) => (
+            <Ionicons name="settings-sharp" size={20} color={colors.text} />
+          ),
+        }}
         component={SettingScreenStack}
       />
-      
     </Drawer.Navigator>
-   
   );
 };
 

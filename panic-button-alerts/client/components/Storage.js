@@ -24,6 +24,14 @@ export const get = async key => {
     return null;
   }
 };
+export const remove= async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export default {
   saveString,
