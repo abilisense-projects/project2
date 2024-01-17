@@ -1,11 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "../pages/LogInPage";
+import LogIn from "../pages/LogIn";
 import RegisterScreen from "../pages/RegistrScreen";
 import SendEmail from "./forgetPassword/SendEmailScreen";
 import "react-native-gesture-handler";
 import ResetPassword from "./forgetPassword/ResetPasswordScreen";
 import { Linking } from "react-native";
 import { useEffect } from "react";
+import LanguageSelector from "../pages/Language";
 const Stack = createStackNavigator();
 export const Auth = ({ navigation }) => {
   // Stack Navigator for Login and Sign up Screen
@@ -39,10 +40,10 @@ export const Auth = ({ navigation }) => {
   }, []);
   
   return (
-    <Stack.Navigator initialRouteName="login">
+    <Stack.Navigator initialRouteName="LogIn">
       <Stack.Screen
-        name="Login"
-        component={Login}
+        name="LogIn"
+        component={LogIn }
         options={{ headerShown: false }}
       />
       <Stack.Screen
