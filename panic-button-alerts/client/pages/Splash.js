@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View, StyleSheet, Image } from "react-native";
 
-import { get, remove } from "../components/Storage";
+import { get, remove } from "../services/Storage";
 import { jwtDecode } from "jwt-decode";
 
 const Splash = ({ navigation }) => {
@@ -12,14 +12,14 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
     setTimeout(async () => {
       setAnimating(false);
-    
+
       const current_time = new Date();
-      const islogin = await get("accessToken");
+      let islogin = await get("accessToken");
       if (islogin) {
         const decodedToken = jwtDecode(islogin);
         if (current_time.getTime() > decodedToken.exp * 1000) {
           await remove("accessToken");
-          islogin=" "
+          islogin = " ";
         }
       }
 

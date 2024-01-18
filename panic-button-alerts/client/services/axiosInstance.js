@@ -1,7 +1,7 @@
 // axiosInstance.js
 import axios from "axios";
 import { baseURL } from "@env";
-import { get } from "../components/Storage";
+import { get } from "./Storage";
 const Token = await get("accessToken");
 const headers = {
   "Content-Type": "application/json",

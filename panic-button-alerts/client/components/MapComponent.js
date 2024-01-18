@@ -8,67 +8,6 @@ import { YOUR_LOCATIONIQ_API_KEY, ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON } from '@
 
 
 const MapComponent = ({alerts}) => {
-  // const alerts = [
-  //   {
-  //     "_id": "659a76cc4a2d1045b0316fdc",
-  //     "patient": "658bdfff217a5a3a41958a65",
-  //     "date": "2024-01-07T12:02:52.550Z",
-  //     "update": "2024-01-07T12:02:52.550Z",
-  //     "distressDescription": "health event",
-  //     "status": "not treated",
-  //     "location": {
-  //       "country": "Israel",
-  //       "city": "רחובות",
-  //       "street": "עזרא",
-  //       "buildingNumber": 3,
-  //       "floor": 4,
-  //       "apartmentNumber": 10,
-  //       "comments": "",
-  //       "_id": "658bdfff217a5a3a41958a66"
-  //     },
-  //     "level": "Medium",
-  //     "__v": 0
-  //   },
-  //   {
-  //     "_id": "659a76e44a2d1045b0316fdf",
-  //     "patient": "658bdfff217a5a3a41958a65",
-  //     "date": "2024-01-07T12:03:16.305Z",
-  //     "update": "2024-01-07T12:03:16.305Z",
-  //     "distressDescription": "Injury",
-  //     "status": "not treated",
-  //     "location": {
-  //       "country": "Israel",
-  //       "city": "רחובות",
-  //       "street": "מנדלי מוכר ספרים ",
-  //       "buildingNumber": 3,
-  //       "_id": "659a76e44a2d1045b0316fe0"
-  //     },
-  //     "level": "Easy",
-  //     "__v": 0
-  //   },
-  
-    
-  //   {
-  //     "_id": "659a77004a2d1045b0316fe8",
-  //     "patient": "658bdfff217a5a3a41958a65",
-  //     "date": "2024-01-07T12:03:44.321Z",
-  //     "update": "2024-01-07T12:03:44.321Z",
-  //     "distressDescription": "Injury",
-  //     "status": "not treated",
-  //     "location": {
-  //       "country": "Israel",
-  //       "city": "בני ברק",
-  //       "street": "רשי ",
-  //       "buildingNumber": 10,
-  //       "_id": "659a77004a2d1045b0316fe9"
-  //     },
-  //     "level": "Hard",
-  //     "__v": 0
-  //   }
-  // ]
-  
-  console.log(alerts)
-
   const [markers, setMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON]); // Default center (Center of Israel)
 
