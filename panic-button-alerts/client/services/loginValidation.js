@@ -36,24 +36,24 @@
 // export default ValidateEmail
 
 
-import * as Yup from 'yup';
-import validatePassword from './ValidatePassword';
+// import * as Yup from 'yup';
+// import validatePassword from './ValidatePassword';
 
-export const loginValidation = Yup.object().shape({
-  email: Yup.string().email('Invalid email format').required('Email is required'),
-  password: Yup.string()
-    .test('validate-password', 'Invalid password', function (value) {
-      const passwordValidation = validatePassword(value, value); // בדיקה מתוך validatePassword
-      return (
-        passwordValidation.length &&
-        passwordValidation.number &&
-        passwordValidation.specialChar &&
-        passwordValidation.match
-      );
-    })
-    .test('yup-password', 'Yup password validation failed', function (value) {
-      // הוספת בדיקות נוספות כפי שתרצי
-      return true; // החזרת ערך ברירת המחדל או תוצאת הבדיקה
-    })
-    .required('Password is required'),
-});
+// export const loginValidation = Yup.object().shape({
+//   email: Yup.string().email('Invalid email format').required('Email is required'),
+//   password: Yup.string()
+//     .test('validate-password', 'Invalid password', function (value) {
+//       const passwordValidation = validatePassword(value, value); 
+//       return (
+//         passwordValidation.length &&
+//         passwordValidation.number &&
+//         passwordValidation.specialChar 
+//         // passwordValidation.match
+//       );
+//     })
+//     .test('yup-password', 'Yup password validation failed', function (value) {
+     
+//       return true; // החזרת ערך ברירת המחדל או תוצאת הבדיקה
+//     })
+//     .required('Password is required'),
+// });
