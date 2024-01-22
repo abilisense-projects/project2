@@ -4,7 +4,6 @@
     "slug": "panic-button-alerts",
     "version": "1.0.0",
     "orientation": "portrait",
-    "plugins": ["@config-plugins/react-native-webrtc"],
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, Switch } from "react-native";
+import { View, Text, Image, StyleSheet, Switch, I18nManager } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -18,11 +18,16 @@ import { useTranslation } from "react-i18next";
 
 const CustomSidebarMenu = (props) => {
   const { t, i18n } = useTranslation();
-
+  const isHebrew = i18n.language === "he";
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
   const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext);
-
+  
+  if (isHebrew) {
+    I18nManager.forceRTL(true);
+  } else {
+    I18nManager.forceRTL(false);
+  }
   useEffect(() => {
     // Function to get and decode the token from AsyncStorage
     const fetchTokenAndDecode = async () => {
@@ -61,19 +66,10 @@ const CustomSidebarMenu = (props) => {
       <View style={stylesSidebar.profileHeader}>
         <Image
           source={require("../../assets/user.png")}
-          style={{
-            height: 130,
-            width: 130,
-            borderRadius: 65,
-          }}
+          style={stylesSidebar.image}
         />
         <Text
-          style={{
-            fontSize: 22,
-            marginVertical: 6,
-            fontWeight: "bold",
-            color: "#111",
-          }}
+          style={stylesSidebar.text}
         >
           {t(name.toString())}
         </Text>
@@ -82,11 +78,12 @@ const CustomSidebarMenu = (props) => {
       <View style={stylesSidebar.profileHeaderLine} />
 
       <DrawerContentScrollView {...props}
-        style={{ direction: i18n.language === "he" ? "rtl" : "ltr" }}
+        style={{ direction: isHebrew ? "rtl" : "ltr" }}
       >
         <DrawerItemList
           {...props}
-         
+          style={{ direction: isHebrew? "rtl" : "ltr" }}
+
         />
         <DrawerItem
           label={t("Log out")}
@@ -108,9 +105,9 @@ const CustomSidebarMenu = (props) => {
           )}
         />
         <DrawerItem
-          label={i18n.language == "he" ? "English" : "עברית"}
+          label={isHebrew ? "אנגלית" : "Hebrew"}
           onPress={() =>
-            i18n.language == "he"
+           isHebrew
               ? i18n.changeLanguage("en")
               : i18n.changeLanguage("he")
           }
@@ -142,6 +139,18 @@ const stylesSidebar = StyleSheet.create({
     backgroundColor: "#AD40AF",
     paddingTop: 40,
     color: "white",
+
+  },
+  image:{
+    height: 130,
+    width: 130,
+    borderRadius: 65,
+  },
+  text:{
+    fontSize: 22,
+    marginVertical: 6,
+    fontWeight: "bold",
+    color: "#111",
   },
   profileHeader: {
     // flexDirection: "row",

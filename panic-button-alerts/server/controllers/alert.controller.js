@@ -3,12 +3,14 @@ const {
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
+  addAlertforHelper,
+  getAlertsforHelper,
 } = require("../services/alert.service");
 
 const getAlertsController = async (req, res) => {
   try {
     const alerts = await getAlerts();
-    res.send(alerts);
+    alerts !== null ? res.send(alerts) : res.status(404).send("no alerts");
   } catch (error) {
     res.status(500).send(error);
     console.error(error);
@@ -17,8 +19,9 @@ const getAlertsController = async (req, res) => {
 const getAlertDetailController = async (req, res) => {
   try {
     const alertDetails = await getAlertDetails(req.params.alertId);
-    console.log(alertDetails);
-    res.send(alertDetails);
+    alertDetails !== null
+      ? res.send(alertDetails)
+      : res.status(404).send("no alerts");
   } catch (error) {
     res.status(500).send(error);
     console.error(error);
@@ -65,11 +68,24 @@ const getnewAlertController = async (req, res) => {
 
 const updateAlertController = async (req, res) => {
   try {
-    const { id, status,userId } = req.body;
-    status==="treated"? await addAlertforHelper(id,userId):none
+    const { id, status, userId, duration } = req.body;
+    const update =
+      status === "treated"
+        ? await addAlertforHelper(id, userId, duration)
+        : none;
     const result = await updateAlertStatus(id, status);
     console.log(result);
     result !== null ? res.send("updated") : res.send("not updated");
+  } catch (error) {
+    res.status(500).send(error);
+    console.error(error);
+  }
+};
+const getAlertsforHelperController = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const history = await getAlertsforHelper(userId);
+    history!== null ?res.send(history):res.status(404).send("no history for this user")
   } catch (error) {
     res.status(500).send(error);
     console.error(error);
@@ -80,4 +96,5 @@ module.exports = {
   getnewAlertController,
   getAlertsController,
   getAlertDetailController,
+  getAlertsforHelperController,
 };

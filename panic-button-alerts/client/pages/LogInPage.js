@@ -5,7 +5,6 @@ import ValidatePassword from "../services/ValidatePassword";
 import { useState } from "react";
 import axios from "../services/axiosInstance";
 import InputField from "../services/InputField";
-import { storeTokens } from "../services/authService";
 import { save } from "../services/Storage";
 const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");

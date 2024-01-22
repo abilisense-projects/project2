@@ -12,9 +12,11 @@ import CustomSidebarMenu from "./CustomSidebarMenu";
 import NavigationDrawerHeader from "./NavigationDrawerHeader";
 
 // Import Icon
-import { FontAwesome5, Ionicons } from "@expo/vector-icons"; // Import the appropriate icon component
+import { FontAwesome5, Ionicons, FontAwesome } from "@expo/vector-icons"; // Import the appropriate icon component
 import { useTheme } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import Historypage from "../../pages/Historypage";
+import { I18nManager } from "react-native";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -56,7 +58,11 @@ const SettingScreenStack = ({ navigation }) => {
   const { t, i18n } = useTranslation();
 
   const isHebrew = i18n.language === "he";
-
+  if (isHebrew) {
+    I18nManager.forceRTL(true);
+  } else {
+    I18nManager.forceRTL(false);
+  }
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -79,7 +85,38 @@ const SettingScreenStack = ({ navigation }) => {
           headerTitleStyle: {
             fontWeight: "bold", // Set Header text style
           },
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+const HistoryScreenStack = ({ navigation }) => {
+  const { colors } = useTheme();
+  const { t, i18n } = useTranslation();
 
+  const isHebrew = i18n.language === "he";
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HistoryScreen"
+        component={Historypage}
+        options={{
+          title: false, // Set Header Title
+          headerLeft: () =>
+            isHebrew ? undefined : (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            ),
+          headerRight: isHebrew
+            ? () => <NavigationDrawerHeader navigationProps={navigation} />
+            : undefined,
+          headerStyle: {
+            backgroundColor: colors.background, // Set Header color
+          },
+          headerTintColor: colors.text, // Set Header text color
+          headerTitleStyle: {
+            fontWeight: "bold", // Set Header text style
+          },
         }}
       />
     </Stack.Navigator>
@@ -91,24 +128,30 @@ const DrawerNavigatorRoutes = (props) => {
   const { t, i18n } = useTranslation();
 
   const isHebrew = i18n.language === "he";
+  if (isHebrew) {
+    I18nManager.forceRTL(true);
+  } else {
+    I18nManager.forceRTL(false);
+  }
 
   return (
     <Drawer.Navigator
-      drawerContentOptions={{
-        activeTintColor: "#f8ecf8",
-        color: "#f8ecf8",
-        itemStyle: { marginVertical: 5, color: "white" },
-        labelStyle: {
-          color: "#d8d8d8",
-          
-        },
-      }}
+     
       screenOptions={{
         headerShown: false,
-        drawerPosition: isHebrew ? "right" : "left", // Set drawer position to right if language is Hebrew
+        activeTintColor: "#f8ecf8",
+        color: "#f8ecf8",
+        itemStyle: {
+          marginVertical: 5,
+          color: "white",
+        },
+        labelStyle: {
+          color: "#d8d8d8",
+        },
+         drawerPosition: isHebrew ? "right" : "left",
+         
       }}
       drawerContent={CustomSidebarMenu}
-     
     >
       <Drawer.Screen
         name="HomeScreenStack"
@@ -117,7 +160,6 @@ const DrawerNavigatorRoutes = (props) => {
           drawerIcon: ({ color }) => (
             <FontAwesome5 name="home" size={19} color={colors.text} />
           ),
-          
         }}
         component={HomeScreenStack}
       />
@@ -130,6 +172,16 @@ const DrawerNavigatorRoutes = (props) => {
           ),
         }}
         component={SettingScreenStack}
+      />
+      <Drawer.Screen
+        name="HistoryScreenStack"
+        options={{
+          drawerLabel: t("History Screen"),
+          drawerIcon: ({ color }) => (
+            <FontAwesome name="list-alt" size={20} color={colors.text} />
+          ),
+        }}
+        component={HistoryScreenStack}
       />
     </Drawer.Navigator>
   );
