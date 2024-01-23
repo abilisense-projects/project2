@@ -7,12 +7,11 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  } from "react-native";
+} from "react-native";
 import axios from "../services/axiosInstance";
 import validatePassword from "../services/ValidatePassword";
 import ValidateEmail from "../services/ValidateEmail";
-// import * as Yup from "yup";
-// import { loginValidation } from "../loginValidation";
+
 const Login = ({ navigation }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [email, setEmail] = useState("");
@@ -25,70 +24,54 @@ const Login = ({ navigation }) => {
     specialChar: false,
   });
   const handleLogin = async () => {
-    // try {
 
 
-      if (!email) {
-        errors.email = "Email is required.";
-      } else if (!ValidateEmail(email)) {
-        errors.email = "Email is invalid.";
+
+    if (!email) {
+      errors.email = "Email is required.";
+    } else if (!ValidateEmail(email)) {
+      errors.email = "Email is invalid.";
+    }
+    setValidationResults(validatePassword(password));
+
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (
+      !(
+        validationResults.length ||
+        validationResults.number ||
+        validationResults.specialChar
+      )
+    ) {
+      if (!validationResults.length)
+        errors.passwordlength = "Password must be at least 8 characters. ";
+      if (!validationResults.number) {
+        errors.passwordnumber = "password must contain 1 number;";
       }
-      setValidationResults(validatePassword(password));
-      // Validate password field
-      if (!password) {
-        errors.password = "Password is required.";
-      } else if (
-        !(
-          validationResults.length &
-          validationResults.number &
-          validationResults.specialChar
-        )
-      ) {
-        if (!validationResults.length)
-          errors.passwordlength = "Password must be at least 8 characters. ";
-        if (!validationResults.number) {
-          errors.passwordnumber = "password must contain 1 number;";
-        }
 
-        if (!validationResults.specialChar) {
-          errors.passwordchar = "password must contain 1 special carracter;";
-        }
-
+      if (!validationResults.specialChar) {
+        errors.passwordchar = "password must contain 1 special carracter;";
       }
-      setErrors(errors);
-      setIsFormValid(Object.keys(errors).length === 0);
+
+    }
+    
 
 
-      //validate the email and password valid
-      // await loginValidation.validate(
-      //   { email, password },
-      //   { abortEarly: false }
-      // );
-      console.log("after handlogin ");
-      // Runs the function that accesses the database and waits for an answer
-      const response = await axios.post("/auth/login", { email, password });
-      console.log("after checkEmailAndpassword", response);
-      if (response.data.message === "Login Success") {
-        console.log("if ", response);
-        navigation.replace("DrawerNavigationRoutes");
-      } else {
-        // if the response is not good there is a error on login
-        console.log("else ", response);
-        // setErrorMessage("user name or password invalid");
-      }
-      // if there is error show them
-    // } catch (error) {
-    //   if (error instanceof Yup.ValidationError) {
-    //     const yupErrors = {};
-    //     error.inner.forEach((e) => {
-    //       yupErrors[e.path] = e.message;
-    //     });
-      //   setErrors(yupErrors);
-      // }
-      // setErrorMessage('user name or password invalid');
-    // }
 
 
+    console.log("gfyf");
+    const response = await axios.post("/auth/login", { email, password });
+    console.log("after checkEmailAndpassword", response);
+    if (response.data.message === "Login Success") {
+      console.log("if ", response);
+      navigation.replace("DrawerNavigationRoutes");
+    } else {
+
+      console.log("else ", response);
+
+    }
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
 
   return (
@@ -110,7 +93,7 @@ const Login = ({ navigation }) => {
         placeholder="Email"
         onChangeText={(text) => {
           setEmail(text);
-          // setErrors((prevErrors) => ({ ...prevErrors, email: "" })); // Merge state updates
+
         }}
         value={email}
       />
@@ -120,13 +103,13 @@ const Login = ({ navigation }) => {
         secureTextEntry
         onChangeText={(text) => {
           setPassword(text);
-          // setErrors((prevErrors) => ({ ...prevErrors, password: "" })); // Merge state updates
+
         }}
         value={password}
 
       />
       {Object.values(errors).map((error, index) => (
-        <Text key={index} style={styles.error}>
+        <Text key={index} style={styles.errorMessage}>
           {error}
         </Text>
       ))}
