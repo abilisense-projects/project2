@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View, StyleSheet, Image } from "react-native";
 
 import { get } from "./Storage";
-import { useNavigation } from "@react-navigation/native";
 
 const Splash = ({ navigation }) => {
   //State for ActivityIndicator animation
@@ -23,10 +22,10 @@ const Splash = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image
+      {/* <Image
         source={require("../assets/images/aboutreact.png")}
         style={{ width: "90%", resizeMode: "contain", margin: 30 }}
-      />
+      /> */}
       <ActivityIndicator
         animating={animating}
         color="#FFFFFF"
