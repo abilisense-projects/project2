@@ -113,6 +113,7 @@ const Login = ({ navigation }) => {
           {error}
         </Text>
       ))}
+      
       <View style={styles.forgotPasswordContainer}>
         <TouchableOpacity onPress={() => navigation.navigate("PasswordReset")}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
