@@ -9,7 +9,8 @@ const {
   getnewAlertController,
   getAlertDetailController,
   updateAlertController,
-  getAlertsforHelperController
+  getAlertsforHelperController,
+  getAlertsforPatientController
 } = require("../controllers/alert.controller");
 const ApiRateLimiter = require("../middlewares/ApiRateLimiter");
 const VerifyToken = require("../middlewares/VerifyToken");
@@ -30,7 +31,9 @@ router.get("/alerts/details/:alertId", getAlertDetailController);
 router.get("/alerts/:lastAlertID", getnewAlertController);
 router.get("/alerts", getAlertsController);
 router.post("/alerts", updateAlertController);
-router.get("/alerts/history/:userId",getAlertsforHelperController)
+router.get("/alerts/user/:userId",getAlertsforHelperController)
+router.get("/alerts/history/:alertId",getAlertsforPatientController)
+
 
 
 module.exports = router;
