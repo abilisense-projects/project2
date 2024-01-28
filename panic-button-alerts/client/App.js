@@ -16,11 +16,11 @@ import {
   useColorScheme,
 } from "react-native";
 
-import Map from "./components/MapComponent";
+import Map from "./components/Homecomponents/MapComponent";
 import "react-native-gesture-handler";
 import Splash from "./pages/Splash";
-import DrawerNavigatorRoutes from "./components/DrawerNavigatorRoutes";
-import { Auth } from "./components/Auth";
+import DrawerNavigatorRoutes from "./components/Router/DrawerNavigatorRoutes";
+import { Auth } from "./components/Router/Auth";
 import { get, save } from "./components/Storage";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppContext } from "./components/context/AppContext";
