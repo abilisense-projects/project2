@@ -143,7 +143,7 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         <View style={styles.footer}>
           {propStatus == "for treatment" && <TouchableOpacity style={styles.footerButton}
             onPress={() => {
-              { prop_status == "for treatment" ? [updateAlert(data.alert._id, "treated"), onIdchange(null)] : onIdchange(null) }
+              { propStatus == "for treatment" ? [updateAlert(data.alert._id, "treated"), onIdchange(null)] : onIdchange(null) }
               toShow.setdataSpecificAlert({ ...toShow.dataSpecificAlert, flag: false, data: "" })
             }}>
             <Ionicons name="checkmark" size={24} color="white" />
@@ -178,22 +178,23 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
                 dataSpecificAlert.data == "Instructions" ? <Text style={styles.dataSpecificAlertText}>no further instruction</Text> : null
           }
         </View>}
-        (moreDetails && <View>
-          <Text>
-          Diseases:{'\n'}
-          {/* -{data.} */}
-          </Text>
-          </View>)
-      <MyModal
+        {moreDetails && <View style={styles.more}>
+          <Text style={styles.dataSpecificAlertText}>   Diseases:{'\n'}</Text>
+         
+          {data.medicalConditions.map((item ,key)=>(
+            <Text  style={styles.dataSpecificAlertText} >{item}{'\n'}</Text>
+          ))}
+        
+          </View>}
+          <MyModal
         text={"Are you sure you want to leave?"}
         visible={modalVisible}
         onConfirm={() => {
-
-          handleLeaveAlert()
-
-          hideModal()
+         handleLeaveAlert()
+          hideModal(); 
         }}
-        onCancel={() => hideModal}
+        onCancel={hideModal}
+        action={"Sure"}
       />
     </View>
   );
@@ -298,5 +299,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     justifyContent: "center"
+  },
+  more:{
+    right: "165%",
+    bottom: "95%",
+    zIndex: 5,
+    width: "140%",
+    height: "90%",
+    backgroundColor: 'rgba(50, 50, 50, 0.8)',
+    borderRadius: 30,
+    justifyContent: "center",
+    padding: "5%",
   }
 });

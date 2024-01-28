@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, Image, TouchableOpacity, Text, View, Dimensions
 import axios from '../../services/axiosInstance';
 import { Icon } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
-export default function Alertscomp({ onIdchange, onAlertchange, prop_id }) {
+export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     //   const icons = [
     //     { name: 'heart', type: 'font-awesome' },
     //     { name: 'star', type: 'material' },
@@ -57,13 +57,13 @@ export default function Alertscomp({ onIdchange, onAlertchange, prop_id }) {
 
 
     useEffect(() => {
-        if (prop_id) {
-            setoccupied({ ...occupied, flag: true, Id: prop_id })
+        if (propId) {
+            setoccupied({ ...occupied, flag: true, Id: propId })
         }
         else {
             setoccupied({ ...occupied, flag: false, Id: null })
         }
-    }, [prop_id])
+    }, [propId])
     async function getListAlerts() {
         try {
             console.log("enter")
@@ -234,7 +234,7 @@ export default function Alertscomp({ onIdchange, onAlertchange, prop_id }) {
                                     source={{ uri: '/static/media/med.645af0b7b0645b787cb8.png' }} /> :
                                     <Image style={styles.img}
                                         source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />} */}
-
+<Text style={styles.text}>{call.status}</Text>
                         <Text style={styles.text}>{call.distressDescription}</Text>
                         <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}`} </Text>
 

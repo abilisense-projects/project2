@@ -72,7 +72,7 @@ const updateAlertController = async (req, res) => {
     const update =
       status === "treated"
         ? await addAlertforHelper(id, userId, duration)
-        : none;
+        : "none";
     const result = await updateAlertStatus(id, status);
     console.log(result);
     result !== null ? res.send("updated") : res.send("not updated");
