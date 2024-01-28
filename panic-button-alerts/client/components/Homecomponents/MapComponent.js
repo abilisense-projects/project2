@@ -8,6 +8,10 @@ import { YOUR_LOCATIONIQ_API_KEY, ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON } from '@
 
 
 const MapComponent = ({alerts}) => {
+  
+  
+  console.log(alerts)
+
   const [markers, setMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON]); // Default center (Center of Israel)
 
@@ -67,7 +71,7 @@ const MapComponent = ({alerts}) => {
 
   return (
     <MapContainer
-      style={{ height: '100vh', width: '100%' }}
+      style={{ height: '100%', width: '100%' }}
       center={mapCenter}
       zoom={8} // Adjust the initial zoom level as needed
     >

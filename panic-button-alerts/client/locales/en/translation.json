@@ -1,4 +1,5 @@
 {
+  "Alert Details": "Alert Details",
   "An error occurred while resetting the password,check password again...": "An error occurred while resetting the password,check password again...",
   "An error occurred while sending the reset email.": "An error occurred while sending the reset email.",
   "An error occurred while sending the reset email. Please try again.": "An error occurred while sending the reset email. Please try again.",
@@ -9,6 +10,9 @@
   "Cancel": "Cancel",
   "Confirm New Password": "Confirm New Password",
   "Dark mode": "Dark mode",
+  "Date: ": "Date: ",
+  "Distress Description:": "Distress Description:",
+  "Duration:": "Duration:",
   "Email": "Email",
   "Email is invalid.": "Email is invalid.",
   "Email is required.": "Email is required.",
@@ -41,10 +45,12 @@
   "Setting": "Setting",
   "Setting Screen": "Setting Screen",
   "Something went wrong. Please try again later.": "Something went wrong. Please try again later.",
+  "Status:": "Status:",
   "already register ? login!": "already register ? login!",
   "confirmd password not matching": "confirmd password not matching",
   "go to login": "go to login",
   "password must contain 1 number;": "password must contain 1 number;",
   "password must contain 1 special carracter;": "password must contain 1 special carracter;",
-  "submit": "submit"
+  "submit": "submit",
+  "you did not help yet 😒...": "you did not help yet 😒..."
 }

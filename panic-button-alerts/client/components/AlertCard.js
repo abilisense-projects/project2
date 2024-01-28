@@ -23,19 +23,19 @@ const AlertCard = ({ alert }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>`$t(Alert Details)`</Text>
+      <Text style={styles.title}>{t("Alert Details")}</Text>
       <Text style={styles.subtitle}>
-        t(Date: ){new Date(date).toLocaleString()}
+       { t("Date: ")}{new Date(date).toLocaleString()}
       </Text>
       <Text style={styles.subtitle}>
-        t(Distress Description: ){distressDescription}
+        {t("Distress Description:" )}{distressDescription}
       </Text>
-      <Text style={styles.subtitle}>t(Status: ){status}</Text>
+      <Text style={styles.subtitle}>{t("Status:" )}{status}</Text>
       <Text style={styles.subtitle}>
         t(Location: )
         {`${buildingNumber}, ${street}, Floor ${floor}, Apt ${apartmentNumber}, ${city}, ${country}`}
       </Text>
-      <Text style={styles.subtitle}>t(Duration: ){duration}</Text>
+      <Text style={styles.subtitle}>{t("Duration:" )}{duration}</Text>
     </View>
   );
 };

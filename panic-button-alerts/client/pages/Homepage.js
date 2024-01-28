@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   Alert: {
     flex: 1,
-    width: '20%'
+    width: '15%'
     // alignItems: 'flex-start'
   },
   SpecificAlert: {
