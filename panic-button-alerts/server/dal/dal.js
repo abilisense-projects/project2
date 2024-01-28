@@ -9,8 +9,7 @@ exports.createMany = async (model, body) => {
 
 // find and filter
 exports.find = async (model, filter = {}, pagination = {}, sort = {}, projection = {}) => {
-    console.log(pagination)
-    return await model.find(filter, projection).sort(sort).skip(pagination.skip).limit(pagination.limit);
+  return await model.find(filter, projection).sort(sort).skip(pagination.skip).limit(pagination.limit);
 };
 
 exports.findOne = async (model, filter, projection = {}) => {

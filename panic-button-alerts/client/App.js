@@ -19,9 +19,9 @@ import {
 import Map from "./components/Homecomponents/MapComponent";
 import "react-native-gesture-handler";
 import Splash from "./pages/Splash";
-import DrawerNavigatorRoutes from "./components/Router/DrawerNavigatorRoutes";
-import { Auth } from "./components/Router/Auth";
-import { get, save } from "./components/Storage";
+import DrawerNavigatorRoutes from "./components/Navigation/DrawerNavigatorRoutes";
+import { Auth } from "./components/Navigation/Auth";
+import { get, save } from "./services/Storage";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppContext } from "./components/context/AppContext";
 import DarkTheme from "./components/theme/DarkTheme";
@@ -65,7 +65,7 @@ i18n.use(initReactI18next).init({
     },
   },
   lng: getLocales()[0].languageCode,
-  fallbackLng: "en", // This is the default language if none of the users preffered languages are available
+  fallbackLng: "en", 
   interpolation: {
     escapeValue: false, // https://www.i18next.com/translation-function/interpolation#unescape
   },

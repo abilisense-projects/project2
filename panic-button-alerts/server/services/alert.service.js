@@ -1,8 +1,15 @@
 const moment = require("moment-timezone");
 
 const { Alert } = require("../models/alerts.model");
-const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
+const {
+  find,
+  findByID,
+  findOne,
+  findOneAndUpdate,
+  create,
+} = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
+const { History } = require("../models/history.model");
 
 var isUpdate = [];
 const status = { $nin: ["treated", "cancel"] };
@@ -55,7 +62,6 @@ const getnewAlerts = async (lastIdAlert) => {
   // Sort in ascending order based on the date
   let updateItemsresult = [];
   if (isUpdate.length != 0) {
-    console.log("came to if");
     updateItemsresult = await find(
       Alert,
       {
@@ -64,9 +70,8 @@ const getnewAlerts = async (lastIdAlert) => {
       (pagination = {}),
       sort
     );
-    isUpdate=[]
+    isUpdate = [];
   }
-  console.log("came");
   return { new: lastItemsresult, update: updateItemsresult };
 };
 
@@ -85,10 +90,29 @@ const updateAlertStatus = async (alertId, status) => {
   console.log(result);
   return result;
 };
+const addAlertforHelper = async (id, userId, duration) => {
+  history = {
+    userId: userId,
+    alertId: id,
+    duration: duration,
+  };
+  const result = await create(History, history);
+  console.log(result);
+};
+const getAlertsforHelper = async (userId) => {
+  const history = await History.find({ userId: userId })
+  .populate({
+    path: 'alertId',
+    model: 'alert',
+  })
+return history
+};
 
 module.exports = {
   getAlerts,
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
+  addAlertforHelper,
+  getAlertsforHelper,
 };
