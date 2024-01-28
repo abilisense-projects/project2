@@ -1,5 +1,4 @@
 {
-  "": "",
   "An error occurred while resetting the password,check password again...": "An error occurred while resetting the password,check password again...",
   "An error occurred while sending the reset email.": "An error occurred while sending the reset email.",
   "An error occurred while sending the reset email. Please try again.": "An error occurred while sending the reset email. Please try again.",
@@ -20,12 +19,7 @@
   "History Screen": "History Screen",
   "Home": "Home",
   "Home Screen": "Home Screen",
-  "LOG ": "LOG ",
-  "LOG O": "LOG O",
   "Light mode": "Light mode",
-  "Log ": "Log ",
-  "Log O": "Log O",
-  "Log Ou": "Log Ou",
   "Log Out": "Log Out",
   "Log out": "Log out",
   "Logout": "Logout",

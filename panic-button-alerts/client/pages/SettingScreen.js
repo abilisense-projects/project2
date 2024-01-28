@@ -1,115 +1,177 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-const SettingScreen = () => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>High</Text>
-        <TouchableOpacity style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>Open</Text>
-        </TouchableOpacity>
+import React from 'react'
+import { View, Text, StyleSheet, TouchableNativeFeedback, Platform } from 'react-native'
+import { Button } from 'react-native-elements';
+
+
+
+  const Setting= () =>{
+    var onPressProps;
+    if (this.state.isOnPressing) {
+      onPressProps = styles.buttonStylePressing
+    } else {
+      onPressProps = styles.buttonStyle1
+    }
+    return (
+      <View style={styles.container}>
+        <Button
+          background={(Platform.OS === 'android') ? TouchableNativeFeedback.Ripple('#f39c12', true) : null}
+          style={styles.buttonStyle} textStyle={styles.textStyle}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          textStyle={styles.textStyle}
+          style={onPressProps}
+          activeOpacity={1}
+          isOnPressing={this.state.isOnPressing}
+          onPressIn={() => console.log('onPressIn')}
+          onPressOut={() => console.log('onPressOut')}>
+          Hello
+        </Button>
+        <Button
+          style={styles.buttonStyle2} textStyle={styles.textStyle}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          style={styles.buttonStyle3} textStyle={styles.textStyle}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          style={styles.buttonStyle4} textStyle={styles.textStyle}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          style={styles.buttonStyle5} textStyle={styles.textStyle}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          style={styles.buttonStyle6} textStyle={styles.textStyle}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          style={styles.buttonStyle7} textStyle={styles.textStyle6}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          isLoading={true}
+          style={styles.buttonStyle7} textStyle={styles.textStyle6}
+          onPress={() => {
+            console.log('world!')
+          }}>
+          Hello
+        </Button>
+        <Button
+          disabledStyle={styles.buttonStyle8}
+          isDisabled={true}
+          textStyle={styles.textStyle8}>
+          Disabled
+        </Button>
+        <Button style={styles.buttonStyle8}
+          textStyle={styles.textStyle8}
+          onPress={() => console.log('world!')}>
+          <View style={styles.customViewStyle}>
+            <Text style={{textAlign: 'center', fontFamily: 'Avenir'}}>
+              Custom inner view
+            </Text>
+          </View>
+        </Button>
       </View>
-      <TouchableOpacity style={styles.helpButton}>
-        <Text style={styles.helpButtonText}>Stop i need help</Text>
-      </TouchableOpacity>
-      <View style={styles.dateTime}>
-        <Text style={styles.dateText}>Date: Sep 25, 2023</Text>
-        <Text style={styles.timeText}>Time: 06:42 PM (GMT+2)</Text>
-      </View>
-      <TouchableOpacity style={styles.audioButton}>
-        <Ionicons name="play" size={24} color="white" />
-        <Text style={styles.audioText}>Part 1 06:42</Text>
-      </TouchableOpacity>
-      <View style={styles.menu}>
-        <Ionicons name="map" size={24} color="white" />
-        <FontAwesome5 name="sensor" size={24} color="white" />
-        <FontAwesome5 name="balance-scale" size={24} color="white" />
-        <Ionicons name="information-circle" size={24} color="white" />
-        <FontAwesome5 name="ticket-alt" size={24} color="white" />
-      </View>
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Ionicons name="checkmark" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Ionicons name="close" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
+    )
+  }
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
-    padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
   },
-  headerText: {
-    color: 'white',
-    fontSize: 20,
+  textStyle: {
+    color: 'white'
   },
-  headerButton: {
-    backgroundColor: 'red',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+  textStyle6: {
+    color: '#8e44ad',
+    fontFamily: 'Avenir',
+    fontWeight: 'bold'
   },
-  headerButtonText: {
-    color: 'white',
-    fontSize: 16,
+  buttonStylePressing: {
+    borderColor: 'red',
+    backgroundColor: 'red'
   },
-  helpButton: {
-    backgroundColor: 'pink',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginBottom: 10,
+  buttonStyle: {
+    borderColor: '#f39c12',
+    backgroundColor: '#f1c40f'
   },
-  helpButtonText: {
-    color: 'white',
-    fontSize: 16,
+  buttonStyle1: {
+    borderColor: '#d35400',
+    backgroundColor: '#e98b39'
   },
-  dateTime: {
-    marginBottom: 10,
+  buttonStyle2: {
+    borderColor: '#c0392b',
+    backgroundColor: '#e74c3c'
   },
-  dateText: {
-    color: 'white',
-    fontSize: 16,
+  buttonStyle3: {
+    borderColor: '#16a085',
+    backgroundColor: '#1abc9c'
   },
-  timeText: {
-    color: 'white',
-    fontSize: 16,
+  buttonStyle4: {
+    borderColor: '#27ae60',
+    backgroundColor: '#2ecc71'
   },
-  audioButton: {
-    flexDirection: 'row',
+  buttonStyle5: {
+    borderColor: '#2980b9',
+    backgroundColor: '#3498db'
+  },
+  buttonStyle6: {
+    borderColor: '#8e44ad',
+    backgroundColor: '#9b59b6'
+  },
+  buttonStyle7: {
+    borderColor: '#8e44ad',
+    backgroundColor: 'white',
+    borderRadius: 0,
+    borderWidth: 3,
+  },
+  buttonStyle8: {
+    backgroundColor: 'white',
+    borderColor: '#333',
+    borderWidth: 2,
+    borderRadius: 22,
+  },
+  textStyle8: {
+    width: 200,
+    fontFamily: 'Avenir Next',
+    fontWeight: '500',
+    color: '#333',
+  },
+  customViewStyle: {
+    width: 120,
+    height: 40,
     alignItems: 'center',
-    marginBottom: 10,
-  },
-  audioText: {
-    color: 'white',
-    fontSize: 16,
-    marginLeft: 10,
-  },
-  menu: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  footerButton: {
-    padding: 10,
-  },
-});
-export default SettingScreen;
+  }
+})
+
+export default Setting

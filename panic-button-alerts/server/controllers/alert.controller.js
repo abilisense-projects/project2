@@ -3,10 +3,10 @@ const {
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
-  addAlertforHelper,
-  getAlertsforHelper,
-  getAlertsforPatient,
+
+  
 } = require("../services/alert.service");
+const { addHistoryforHelper } = require("../services/history.service");
 
 const getAlertsController = async (req, res) => {
   try {
@@ -72,7 +72,7 @@ const updateAlertController = async (req, res) => {
     const { id, status, userId, duration } = req.body;
     const update =
       status === "treated"
-        ? await addAlertforHelper(id, userId, duration)
+        ? await addHistoryforHelper(id, userId, duration, summary)
         : none;
     const result = await updateAlertStatus(id, status);
     console.log(result);
@@ -82,35 +82,11 @@ const updateAlertController = async (req, res) => {
     console.error(error);
   }
 };
-const getAlertsforHelperController = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const history = await getAlertsforHelper(userId);
-    history !== null
-      ? res.send(history)
-      : res.status(404).send("no history for this user");
-  } catch (error) {
-    res.status(500).send(error);
-    console.error(error);
-  }
-};
-const getAlertsforPatientController = async (req, res) => {
-  try {
-    const { alertId } = req.params;
-    const history = await getAlertsforPatient(alertId);
-    history !== null
-      ? res.send(history)
-      : res.status(404).send("no history for this paient");
-  } catch (error) {
-    res.status(500).send(error);
-    console.error(error);
-  }
-};
+
 module.exports = {
   updateAlertController,
   getnewAlertController,
   getAlertsController,
   getAlertDetailController,
-  getAlertsforHelperController,
-  getAlertsforPatientController
+
 };

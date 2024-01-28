@@ -23,7 +23,7 @@ const AlertCard = ({ alert }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>t(Alert Details)</Text>
+      <Text style={styles.title}>`$t(Alert Details)`</Text>
       <Text style={styles.subtitle}>
         t(Date: ){new Date(date).toLocaleString()}
       </Text>

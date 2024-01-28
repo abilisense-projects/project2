@@ -1,4 +1,5 @@
 {
+ 
   "expo": {
     "name": "panic-button-alerts",
     "slug": "panic-button-alerts",
@@ -25,5 +26,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     }
+    
   }
 }

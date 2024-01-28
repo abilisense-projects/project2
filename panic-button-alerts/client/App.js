@@ -16,7 +16,7 @@ import {
   useColorScheme,
 } from "react-native";
 
-import Map from "./components/MapComponent";
+import Map from "./components/Homecomponents/MapComponent";
 import "react-native-gesture-handler";
 import Splash from "./pages/Splash";
 import DrawerNavigatorRoutes from "./components/Navigation/DrawerNavigatorRoutes";

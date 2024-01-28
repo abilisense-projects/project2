@@ -6,10 +6,8 @@ const {
   findByID,
   findOne,
   findOneAndUpdate,
-  create,
 } = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
-const { History } = require("../models/history.model");
 
 var isUpdate = [];
 const status = { $nin: ["treated", "cancel"] };
@@ -90,36 +88,13 @@ const updateAlertStatus = async (alertId, status) => {
   console.log(result);
   return result;
 };
-const addAlertforHelper = async (id, userId, duration) => {
-  history = {
-    userId: userId,
-    alertId: id,
-    duration: duration,
-  };
-  const result = await create(History, history);
-  console.log(result);
-};
-const getAlertsforHelper = async (userId) => {
-  const history = await History.find({ userId: userId }).populate({
-    path: "alertId",
-    model: "alert",
-  });
-  return history;
-};
-const getAlertsforPatient = async (alertId) => {
-  const alert = await findByID(Alert, alertId);
-  console.log(alert)
-  const history = await find(Alert, { patient: alert.patient._id});
-  return history;
-};
+
 
 module.exports = {
   getAlerts,
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
-  addAlertforHelper,
-  getAlertsforHelper,
-  getAlertsforPatient ,
+
 
 };
