@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function SOSAlertForm() {
-  const [alertData, setAlertData] = useState({
-    dateAndTime: '',
-    callerName: '',
-    location: '',
-    natureOfEmergency: '',
-    callerContactNumber: '',
-    description: '',
-    severity: '',
-    hazards: '',
-    actionsTaken: '',
-    additionalNotes: '',
-    operatorName: '',
-    operatorID: '',
-    completionDateAndTime: '',
-  });
-
+export default function SOSAlertForm(onDataAlert) {
+    const [alertData, setAlertData] = useState({
+        dateAndTime: '',
+        callerName: '',
+        location: '',
+        natureOfEmergency: '',
+        callerContactNumber: '',
+        description: '',
+        severity: '',
+        hazards: '',
+        actionsTaken: '',
+        additionalNotes: '',
+        operatorName: '',
+        operatorID: '',
+        completionDateAndTime: '',
+      });
+    
   const handleAlertDataChange = (key, value) => {
     setAlertData({ ...alertData, [key]: value });
+    onDataAlert({ ...alertData, [key]: value });
   };
 
   const submitAlert = () => {
@@ -32,7 +33,7 @@ export default function SOSAlertForm() {
       <Text style={styles.title}>SOS Alert Summary</Text>
       {/* Render input fields for each item in the SOS alert */}
       {/* Example: */}
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Date and Time"
         onChangeText={(text) => handleAlertDataChange('dateAndTime', text)}
@@ -51,7 +52,7 @@ export default function SOSAlertForm() {
   placeholder="Location of Incident"
   onChangeText={(text) => handleAlertDataChange('location', text)}
   value={alertData.location}
-/>
+/> */}
 
 <TextInput
   style={styles.input}
@@ -124,7 +125,7 @@ export default function SOSAlertForm() {
 />
 
       
-      <Button title="Submit Alert" onPress={submitAlert} />
+      <TouchableOpacity onPress={()=>submitAlert}> <Text>Submit Alert </Text></TouchableOpacity>
     </View>
   );
 }

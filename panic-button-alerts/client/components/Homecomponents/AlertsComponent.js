@@ -4,12 +4,6 @@ import axios from '../../services/axiosInstance';
 import { Icon } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
-    //   const icons = [
-    //     { name: 'heart', type: 'font-awesome' },
-    //     { name: 'star', type: 'material' },
-    //     { name: 'rocket', type: 'octicon' },
-    //     // Add more icons as needed
-    //   ];
     const [ListLow, setListLow] = useState([])
     const [ListMedium, setListMedium] = useState([])
     const [ListHigh, setListHigh] = useState([])
@@ -38,6 +32,12 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     };
 
     useEffect(() => {
+         if (propId) {
+            setoccupied({ ...occupied, flag: true, Id: propId })
+        }
+        else {
+            setoccupied({ ...occupied, flag: false, Id: null })
+        }
         if (lastIdAlert) {
             setAllList([...ListHigh, ...ListMedium, ...ListLow]),
                 setState([...ListHigh, ...ListMedium, ...ListLow])
@@ -53,17 +53,7 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
         }
         getListAlerts();
 
-    }, [lastIdAlert]);
-
-
-    useEffect(() => {
-        if (propId) {
-            setoccupied({ ...occupied, flag: true, Id: propId })
-        }
-        else {
-            setoccupied({ ...occupied, flag: false, Id: null })
-        }
-    }, [propId])
+    }, [lastIdAlert], [propId]);
     async function getListAlerts() {
         try {
             console.log("enter")
@@ -198,62 +188,43 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
                 ><Text style={styles.textb}>All</Text>
                 </TouchableOpacity>
             </View>}
-            <View style={styles.containerCalls}>
-                {/* <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>  */}
-                <FlatList
-                    data={State}
-                    keyExtractor={(call) => call._id}
-                    renderItem={({ item: call }) => (
-                          <View key={call._id}>
-                         {/* Rest of your code for each individual alert */ }
-  
-                     {/* {State.map((call, index) => {
+            {State != [] ?
+                <View style={styles.containerCalls}>
+                    <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>
+                        {State.map((call, index) => { return (
+                                <View key={call._id}>
+                                    {(isSmallDevice && occupied.flag) ?
+                                        <View style={styles.ListIcon} >
+                                            <AntDesign name="exclamationcircle" size={24} color={call.level == "Hard" ? "red" :
+                                                call.level == "Medium" ? "orange" : "green"} padding={50}
+                                                onPress={() => { { occupied.flag || handleAlertPress(call._id) } }} />
+                                        </View> : <TouchableOpacity
+                                            // disabled={call.status === "in treatment" ? true : false}
+                                            style={[
+                                                (call.status == "in treatment" ?
+                                                    [styles.alert, styles.inTreatment] : styles.alert),
+                                                call.level == "Hard" ? colorHi :
+                                                    call.level == "Medium" ? colorMed : colorLow ]}
+                                            onPress={() => { !occupied.flag ? handleAlertPress(call._id, call.status) : alert(" you need to close to changing to a difrent one") }} >
+                                            <Text style={styles.text}>{call.status}</Text>
+                                            <Text style={styles.text}>{call.distressDescription}</Text>
+                                            <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}`} </Text>
+                                        </TouchableOpacity>}
+                                </View>) })}
+                    </ScrollView>
+                </View>: <Text>"No distress alerts"</Text>}
+        </View>
+    );
+}
 
-                        // return ( */}
-                             {/* <View key={call._id}>
-                disabled={call.status === "in treatment" ? true : false}  */}
-               
-                    {(isSmallDevice && occupied.flag) ? <View style={styles.ListIcon} >
 
-                        <AntDesign name="exclamationcircle" size={24} color={call.level == "Hard" ? "red" :
-                            call.level == "Medium" ? "orange" : "green"} padding={50}
-                            onPress={() => { { occupied.flag || handleAlertPress(call._id) } }} />
-                    </View> : <TouchableOpacity
-                        // disabled={call.status === "in treatment" ? true : false}
-                        style={[
-                            (call.status == "in treatment" ?
-                                [styles.alert, styles.inTreatment] : styles.alert),
-                            call.level == "Hard" ? colorHi :
-                                call.level == "Medium" ? colorMed : colorLow
-                        ]}
-                        onPress={() => { occupied.flag || handleAlertPress(call._id, call.status) }}
-                    >
-                        {/* {call.level == "Hard" ? <Image style={styles.img}
+
+{/* {call.level == "Hard" ? <Image style={styles.img}
                                 source={{ uri: '/static/media/hi.b2fd8eed21094cc1e0ef.png' }} /> :
                                 call.level == "Medium" ? <Image style={styles.img}
                                     source={{ uri: '/static/media/med.645af0b7b0645b787cb8.png' }} /> :
                                     <Image style={styles.img}
                                         source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />} */}
-<Text style={styles.text}>{call.status}</Text>
-                        <Text style={styles.text}>{call.distressDescription}</Text>
-                        <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}`} </Text>
-
-                    </TouchableOpacity>}
-
-                    {/* </View>)    */}
-                </View>
-    )}
-                ListEmptyComponent={<Text>"No distress alerts"</Text>}
-  />
-                {/* }) || <Text>"No distress alerts"</Text>} */}
-                {/* </ScrollView> */}
-            </View>
-
-        </View>
-
-    );
-}
-
 const styles = StyleSheet.create({
     container: {
         // //  marginTop: 30,
