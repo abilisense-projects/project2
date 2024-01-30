@@ -15,6 +15,10 @@ const historySchema = new Schema({
   duration: {
     type: String,
   },
+  summary:{
+    type:Object,
+   
+  }
 });
 
 const History = mongoose.model("history", historySchema);

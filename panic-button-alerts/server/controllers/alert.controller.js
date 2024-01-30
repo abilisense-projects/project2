@@ -3,9 +3,10 @@ const {
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
-  addAlertforHelper,
-  getAlertsforHelper,
+
+  
 } = require("../services/alert.service");
+const { addHistoryforHelper } = require("../services/history.service");
 
 const getAlertsController = async (req, res) => {
   try {
@@ -68,11 +69,11 @@ const getnewAlertController = async (req, res) => {
 
 const updateAlertController = async (req, res) => {
   try {
-    const { id, status, userId, duration } = req.body;
+    const { id, status, userId, duration, summary } = req.body;
     const update =
       status === "treated"
-        ? await addAlertforHelper(id, userId, duration)
-        : "none";
+        ? await addHistoryforHelper(id, userId, duration, summary)
+        : null;
     const result = await updateAlertStatus(id, status);
     console.log(result);
     result !== null ? res.send("updated") : res.send("not updated");
@@ -81,20 +82,11 @@ const updateAlertController = async (req, res) => {
     console.error(error);
   }
 };
-const getAlertsforHelperController = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const history = await getAlertsforHelper(userId);
-    history!== null ?res.send(history):res.status(404).send("no history for this user")
-  } catch (error) {
-    res.status(500).send(error);
-    console.error(error);
-  }
-};
+
 module.exports = {
   updateAlertController,
   getnewAlertController,
   getAlertsController,
   getAlertDetailController,
-  getAlertsforHelperController,
+
 };

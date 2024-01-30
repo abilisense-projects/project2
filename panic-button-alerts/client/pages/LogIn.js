@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -8,54 +9,69 @@ import {
   TouchableOpacity,
 } from "react-native";
 import axios from "../services/axiosInstance";
-// import { loginSuccess } from '../redux/actions/loginActions';
-import * as Yup from "yup";
-import { loginValidation } from "../loginValidation";
+import validatePassword from "../services/ValidatePassword";
+import ValidateEmail from "../services/ValidateEmail";
+
 const Login = ({ navigation }) => {
+  const [isFormValid, setIsFormValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [validationResults, setValidationResults] = useState({
+    length: false,
+    number: false,
+    specialChar: false,
+  });
   const handleLogin = async () => {
-    try {
-      setIsEmailValid(ValidateEmail(email));
 
-      if (!isEmailValid) {
-        console.error("Invalid email format");
-        return;
-      }
-      setConfirmPassword(password)
-      const isPasswordValid = ValidatePassword(password);
-      if (!isPasswordValid) {
-        console.error("Invalid password format");
-        return;
-      }
 
-      const response = await axios.post("/auth/login", { email, password })
-      if (response.data.message === 'Login Success') {
-        // dispatch(loginSuccess(response.user));
-        // storeTokens(response.data.token, {})
-       
-        navigation.navigate('DrawerNavigationRoutes');
-       
-      } else {
-        // if the response is not good there is a error on login
-        console.log("else ", response);
-        setErrorMessage("user name or password invalid");
-      }
-      // if there is error show them
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const yupErrors = {};
-        error.inner.forEach((e) => {
-          yupErrors[e.path] = e.message;
-        });
-        setErrors(yupErrors);
-      }
-      setErrorMessage('user name or password invalid');
+
+    if (!email) {
+      errors.email = "Email is required.";
+    } else if (!ValidateEmail(email)) {
+      errors.email = "Email is invalid.";
     }
+    setValidationResults(validatePassword(password));
+
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (
+      !(
+        validationResults.length ||
+        validationResults.number ||
+        validationResults.specialChar
+      )
+    ) {
+      if (!validationResults.length)
+        errors.passwordlength = "Password must be at least 8 characters. ";
+      if (!validationResults.number) {
+        errors.passwordnumber = "password must contain 1 number;";
+      }
+
+      if (!validationResults.specialChar) {
+        errors.passwordchar = "password must contain 1 special carracter;";
+      }
+
+    }
+    
 
 
+
+
+    console.log("gfyf");
+    const response = await axios.post("/auth/login", { email, password });
+    console.log("after checkEmailAndpassword", response);
+    if (response.data.message === "Login Success") {
+      console.log("if ", response);
+      navigation.replace("DrawerNavigationRoutes");
+    } else {
+
+      console.log("else ", response);
+
+    }
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
   };
 
   return (
@@ -77,7 +93,7 @@ const Login = ({ navigation }) => {
         placeholder="Email"
         onChangeText={(text) => {
           setEmail(text);
-          setErrors((prevErrors) => ({ ...prevErrors, email: "" })); // Merge state updates
+
         }}
         value={email}
       />
@@ -87,10 +103,17 @@ const Login = ({ navigation }) => {
         secureTextEntry
         onChangeText={(text) => {
           setPassword(text);
-          setErrors((prevErrors) => ({ ...prevErrors, password: "" })); // Merge state updates
+
         }}
         value={password}
+
       />
+      {Object.values(errors).map((error, index) => (
+        <Text key={index} style={styles.errorMessage}>
+          {error}
+        </Text>
+      ))}
+      
       <View style={styles.forgotPasswordContainer}>
         <TouchableOpacity onPress={() => navigation.navigate("PasswordReset")}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
@@ -178,7 +201,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
-  },
+  }
 });
 export default Login;
 

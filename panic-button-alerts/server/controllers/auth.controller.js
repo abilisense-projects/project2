@@ -15,22 +15,32 @@ const registerController = async (req, res, next) => {
 };
 
 const resetPasswordRequestController = async (req, res, next) => {
-  const requestPasswordResetService = await requestPasswordReset(
-    req.body.email
-  );
-  return res.json(requestPasswordResetService);
+  try {
+    const requestPasswordResetService = await requestPasswordReset(
+      req.body.email
+    );
+    return res.json(requestPasswordResetService);
+    
+  } catch (error) {
+    next(error)
+  }
+
 };
 
 const resetPasswordController = async (req, res, next) => {
-  console.log("userId"+req.body.userid)
+ try {
   const resetPasswordService = await resetPassword(
     req.body.userid,
     req.body.token,
     req.body.password
   );
   return res.json(resetPasswordService);
+  
+ } catch (error) {
+  next(error)
+ } 
 };
-const LoginController = async (req, res) => {
+const LoginController = async (req, res,next) => {
   try {
     const token = await Login( req.body.email,req.body.password );
     if (token) {
@@ -38,8 +48,7 @@ const LoginController = async (req, res) => {
     }
    else {res.send({message: "Login failed", status: 0})}
   } catch (error){
-    console.log(error)
-  }
+next(error)  }
 };
 
 module.exports = {

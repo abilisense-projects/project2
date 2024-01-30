@@ -1,25 +1,27 @@
 // MainScreen.js
 
-import React, { useEffect, useState } from 'react';
-import { FlatList, View, Text, StyleSheet } from 'react-native';
-import axios from '../services/axiosInstance';
-import AlertCard from '../components/AlertCard';
-import { decodeToken } from '../services/JwtService';
+import React, { useEffect, useState } from "react";
+import { FlatList, View, Text, StyleSheet } from "react-native";
+import axios from "../services/axiosInstance";
+import AlertCard from "../components/AlertCard";
+import { decodeToken } from "../services/JwtService";
+import { useTranslation } from "react-i18next";
 
 const Historypage = () => {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     // Fetch data from the server
     const fetchData = async () => {
       try {
-        const token= await decodeToken()
-        const response = await axios.get(`alerts/history/${token._id}`); // Replace with your actual server endpoint
+        const token = await decodeToken();
+        const response = await axios.get(`alerts/user/${token._id}`); // Replace with your actual server endpoint
         setAlerts(response.data);
-        console.log(alerts)
+        console.log(alerts.length > 0);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -36,20 +38,28 @@ const Historypage = () => {
     );
   }
 
-  return (
-    <FlatList
-      data={alerts}
-      keyExtractor={(item) => item._id}
-      renderItem={({ item }) => <AlertCard alert={item} />}
-    />
-  );
+  if (alerts.length!==0) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>{t("you did not help yet 😒...")}</Text>
+      </View>
+    );
+  } else {
+    return (
+      <FlatList
+        data={alerts}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => <AlertCard alert={item} />}
+      />
+    );
+  }
 };
 
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

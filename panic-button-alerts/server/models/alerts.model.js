@@ -40,7 +40,7 @@ const addressSchema = mongoose.Schema({
     }
 });
 
-const alertsSchema = new Schema({
+const alertSchema = new Schema({
     patient: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -71,6 +71,6 @@ const alertsSchema = new Schema({
         required: true,
     },
 })
-alertsSchema.index({ date: 1 })
-const Alert = mongoose.model("alert", alertsSchema);
+alertSchema.index({ date: 1 })
+const Alert = mongoose.model("alert", alertSchema);
 module.exports = { Alert };

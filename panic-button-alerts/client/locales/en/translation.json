@@ -1,5 +1,6 @@
 {
   "": "",
+  "Alert Details": "Alert Details",
   "An error occurred while resetting the password,check password again...": "An error occurred while resetting the password,check password again...",
   "An error occurred while sending the reset email.": "An error occurred while sending the reset email.",
   "An error occurred while sending the reset email. Please try again.": "An error occurred while sending the reset email. Please try again.",
@@ -11,6 +12,9 @@
   "Cancel": "Cancel",
   "Confirm New Password": "Confirm New Password",
   "Dark mode": "Dark mode",
+  "Date: ": "Date: ",
+  "Distress Description:": "Distress Description:",
+  "Duration:": "Duration:",
   "Email": "Email",
   "Email is invalid.": "Email is invalid.",
   "Email is required.": "Email is required.",
