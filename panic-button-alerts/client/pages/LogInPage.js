@@ -25,6 +25,7 @@ const Login = ({ navigation, route }) => {
     }));
   };
 
+  
   const handleLogin = async () => {
     try {
       setIsEmailValid(ValidateEmail(email));

@@ -17,7 +17,7 @@ const historySchema = new Schema({
   },
   summary:{
     type:Object,
-    required:true,
+    
   }
 });
 

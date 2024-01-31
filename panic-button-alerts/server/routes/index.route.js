@@ -27,13 +27,15 @@ router.get(
 );
 router.get("/alerts/:lastAlertID", alertController.getnewAlertController);
 router.get("/alerts", alertController.getAlertsController);
-router.post("/alerts", alertController.updateAlertController);
+router.post("/alerts", alertController.updateAlertStatusController);
+router.post("/alerts/treated", alertController.updateTreatedController);
+
 router.get(
-  "/alerts/user/:userId",
+  "/history/user/:userId",
   HistoryController.getHistoryforHelperController
 );
 router.get(
-  "/alerts/history/:alertId",
+  "/history/patient/:alertId",
   HistoryController.getHistoryforPatientController
 );
 router.post("/upload", fileController.uploadFile);

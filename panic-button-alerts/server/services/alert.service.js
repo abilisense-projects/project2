@@ -1,13 +1,9 @@
 const moment = require("moment-timezone");
 
 const { Alert } = require("../models/alerts.model");
-const {
-  find,
-  findByID,
-  findOne,
-  findOneAndUpdate,
-} = require("../dal/dal");
+const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
+const { addHistoryforHelper } = require("./history.service");
 
 var isUpdate = [];
 const status = { $nin: ["treated", "cancel"] };
@@ -88,13 +84,16 @@ const updateAlertStatus = async (alertId, status) => {
   console.log(result);
   return result;
 };
-
+const treatedAlert = async (id, status, userId, duration, summary) => {
+  const update =await  updateAlertStatus(id, status);
+  const add = await addHistoryforHelper(id, userId, duration, summary);
+  return {update:update,add:add}
+};
 
 module.exports = {
   getAlerts,
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
-
-
+  treatedAlert
 };
