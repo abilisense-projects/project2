@@ -76,12 +76,11 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
   }
   async function handleLeaveAlert() {
     try {
-      const response = await axios.post(`alerts/`, { id: data.alert._id, status: "not treated" },);
+      const response = await axios.post(`alerts/`, { id: value, status: "not treated" },);
       const result = response.data
-      onIdchange(null)
-    } catch (error) {
-      console.log(error);
-    }
+  } catch (error) {
+      console.log("error"+error);
+  }
 
   }
   async function updateAlert(IdAlert, msgState) {
@@ -166,10 +165,10 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
           </View>
         </View>
         <View style={styles.footer}>
-          {propStatus == "not treated" && <TouchableOpacity style={styles.footerButton}
+          {propStatus == "for treatment" && <TouchableOpacity style={styles.footerButton}
             onPress={() => {
               {
-                alertData.callerName != "" ? (updateAlert(data.alert._id, "treated"), onIdchange(null)) : alert("you need to make summry")
+                alertData.callerName != "" ? (updateAlert(data.alert._id, "treated"), onIdchange('')) : alert("you need to make summry")
               }
             }}>
             <Ionicons name="checkmark" size={24} color="white" />
@@ -237,8 +236,8 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         text={"Are you sure you want to leave?"}
         visible={modalVisible}
         onConfirm={() => {
-          {propStatus == "not treated" ?
-          handleLeaveAlert(): onIdchange(null)}
+          {propStatus == "for treatment" ?
+          (handleLeaveAlert(),onIdchange('')): onIdchange('')}
           hideModal();
         }}
         onCancel={hideModal}
@@ -250,118 +249,110 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
-    borderRadius: 10,
-    // padding: 20,
+    backgroundColor: '#121212', // A standard dark background
+    padding: 20,
+    borderRadius: 20,
   },
   header: {
-    justifyContent: " space-evenly",
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
   },
   headerText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#FFF',
     fontSize: 20,
-  },
-  headerButton: {
-    backgroundColor: 'red',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  headerButtonText: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 16,
+    fontWeight: 'bold',
   },
   helpButton: {
-    textAlign: "center",
-    backgroundColor: 'pink',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    backgroundColor: '#E91E63', // A vibrant color for important buttons
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 20,
-    marginBottom: "1%",
+    elevation: 4,
+    marginBottom: 10,
   },
   helpButtonText: {
-    textAlign: "center",
-    color: 'white',
+    color: '#FFFFFF',
     fontSize: 16,
   },
   dateTime: {
-    marginBottom: "1%",
+    backgroundColor: '#1F1F1F', // A slightly lighter shade for cards
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  headerButtonText:{
+    color: 'white'
+
   },
   dateText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#BBB',
     fontSize: 16,
   },
   timeText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#BBB',
     fontSize: 16,
   },
   audioButton: {
-    alignSelf: "center",
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
     marginBottom: 10,
   },
   audioText: {
-
-    color: 'white',
+    color: '#FFF',
     fontSize: 16,
     marginLeft: 10,
   },
   menu: {
-    flexDirection: 'column',
-    alignItems: 'normal',
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: '2%',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   column: {
     alignItems: 'center',
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: 10,
   },
   footerButton: {
-    // padding: 10,
+    backgroundColor: '#333',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    elevation: 4,
   },
   dataSpecificAlert: {
-    right: "165%",
-    top: "-5%",
-    zIndex: 5,
-    width: "140%",
-    height: "180px",
-    backgroundColor: 'rgba(50, 50, 50, 0.8)',
-    borderRadius: 30,
-    justifyContent: "center",
-    padding: "5%",
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 10,
   },
   dataSpecificAlertText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#FFF',
     fontSize: 16,
-    justifyContent: "center"
   },
-
   more: {
-    alignSelf: "center",
-    right: "165%",
-    top: "-10%",
-    zIndex: 5,
-    width: "140%",
-    height: "500px",
-    backgroundColor: 'rgba(50, 50, 50, 0.8)',
-    borderRadius: 30,
-    justifyContent: "flex-start",
-    padding: "5%",
-  }
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
+    padding: 16,
+  },
 });

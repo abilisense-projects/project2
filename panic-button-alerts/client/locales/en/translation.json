@@ -52,6 +52,7 @@
   "Setting": "Setting",
   "Setting Screen": "Setting Screen",
   "Something went wrong. Please try again later.": "Something went wrong. Please try again later.",
+  "Status:": "Status:",
   "Sure": "Sure",
   "already register ? login!": "already register ? login!",
   "confirmd password not matching": "confirmd password not matching",
@@ -59,5 +60,6 @@
   "password must contain 1 number;": "password must contain 1 number;",
   "password must contain 1 special carracter;": "password must contain 1 special carracter;",
   "submit": "submit",
-  "sure": "sure"
+  "sure": "sure",
+  "you did not help yet 😒...": "you did not help yet 😒..."
 }

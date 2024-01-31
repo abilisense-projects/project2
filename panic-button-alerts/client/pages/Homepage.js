@@ -12,7 +12,7 @@ export default function Homepage() {
     setisSmallDevice(Dimensions.get('window').width < 768)
   }, []);
   const [Mes, setMes] = useState('');
-  const [Id, setId] = useState(null);
+  const [Id, setId] = useState('');
   const [Status, setStatus] = useState('')
   const [Alerts, setAlerts] = useState([])
   const [isSmallDevice, setisSmallDevice] = useState(false)
@@ -46,7 +46,8 @@ export default function Homepage() {
   return (
     <View style={{ height: '100%', width: ' 100%' }}>
       {/* style={styles.container} */}
-      <Text>{Mes}</Text>
+      <Text style={styles.headerTitle}>{Mes}</Text>
+
       <View style={isSmallDevice ? Id ? styles.smallDeviceSpesific : styles.smallDevice : styles.contentContainer}>
 
         <View style={isSmallDevice ? Id ? styles.AlertAndr : null : styles.Alert}>
@@ -129,5 +130,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 'large',
     color: 'black',
-  }
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'rgb(197, 141, 200)',
+    textAlign: 'center', 
+    marginVertical: 10, // הוסיפי רווח מעל ומתחת לכותרת
+  },
 });
