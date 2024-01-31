@@ -8,8 +8,10 @@ import React, {
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
+  Alert,
   Image,
   Linking,
+  PanResponder,
   SafeAreaView,
   Text,
   View,
@@ -21,7 +23,7 @@ import "react-native-gesture-handler";
 import Splash from "./pages/Splash";
 import DrawerNavigatorRoutes from "./components/Navigation/DrawerNavigatorRoutes";
 import { Auth } from "./components/Navigation/Auth";
-import { get, save } from "./services/Storage";
+import { get, remove, save } from "./services/Storage";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppContext } from "./components/context/AppContext";
 import DarkTheme from "./components/theme/DarkTheme";
@@ -83,9 +85,32 @@ const App = () => {
       setIsDarkTheme,
     };
   });
+  const [lastInteraction, setLastInteraction] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Date.now() - lastInteraction >= 1000 * 60 * 30) { // 30 minutes
+       
+        Alert.alert('User is inactive for 30 minutes. Logging out...');
+        // Reset the last interaction time to prevent multiple logouts
+        setLastInteraction(Date.now());
+        remove("accessToken")
+      }
+    }, 1000 * 60); // Check every minute
+
+    return () => clearInterval(interval);
+  }, [lastInteraction]);
+
+  // Setup PanResponder to listen to all touch events
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderStart: () => {
+      setLastInteraction(Date.now());
+    },
+  });
 
   return (
-    <SafeAreaProvider style={{ flex: 1 }}>
+    <SafeAreaProvider style={{ flex: 1 }} {...panResponder.panHandlers}>
       <StatusBar style={isDarkTheme ? "light" : "dark"} />
       <NavigationContainer theme={isDarkTheme ? DarkTheme : DefaultTheme}>
         <AppContext.Provider value={appContext}>

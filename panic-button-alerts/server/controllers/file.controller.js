@@ -1,26 +1,14 @@
-const multer = require("multer");
-const upload = multer({ storage: multer.memoryStorage() });
-
+const fileService =require("../services/file.service")
 
 
 // Middleware to handle file upload
-const uploadFile = async (req, res, next) => {
+const uploadFile = async (req, res) => {
   try {
-    // Perform the file upload
-    upload.single("file")(req, res, async (err) => {
-      if (err) {
-        // Handle file upload error
-        next(err);
-      } else {
-        // Call the function to save to MongoDB
-        const { originalname, buffer } = req.file;
-       const isUpload= await uploadAndSaveToMongoDB(originalname, buffer);
-       res.send(isUpload)
-      }
-    });
+    await fileService.saveFile(req.file);
+    res.send('File uploaded and saved to MongoDB');
   } catch (error) {
-    // Pass the error to the next middleware for centralized error handling
-    next(error);
+    console.error(error);
+    res.status(500).send('Error saving file to database');
   }
 };
 

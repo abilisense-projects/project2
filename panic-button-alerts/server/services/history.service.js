@@ -23,7 +23,8 @@ const getHistoryforHelper = async (userId) => {
 const getHistoryforPatient = async (alertId) => {
   const alert = await findByID(Alert, alertId);
   console.log(alert);
-  const history = await find(Alert, { patient: alert.patient._id });
+  const history = await Alert.find( { patient: alert.patient._id })
+  
   return history;
 };
 module.exports = {

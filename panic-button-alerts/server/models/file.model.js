@@ -3,8 +3,11 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
-  filename: String,
-  content: String,
+  name: String,
+  contentType: String,
+  data: Buffer,
 });
 
-module.exports = mongoose.model('File', fileSchema);
+const File = mongoose.model('File', fileSchema);
+
+module.exports = File;

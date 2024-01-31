@@ -1,4 +1,8 @@
 const router = require("express").Router();
+const multer = require('multer');
+
+const upload = multer({ dest: 'uploads/' }); 
+
 
 const authController = require("../controllers/auth.controller");
 const alertController = require("../controllers/alert.controller");
@@ -38,6 +42,6 @@ router.get(
   "/history/patient/:alertId",
   HistoryController.getHistoryforPatientController
 );
-router.post("/upload", fileController.uploadFile);
+router.post("/upload", upload.single('file'),fileController.uploadFile);
 
 module.exports = router;
