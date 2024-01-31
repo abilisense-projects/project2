@@ -17,10 +17,6 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     const [flag, setflag] = useState(false)
     const [AllList, setAllList] = useState([...ListHigh, ...ListMedium, ...ListLow])
     const isSmallDevice = Dimensions.get('window').width < 768
-
-
-
-
     const colorHi = {
         backgroundImage: 'linear-gradient(220deg, rgb(255, 0, 0), rgb(255, 255, 255))'
     };
@@ -32,28 +28,20 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     };
 
     useEffect(() => {
-         if (propId) {
-            setoccupied({ ...occupied, flag: true, Id: propId })
-        }
-        else {
-            setoccupied({ ...occupied, flag: false, Id: null })
-        }
         if (lastIdAlert) {
-            setAllList([...ListHigh, ...ListMedium, ...ListLow]),
-                setState([...ListHigh, ...ListMedium, ...ListLow])
+            setAllList([...ListHigh, ...ListMedium, ...ListLow])
+               setState([...ListHigh, ...ListMedium, ...ListLow])
             const interval = setInterval(() => {
-                {
-                    flag && setAllList([...ListHigh, ...ListMedium, ...ListLow]),
+                {flag?(setAllList([...ListHigh, ...ListMedium, ...ListLow]),
                         setState([...ListHigh, ...ListMedium, ...ListLow]),
-                        setflag(false)
-                }
+                        setflag(false)):null}
+                {propId?setoccupied({ ...occupied, flag: true, Id: propId }):setoccupied({ ...occupied, flag: false, Id: null })}
                 getnewAlert();
             }, 1000);
             return () => clearInterval(interval);
         }
         getListAlerts();
-
-    }, [lastIdAlert], [propId]);
+    }, [lastIdAlert]);
     async function getListAlerts() {
         try {
             console.log("enter")
@@ -87,8 +75,6 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
             try {
                 const response = await axios.get(`alerts/${lastIdAlert}`,);
                 const result = response.data
-
-                //new
                 if (result.isNew) {
                     onAlertchange({ status: "add", arr: result })
                     setlastIdAlert(result.newAlerts[(result.newAlerts.length - 1)]._id)
@@ -160,18 +146,15 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
         }
         else {
             onIdchange(value, 'for treatment')
-
             try {
                 const response = await axios.post(`alerts/`, { id: value, status: "in treatment" },);
                 const result = response.data
-
             } catch (error) {
                 console.log(error);
             }
         }
         setoccupied({ ...occupied, flag: true, Id: value })
     }
-
     return (
         <View style={styles.container}>
             {isSmallDevice || <View style={styles.buttons}>
@@ -190,7 +173,31 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
             </View>}
             {State != [] ?
                 <View style={styles.containerCalls}>
-                    <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>
+
+<FlatList
+        data={State}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) =><View key={item._id}>
+        {(isSmallDevice && occupied.flag) ?
+            <View style={styles.ListIcon} >
+                <AntDesign name="exclamationcircle" size={24} color={item.level == "Hard" ? "red" :
+                    item.level == "Medium" ? "orange" : "green"} padding={50}
+                    onPress={() => { { occupied.flag || handleAlertPress(item._id) } }} />
+            </View> : <TouchableOpacity
+                // disabled={call.status === "in treatment" ? true : false}
+                style={[
+                    (item.status == "in treatment" ?
+                        [styles.alert, styles.inTreatment] : styles.alert),
+                        item.level == "Hard" ? colorHi :
+                        item.level == "Medium" ? colorMed : colorLow ]}
+                onPress={() => { !occupied.flag ? handleAlertPress(item._id, item.status) : alert(" you need to close to changing to a difrent one") }} >
+                <Text style={styles.text}>{item.status}</Text>
+                <Text style={styles.text}>{item.distressDescription}</Text>
+                <Text style={styles.text}>{`${item.date.split('T')[1].split('.')[0]}`} </Text>
+            </TouchableOpacity>}
+    </View>}
+      />
+                    {/* <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>
                         {State.map((call, index) => { return (
                                 <View key={call._id}>
                                     {(isSmallDevice && occupied.flag) ?
@@ -211,25 +218,14 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
                                             <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}`} </Text>
                                         </TouchableOpacity>}
                                 </View>) })}
-                    </ScrollView>
+                    </ScrollView> */}
                 </View>: <Text>"No distress alerts"</Text>}
         </View>
     );
 }
-
-
-
-{/* {call.level == "Hard" ? <Image style={styles.img}
-                                source={{ uri: '/static/media/hi.b2fd8eed21094cc1e0ef.png' }} /> :
-                                call.level == "Medium" ? <Image style={styles.img}
-                                    source={{ uri: '/static/media/med.645af0b7b0645b787cb8.png' }} /> :
-                                    <Image style={styles.img}
-                                        source={{ uri: '/static/media/low.64f1b00574697900140a.png' }} />} */}
 const styles = StyleSheet.create({
     container: {
-        // //  marginTop: 30,
-        // flex: 1, // Add flex: 1 to make the container take the entire screen height
-        // alignItems: 'center', // Center items horizontally
+       
         height: '100%',
         width: '100%'
     },
@@ -261,31 +257,34 @@ const styles = StyleSheet.create({
         borderWidth: "medium",
         opacity: '40%'
     },
-    // img: {
-    //     width: '100%',
-    //     height: '60%', // Adjust the image height as needed
-    //     resizeMode: 'cover', // Maintain aspect ratio while covering the container
-    // },
+
     buttons: {
-        flexDirection: 'row', // Arrange buttons in a row
-        justifyContent: 'space-around', // Space buttons evenly
-        marginTop: 20, // Add top margin to separate buttons from alerts
+        flexDirection: 'row', // סדר כפתורים בשורה
+        justifyContent: 'space-between', // הפצל את הכפתורים באופן שווה
+        marginTop: 20, // הוסף רווח עליון
+        marginBottom: 20, // הוסף רווח תחתון לפני הכרטיסיות
+        paddingHorizontal: 10, // הקטן את הרווח האופקי בקצוות
     },
     button: {
-        height: 30,
-        width: 70,
-        borderRadius: 4,
-        backgroundColor: 'black',
-        justifyContent: 'center', // Center text within the button
-        alignItems: 'center', // Center button within its container
+        height: 40, // גובה הכפתור
+        paddingHorizontal: 15, // רווח אופקי פנימי
+        borderRadius: 10, // קירות עגולות
+        backgroundColor: 'rgb(197, 141, 163)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 2, // הקטן את הרווח בין הכפתורים
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     textb: {
         fontSize: 16,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
         color: 'white',
+        fontWeight: 'bold',
     },
+
     ListIcon: {
         alignItems: 'flex-start',
         justifyFontent: 'space-around'

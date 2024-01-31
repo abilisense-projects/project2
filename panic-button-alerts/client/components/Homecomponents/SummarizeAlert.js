@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function SOSAlertForm(onDataAlert) {
+export default function SOSAlertForm(onDataAlert,toClose) {
     const [alertData, setAlertData] = useState({
         dateAndTime: '',
         callerName: '',
@@ -17,15 +17,18 @@ export default function SOSAlertForm(onDataAlert) {
         operatorID: '',
         completionDateAndTime: '',
       });
-    
-  const handleAlertDataChange = (key, value) => {
+   
+    function handleAlertDataChange (key, value)  {
     setAlertData({ ...alertData, [key]: value });
-    onDataAlert({ ...alertData, [key]: value });
+    
   };
 
-  const submitAlert = () => {
+  function submitAlert(){
+     console.log("alertData   "+alertData);
+    onDataAlert.onDataAlert.handleSetAlertData(alertData)
+    onDataAlert.toClose.handleSetdataSpecificAlert()
     // Handle the submission of the SOS alert data here
-    console.log(alertData);
+   
   };
 
   return (
@@ -125,7 +128,7 @@ export default function SOSAlertForm(onDataAlert) {
 />
 
       
-      <TouchableOpacity onPress={()=>submitAlert}> <Text>Submit Alert </Text></TouchableOpacity>
+      <TouchableOpacity onPress={() => {submitAlert()}}> <Text>Submit Alert </Text></TouchableOpacity>
     </View>
   );
 }

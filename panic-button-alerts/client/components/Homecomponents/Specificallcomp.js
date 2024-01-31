@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import axios from '../../services/axiosInstance';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity,FlatList } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import MyModal from "../Modal";
 import TimerModal from './Time'
 import UploadFiles from "./UploadFiles";
-import SOSForm from './SummarizeAlert';
+import SOSAlertForm from './SummarizeAlert';
+import AlertCard from '../AlertCard'
 // run animation... (`runAfterInteractions` tasks are queued)
 // later, on animation completion:
 //InteractionManager.clearInteractionHandle(handle);
@@ -15,6 +16,8 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
   useEffect(() => {
     getInfoAlerts()
     getPreviousAlerts()
+
+    { propStatus == "for treatment" ? setAlertDataTIme({ ...alertDataTime, flag: true }) : setAlertDataTIme({ ...alertDataTime, flag: false }) }
   }, [propId]);
   const [data, setdata] = useState(null)
   const [PreviousAlert, setPreviousAlert] = useState({ falseAlert: [], trueAlert: [] })
@@ -22,28 +25,23 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [moreDetails, setmoreDetails] = useState(false);
   const [dataSpecificAlert, setdataSpecificAlert] = useState({ flag: false, data: " " });
-  const [alertData, setAlertData] = useState({
-    dateAndTime: '',
-    callerName: '',
-    location: '',
-    natureOfEmergency: '',
-    callerContactNumber: '',
-    description: '',
-    severity: '',
-    hazards: '',
-    actionsTaken: '',
-    additionalNotes: '',
-    operatorName: '',
-    operatorID: '',
-    completionDateAndTime: '',
-  });
-
+  const [alertData, setAlertData] = useState();
+  const [alertDataTime, setAlertDataTIme] = useState({ flag: false, time: 0 });
   const showModal = () => {
     setModalVisible(true);
   };
   const hideModal = () => {
     setModalVisible(false);
   };
+  function handleSetTime(value) {
+    setAlertDataTIme({ ...alertDataTime, time: value })
+  };
+  function handleSetAlertData(value) {
+    setAlertData(value)
+  };
+  function handleSetdataSpecificAlert() {
+    ; setdataSpecificAlert({ ...dataSpecificAlert, flag: false, data: "" })
+  }
 
   async function getInfoAlerts() {
     try {
@@ -56,37 +54,41 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
     }
   }
   async function getPreviousAlerts() {
+    console.log(alertData);
     try {
-      const response = await axios.get(`/history/pasient/${propId}`);
-      const result = response
-      console.log(result)
-      const countFalse = 0, countTrue = 0;
+      const response = await axios.get(`/history/patient/${propId}`);
+      const result = response.data
+      console.log("history/patient   "+result.length)
+      const countFalse = [], countTrue = [];
       for (let index = 0; index < result.length; index++) {
-        const element = array[index];
-        if (element.status == "Cancele") {
-          setPreviousAlert({ ...PreviousAlert, falseAlert: current => [element, ...current] })
+        const element = result[index];
+        if (element.status == "cancel") {
+          countFalse.push(element)
         }
         else {
-          setPreviousAlert({ ...PreviousAlert, trueAlert: current => [element, ...current] })
+          countTrue.push(element)
         }
+        setPreviousAlert({ ...PreviousAlert, falseAlert:countFalse })
+        setPreviousAlert({ ...PreviousAlert, trueAlert:countTrue})
       }
     } catch (error) {
       console.log(error)
     }
   }
   async function handleLeaveAlert() {
+    console.log(PreviousAlert)
     try {
       const response = await axios.post(`alerts/`, { id: data.alert._id, status: "not treated" },);
       const result = response.data
-      onIdchange(null)
+      console.log(result)
     } catch (error) {
-      console.log(error);
+      console.log("error" + error);
     }
 
   }
   async function updateAlert(IdAlert, msgState) {
     try {
-      const response = await axios.post(`alerts/`, { id: IdAlert, status: msgState, summary: alertData });
+      const response = await axios.post(`alerts/treated/`, { id: IdAlert, status: msgState, userId: data.alert.patient, duration: alertDataTime.time, summary: alertData });
       const result = response.data
 
     } catch (error) {
@@ -96,13 +98,12 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
   return (
     <View style={styles.container}>
 
-      {data ? <View>
-        {propStatus == "not treated" &&
-          < View style={{ top: "5%", height: "20px", width: '200px', right: "250px", zIndex: 5 }}>
-            <Text style={styles.headerButtonText}> you care:</Text>
-            <TimerModal isVisible={true} />
-          </View >
-        }
+      {data ? 
+      <View>
+        < View style={{ top: "5%", height: "20px", width: '200px', right: "250px", zIndex: 5 }}>
+          <Text style={styles.headerButtonText}> you care:</Text>
+          <TimerModal isVisible={alertDataTime.flag} onTime={handleSetTime} />
+        </View >
         <View style={styles.header}>
           <Text style={styles.headerText}>{data.alert.level}</Text>
           {propStatus == "not treated" ? <Text style={styles.headerButtonText}>Open</Text> :
@@ -122,56 +123,46 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         <TouchableOpacity onPress={() => { setmoreDetails(!moreDetails) }}>
           <Text style={styles.audioText}>More Details</Text>
         </TouchableOpacity>
-
         <View style={styles.menu}>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}>
               <MaterialCommunityIcons name="map-marker-radius-outline" size={24} color="white" />
               <Text style={{ color: "white" }}>Map</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.column}
               onPress={() => setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Sensor" })}>
               <MaterialIcons name="sensors" size={24} color="white" />
               <Text style={{ color: "white" }}>Sensor</Text>
             </TouchableOpacity>
           </View>
-
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}
-              onPress={() =>{propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Evidence" })}}>
+              onPress={() => { propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Evidence" }) }}>
               <FontAwesome5 name="magnifying-glass-chart" size={24} color="white" />
               <Text style={{ color: "white" }}>Evidence</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.column}
               onPress={() => setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Trigger" })}>
               <MaterialCommunityIcons name="alarm-light-outline" size={24} color="white" />
               <Text style={{ color: "white" }}>Trigger</Text>
             </TouchableOpacity>
           </View>
-
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}
               onPress={() => { setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Instructions" }) }}>
               <MaterialIcons name="linear-scale" size={24} color="white" />
               <Text style={{ color: "white" }}>Instructions</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.column}
-              onPress={() => {propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Ticketing" }) }}>
+              onPress={() => { propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Ticketing" }) }}>
               <FontAwesome5 name="clipboard-list" size={24} color="white" />
               <Text style={{ color: "white" }}>Ticketing</Text>
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.footer}>
-          {propStatus == "not treated" && <TouchableOpacity style={styles.footerButton}
-            onPress={() => {
-              {
-                alertData.callerName != "" ? (updateAlert(data.alert._id, "treated"), onIdchange(null)) : alert("you need to make summry")
-              }
-            }}>
+          {propStatus == "for treatment" && <TouchableOpacity style={styles.footerButton}
+            onPress={() => {{alertData ? (updateAlert(data.alert._id, "treated"), onIdchange(''), setAlertDataTIme({ ...alertDataTime, flag: false }), setAlertData({})) : alert("you need to make summry")}}}>
             <Ionicons name="checkmark" size={24} color="white" />
             <Text color="white">Applay</Text>
           </TouchableOpacity>}
@@ -191,54 +182,60 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
           height: "400px",
           backgroundColor: 'white',
           borderRadius: 30,
-          padding: "5%",
-        }}>
-          {dataSpecificAlert.data == "Sensor" ? <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
-            <Text style={styles.dataSpecificAlertText}> Sensor name: {"none"}
-              {'\n'}
-              Status: {"none"}
-              {'\n'}
-              Type: {"none"}
-              {'\n'}
-            </Text>
-
-            <Text style={styles.dataSpecificAlertText}> Adress:{data.alert.location.street}
-              {'\n'}
-              City: {data.alert.location.city}
-              {'\n'}
-              Country: {data.alert.location.country}
-              {'\n'}</Text></View> :
-            dataSpecificAlert.data == "Evidence" ? <UploadFiles /> :
+          padding: "5%", }}>
+          {dataSpecificAlert.data == "Sensor" ?
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
+              <Text style={styles.dataSpecificAlertText}> Sensor name: {"none"}
+                {'\n'}
+                Status: {"none"}
+                {'\n'}
+                Type: {"none"}
+                {'\n'}
+              </Text>
+              <Text style={styles.dataSpecificAlertText}> Adress:{data.alert.location.street}
+                {'\n'}
+                City: {data.alert.location.city}
+                {'\n'}
+                Country: {data.alert.location.country}
+                {'\n'}</Text>
+            </View> :
+            dataSpecificAlert.data == "Evidence" ? <UploadFiles/> :
               dataSpecificAlert.data == "Trigger" ? <Text style={styles.dataSpecificAlertText}>Type: Message</Text> :
                 dataSpecificAlert.data == "Instructions" ? <Text style={styles.dataSpecificAlertText}>no further instruction</Text> :
-                  dataSpecificAlert.data == "Ticketing" ? <SOSForm onDataAlert={setAlertData} /> : null
-          }
+                  dataSpecificAlert.data == "Ticketing" ?(
+                      <SOSAlertForm onDataAlert={{handleSetAlertData}} toClose={{handleSetdataSpecificAlert}}/> ): null}
         </View>}
       {moreDetails && <View style={styles.more}>
         <Text style={styles.dataSpecificAlertText}>   Diseases:{'\n'}</Text>
 
-        {data.medicalConditions.map((item, key) => (
-          <Text style={{ color: 'white', fontSize: 16, }} >{item}{'\n'}</Text>
+        {data.medicalConditions.map((item, key) =>{ return ( <View key={item._id}>
+          <Text style={{ color: 'white', fontSize: 16, }} >{item}{'\n'}</Text></View>)}
 
-        ))}
+        )}
         <Text style={styles.dataSpecificAlertText}> {'\n'}{'\n'}  Previous alerts:{'\n'}</Text>
         <TouchableOpacity onPress={() => setPreviousAlertShow({ ...PreviousAlertShow, falseAlert: false, trueAlert: true })}>
           <Text style={{ color: 'white', fontSize: 16, }}>Previous alerts: {PreviousAlert.trueAlert.length}</Text></TouchableOpacity>
         <TouchableOpacity onPress={() => setPreviousAlertShow({ ...PreviousAlertShow, falseAlert: true, trueAlert: false })}>
           <Text style={{ color: 'white', fontSize: 16, }}>Previous false alerts: {PreviousAlert.falseAlert.length}</Text></TouchableOpacity>
-        {PreviousAlertShow.trueAlert && PreviousAlert.trueAlert.map((item, key) => (
-          <Text>{item._id}</Text>
-        ))}
-        {PreviousAlertShow.falseAlert && PreviousAlert.falseAlert.map((item, key) => (
-          <Text>{item._id}</Text>
-        ))}
+        {PreviousAlertShow.trueAlert && <FlatList
+        data={PreviousAlert.trueAlert}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => <AlertCard alert={item} />}
+      />}
+        {PreviousAlertShow.falseAlert && <FlatList
+        data={PreviousAlert.falseAlert}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => <AlertCard alert={item} />}
+      />}
       </View>}
       <MyModal
         text={"Are you sure you want to leave?"}
         visible={modalVisible}
         onConfirm={() => {
-          {propStatus == "not treated" ?
-          handleLeaveAlert(): onIdchange(null)}
+          {
+            propStatus == "for treatment" ?
+              (handleLeaveAlert(), onIdchange('')) : onIdchange('')
+          }
           hideModal();
         }}
         onCancel={hideModal}
@@ -250,118 +247,110 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
-    borderRadius: 10,
-    // padding: 20,
+    backgroundColor: '#121212', // A standard dark background
+    padding: 20,
+    borderRadius: 20,
   },
   header: {
-    justifyContent: " space-evenly",
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
   },
   headerText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#FFF',
     fontSize: 20,
-  },
-  headerButton: {
-    backgroundColor: 'red',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  headerButtonText: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 16,
+    fontWeight: 'bold',
   },
   helpButton: {
-    textAlign: "center",
-    backgroundColor: 'pink',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    backgroundColor: '#E91E63', // A vibrant color for important buttons
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 20,
-    marginBottom: "1%",
+    elevation: 4,
+    marginBottom: 10,
   },
   helpButtonText: {
-    textAlign: "center",
-    color: 'white',
+    color: '#FFFFFF',
     fontSize: 16,
   },
   dateTime: {
-    marginBottom: "1%",
+    backgroundColor: '#1F1F1F', // A slightly lighter shade for cards
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  headerButtonText: {
+    color: 'white'
+
   },
   dateText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#BBB',
     fontSize: 16,
   },
   timeText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#BBB',
     fontSize: 16,
   },
   audioButton: {
-    alignSelf: "center",
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
     marginBottom: 10,
   },
   audioText: {
-
-    color: 'white',
+    color: '#FFF',
     fontSize: 16,
     marginLeft: 10,
   },
   menu: {
-    flexDirection: 'column',
-    alignItems: 'normal',
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: '2%',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   column: {
     alignItems: 'center',
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: 10,
   },
   footerButton: {
-    // padding: 10,
+    backgroundColor: '#333',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    elevation: 4,
   },
   dataSpecificAlert: {
-    right: "165%",
-    top: "-5%",
-    zIndex: 5,
-    width: "140%",
-    height: "180px",
-    backgroundColor: 'rgba(50, 50, 50, 0.8)',
-    borderRadius: 30,
-    justifyContent: "center",
-    padding: "5%",
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 10,
   },
   dataSpecificAlertText: {
-    textAlign: 'center',
-    color: 'white',
+    color: '#FFF',
     fontSize: 16,
-    justifyContent: "center"
   },
-
   more: {
-    alignSelf: "center",
-    right: "165%",
-    top: "-10%",
-    zIndex: 5,
-    width: "140%",
-    height: "500px",
-    backgroundColor: 'rgba(50, 50, 50, 0.8)',
-    borderRadius: 30,
-    justifyContent: "flex-start",
-    padding: "5%",
-  }
+    backgroundColor: '#1F1F1F',
+    borderRadius: 10,
+    padding: 16,
+  },
 });
