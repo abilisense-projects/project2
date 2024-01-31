@@ -26,7 +26,7 @@ const UploadFiles = () => {
     // Check if any file is selected or not
     if (singleFile != null) {
       try {
-        const response = await axios.post(`Upload/`, { File: singleFile },);
+        const response = await axios.post(`upload/`, { File: singleFile },);
         let responseJson = await response.json();
         if (responseJson.status == 1) {
           alert('Upload Successful');
