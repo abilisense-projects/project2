@@ -2,13 +2,16 @@ const fileService =require("../services/file.service")
 
 
 // Middleware to handle file upload
-const uploadFile = async (req, res) => {
+const uploadFile = async (req, res,next) => {
   try {
-    await fileService.saveFile(req.file);
+    console.log(req.File)
+    console.log(req.body)
+
+    await fileService.saveFile(req.body.File);
     res.send('File uploaded and saved to MongoDB');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error saving file to database');
+    next(error)
   }
 };
 

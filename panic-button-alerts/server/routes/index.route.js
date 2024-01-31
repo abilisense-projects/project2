@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const multer = require('multer');
 
-const upload = multer({ dest: 'uploads/' }); 
-
+const upload = multer({ 
+  dest: 'uploads/',
+  limits: { fileSize: 1000* 1024 * 1024 }, // for example, 50 MB
+});
 
 const authController = require("../controllers/auth.controller");
 const alertController = require("../controllers/alert.controller");

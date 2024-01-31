@@ -9,7 +9,10 @@ const logger = require("./logger/logger");
 const HOST_NAME = process.env.HOST_NAME || "127.0.0.1";
 const PORT = process.env.PORT || 8080;
 const app = express();
+app.use(express.json({ limit: '1000mb' }));
 
+// Increase limit for URL-encoded payloads
+app.use(express.urlencoded({ limit: '1000mb', extended: true }));
 connection();
 app.use(cors());
 app.use(express.json());
