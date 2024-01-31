@@ -5,7 +5,6 @@
   const lengthValid = password.length >= 7;
   const numberValid = /\d/.test(password);
   const specialCharValid = /[!@#$%^&*]/.test(password);
-  // const matchValid = password === confirmPassword;
 
   return {
     length: lengthValid,

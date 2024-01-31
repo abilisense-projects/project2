@@ -1,40 +1,3 @@
-// import { React, useState, useEffect } from 'react';
-// import { StyleSheet, Text, View } from 'react-native';
-// export default function Timer() {
-//     useEffect(() => { startTimer() },[])
-//     const [state, setState] = useState({ time: 0, })
-//    function startTimer() {
-//     const interval = setInterval(() => {
-//             setState(state => ({
-//                 time: state.time + 1,
-//             }));
-//         }, 1000);
-//         return () => clearInterval(interval);
-//     };
-//     function  stopTimer  (){
-//         clearInterval(this.interval);
-//     };
-
-//import { View } from "react-native";
-
-   
-//         return (
-//             <View>
-//                 <Text>{state.time}</Text>
-//             </View>
-//         );
-    
-// }
-// const styles = StyleSheet.create({
-//     row: {
-//         display: 'flex',
-//     },
-//     time: {
-//         fontSize: 48,
-//         fontWeight: 'bold',
-//         color: '#272727'
-//     }
-// })
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
@@ -49,7 +12,7 @@ const formatTime = (seconds) => {
   return `${pad(hours)}:${pad(minutes)}:${pad(remainingSeconds)}`;
 };
 
-export default  function TimerModal({ isVisible, onClose }) {
+export default  function TimerModal({ isVisible, onTime }) {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
@@ -62,6 +25,7 @@ export default  function TimerModal({ isVisible, onClose }) {
       }, 1000);
     } else {
       // Clear the timer when the modal is closed
+      onTime(seconds)
       clearInterval(timer);
     }
 

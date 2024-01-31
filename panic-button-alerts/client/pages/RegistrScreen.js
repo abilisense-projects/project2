@@ -149,8 +149,7 @@ const RegisterScreen = ({ route }) => {
   const handleSubmit = () => {
     if (isFormValid) {
       registration();
-      
-      
+
       console.log("Form submitted successfully!");
     } else {
       // Form is invalid, display error messages
@@ -197,13 +196,13 @@ const RegisterScreen = ({ route }) => {
         disabled={!isFormValid}
         onPress={handleSubmit}
       ></CustomButton>
-      <Text
+      {/* <Text
         style={{ alignSelf: "center" }}
         label={"go to login"}
         onPress={() => navigation.navigate("Login")}
       >
         {t("already register ? login!")}
-      </Text>
+      </Text> */}
     </View>
   );
 };

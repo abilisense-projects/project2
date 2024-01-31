@@ -173,7 +173,31 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
             </View>}
             {State != [] ?
                 <View style={styles.containerCalls}>
-                    <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>
+
+<FlatList
+        data={State}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) =><View key={item._id}>
+        {(isSmallDevice && occupied.flag) ?
+            <View style={styles.ListIcon} >
+                <AntDesign name="exclamationcircle" size={24} color={item.level == "Hard" ? "red" :
+                    item.level == "Medium" ? "orange" : "green"} padding={50}
+                    onPress={() => { { occupied.flag || handleAlertPress(item._id) } }} />
+            </View> : <TouchableOpacity
+                // disabled={call.status === "in treatment" ? true : false}
+                style={[
+                    (item.status == "in treatment" ?
+                        [styles.alert, styles.inTreatment] : styles.alert),
+                        item.level == "Hard" ? colorHi :
+                        item.level == "Medium" ? colorMed : colorLow ]}
+                onPress={() => { !occupied.flag ? handleAlertPress(item._id, item.status) : alert(" you need to close to changing to a difrent one") }} >
+                <Text style={styles.text}>{item.status}</Text>
+                <Text style={styles.text}>{item.distressDescription}</Text>
+                <Text style={styles.text}>{`${item.date.split('T')[1].split('.')[0]}`} </Text>
+            </TouchableOpacity>}
+    </View>}
+      />
+                    {/* <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>
                         {State.map((call, index) => { return (
                                 <View key={call._id}>
                                     {(isSmallDevice && occupied.flag) ?
@@ -194,7 +218,7 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
                                             <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}`} </Text>
                                         </TouchableOpacity>}
                                 </View>) })}
-                    </ScrollView>
+                    </ScrollView> */}
                 </View>: <Text>"No distress alerts"</Text>}
         </View>
     );

@@ -32,7 +32,8 @@ const HomeScreenStack = ({ navigation }) => {
         name="HomeScreen"
         component={HomeScreen}
         options={{
-          title: false, // Set Header Title
+          title: false, 
+          // Set Header Title
           headerLeft: () =>
             isHebrew ? undefined : (
               <NavigationDrawerHeader navigationProps={navigation} />
@@ -41,7 +42,7 @@ const HomeScreenStack = ({ navigation }) => {
             ? () => <NavigationDrawerHeader navigationProps={navigation} />
             : undefined,
           headerStyle: {
-            backgroundColor: colors.background, // Set Header color
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text, // Set Header text color
           headerTitleStyle: {
@@ -79,7 +80,7 @@ const SettingScreenStack = ({ navigation }) => {
             ? () => <NavigationDrawerHeader navigationProps={navigation} />
             : undefined,
           headerStyle: {
-            backgroundColor: colors.background, // Set Header color
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text, // Set Header text color
           headerTitleStyle: {
@@ -111,7 +112,8 @@ const HistoryScreenStack = ({ navigation }) => {
             ? () => <NavigationDrawerHeader navigationProps={navigation} />
             : undefined,
           headerStyle: {
-            backgroundColor: colors.background, // Set Header color
+            backgroundColor: colors.background,
+            // Set Header color
           },
           headerTintColor: colors.text, // Set Header text color
           headerTitleStyle: {
@@ -148,16 +150,17 @@ const DrawerNavigatorRoutes = (props) => {
         labelStyle: {
           color: "#d8d8d8",
         },
-         drawerPosition: isHebrew ? "right" : "left",
+        //  drawerPosition: isHebrew ? "right" : "left",
          
       }}
       drawerContent={CustomSidebarMenu}
     >
       <Drawer.Screen
+      
         name="HomeScreenStack"
         options={{
           drawerLabel: t("Home Screen"),
-          drawerIcon: ({ color }) => (
+          drawerIcon: () => (
             <FontAwesome5 name="home" size={19} color={colors.text} />
           ),
         }}
@@ -167,7 +170,7 @@ const DrawerNavigatorRoutes = (props) => {
         name="SettingScreenStack"
         options={{
           drawerLabel: t("Setting Screen"),
-          drawerIcon: ({ color }) => (
+          drawerIcon: () => (
             <Ionicons name="settings-sharp" size={20} color={colors.text} />
           ),
         }}
@@ -177,7 +180,7 @@ const DrawerNavigatorRoutes = (props) => {
         name="HistoryScreenStack"
         options={{
           drawerLabel: t("History Screen"),
-          drawerIcon: ({ color }) => (
+          drawerIcon: () => (
             <FontAwesome name="list-alt" size={20} color={colors.text} />
           ),
         }}

@@ -30,10 +30,6 @@ const Splash = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Image
-        source={require("../../assets/images/aboutreact.png")}
-        style={{ width: "90%", resizeMode: "contain", margin: 30 }}
-      /> */}
       <ActivityIndicator
         animating={animating}
         color="#FFFFFF"

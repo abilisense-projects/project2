@@ -3,6 +3,7 @@ const { Alert } = require("../models/alerts.model");
 const { History } = require("../models/history.model");
 
 const addHistoryforHelper = async (id, userId, duration, summary) => {
+  
   history = {
     userId: userId,
     alertId: id,
