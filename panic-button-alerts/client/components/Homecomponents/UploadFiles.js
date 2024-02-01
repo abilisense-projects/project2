@@ -21,7 +21,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const UploadFiles = () => {
   const [singleFile, setSingleFile] = useState(null);
- const selectFile = async () => {
+  const selectFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: 'application/pdf',
@@ -32,7 +32,9 @@ const UploadFiles = () => {
         // result.output.item(0).uri,
         result.output.item(0).type, // mime type
         result.output.item(0).name,
-        result.output.item(0).size
+        result.output.item(0).size,
+      
+
       );
       setSingleFile(result)
     } catch (err) {
@@ -45,11 +47,10 @@ const UploadFiles = () => {
   };
   const uploadFile = async () => {
     // Check if any file is selected or not
-    if (singleFile != null) {
+    if (singleFile !== null) {
       try {
-        const response = await axios.post(`upload/`, { File: singleFile.as});
-        let responseJson = await response.json();
-        if (responseJson.status == 1) {
+        const response = await axios.post(`upload/`, { File: singleFile.assets[0] },);
+        if (response.data===true) {
           alert('Upload Successful');
         }
         else {
@@ -61,20 +62,20 @@ const UploadFiles = () => {
       }
     };
   }
- 
+  
   return (
     <View style={styles.mainBody}>
 
       <TouchableOpacity
         style={styles.buttonStyle}
         activeOpacity={0.5}
-        onPress={() => selectFile()}>
+        onPress={selectFile}>
         <Text style={styles.buttonTextStyle}>Select File</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonStyle}
         activeOpacity={0.5}
-        onPress={() => uploadFile()}>
+        onPress={uploadFile}>
         <Text style={styles.buttonTextStyle}>Upload File</Text>
       </TouchableOpacity>
       {singleFile != null ? (

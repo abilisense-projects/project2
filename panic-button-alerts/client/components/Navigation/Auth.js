@@ -5,9 +5,10 @@ import { useTranslation } from "react-i18next";
 
 import "react-native-gesture-handler";
 import ResetPassword from "../forgetPassword/ResetPasswordScreen";
-import Login from "../../pages/LogInPage";
+import Login from "../../pages/LogIn";
 import RegisterScreen from "../../pages/RegistrScreen";
 import SendEmail from "../forgetPassword/SendEmailScreen";
+import Toast from "react-native-toast-message";
 
 const Stack = createStackNavigator();
 export const Auth = ({ navigation }) => {
@@ -42,7 +43,7 @@ export const Auth = ({ navigation }) => {
     });
   }, []);
 
-  return (
+  return (<>
     <Stack.Navigator initialRouteName="login">
       <Stack.Screen
         name="Login"
@@ -83,5 +84,7 @@ export const Auth = ({ navigation }) => {
         }}
       />
     </Stack.Navigator>
+    <Toast />
+    </>
   );
 };

@@ -6,7 +6,7 @@ const AlertCard = ({ alert }) => {
   const { t, i18n } = useTranslation();
   const {
     alertId: {
-      date,
+      date ,
       distressDescription,
       status,
       location: {
@@ -25,7 +25,7 @@ const AlertCard = ({ alert }) => {
     <View style={styles.card}>
       <Text style={styles.title}>{t("Alert Details")}</Text>
       <Text style={styles.subtitle}>
-       { t("Date: ")}{new Date(date).toLocaleString()}
+       { t("Date: ")}{date&&new Date(date).toLocaleString()}
       </Text>
       <Text style={styles.subtitle}>
         {t("Distress Description:" )}{distressDescription}
