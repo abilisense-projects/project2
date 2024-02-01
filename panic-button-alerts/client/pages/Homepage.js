@@ -6,7 +6,10 @@ import Specificall from '../components/Homecomponents/Specificallcomp';
 import MapComponent from '../components/Homecomponents/MapComponent';
 import { GridLayer } from 'leaflet';
 import { Switch } from 'react-native-elements';
+import { useTranslation } from 'react-i18next';
 export default function Homepage() {
+  const { t, i18n } = useTranslation();
+
   useEffect(() => {
     updatemes();
     setisSmallDevice(Dimensions.get('window').width < 768)
@@ -44,7 +47,7 @@ export default function Homepage() {
     setStatus(status)
   }
   return (
-    <View style={{ height: '100%', width: ' 100%' }}>
+    <View style={{ height: '90%', width: ' 100%' }}>
       {/* style={styles.container} */}
       <Text style={styles.headerTitle}>{Mes}</Text>
 
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: 'row',
     padding: 10,
-    height: '90%',
+    height: '80%',
     width: '100%',
     zIndex: '1'
   },
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     // flex: 1,
     width: '70%',
+    height: '70%',
     borderWidth: 1, // Add border
     borderColor: 'black', // Border color
     borderRadius: 10, // Border radius

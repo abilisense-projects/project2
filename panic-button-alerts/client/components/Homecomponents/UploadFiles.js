@@ -21,26 +21,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const UploadFiles = () => {
   const [singleFile, setSingleFile] = useState(null);
-
-  const uploadFile = async () => {
-    // Check if any file is selected or not
-    if (singleFile != null) {
-      try {
-        const response = await axios.post(`upload/`, { File: singleFile },);
-        let responseJson = await response.json();
-        if (responseJson.status == 1) {
-          alert('Upload Successful');
-        }
-        else {
-          // If no file selected the show alert
-          alert('Please Select File first');
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  }
-  const selectFile = async () => {
+ const selectFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: 'application/pdf',
@@ -62,6 +43,25 @@ const UploadFiles = () => {
       }
     }
   };
+  const uploadFile = async () => {
+    // Check if any file is selected or not
+    if (singleFile != null) {
+      try {
+        const response = await axios.post(`upload/`, { File: singleFile.as});
+        let responseJson = await response.json();
+        if (responseJson.status == 1) {
+          alert('Upload Successful');
+        }
+        else {
+          // If no file selected the show alert
+          alert('Please Select File first');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  }
+ 
   return (
     <View style={styles.mainBody}>
 

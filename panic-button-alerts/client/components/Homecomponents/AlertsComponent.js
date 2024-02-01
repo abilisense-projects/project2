@@ -3,7 +3,10 @@ import { StyleSheet, ScrollView, Image, TouchableOpacity, Text, View, Dimensions
 import axios from '../../services/axiosInstance';
 import { Icon } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
+import CustomButton from '../../services/CustomButton'
+import { useTranslation } from 'react-i18next';
 export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
+    const { t, i18n } = useTranslation();
     const [ListLow, setListLow] = useState([])
     const [ListMedium, setListMedium] = useState([])
     const [ListHigh, setListHigh] = useState([])
@@ -30,12 +33,14 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     useEffect(() => {
         if (lastIdAlert) {
             setAllList([...ListHigh, ...ListMedium, ...ListLow])
-               setState([...ListHigh, ...ListMedium, ...ListLow])
+            setState([...ListHigh, ...ListMedium, ...ListLow])
             const interval = setInterval(() => {
-                {flag?(setAllList([...ListHigh, ...ListMedium, ...ListLow]),
+                {
+                    flag ? (setAllList([...ListHigh, ...ListMedium, ...ListLow]),
                         setState([...ListHigh, ...ListMedium, ...ListLow]),
-                        setflag(false)):null}
-                {propId?setoccupied({ ...occupied, flag: true, Id: propId }):setoccupied({ ...occupied, flag: false, Id: null })}
+                        setflag(false)) : null
+                }
+                { propId ? setoccupied({ ...occupied, flag: true, Id: propId }) : setoccupied({ ...occupied, flag: false, Id: null }) }
                 getnewAlert();
             }, 1000);
             return () => clearInterval(interval);
@@ -158,47 +163,22 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     return (
         <View style={styles.container}>
             {isSmallDevice || <View style={styles.buttons}>
-                <TouchableOpacity style={styles.button} onPress={() => { changeState("High") }}
-                ><Text style={styles.textb}>High</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => { changeState("Med") }}
-                ><Text style={styles.textb}>Med</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => { changeState("Low") }}
-                ><Text style={styles.textb}>Low</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => { changeState("All") }}
-                ><Text style={styles.textb}>All</Text>
-                </TouchableOpacity>
+            <CustomButton labal={t(`High${ListHigh.length}`)} onPress={() => { changeState("High") }}/>
+                <CustomButton labal={"Medium"}  onPress={() => { changeState("Med") }}
+                />
+                <CustomButton labal={"Low"}  onPress={() => { changeState("Low") }}
+                />
+                <CustomButton labal={t(`All${AllList.length}`)}  onPress={() => { changeState("All") }}
+                >
+                </CustomButton>
             </View>}
             {State != [] ?
                 <View style={styles.containerCalls}>
-
-<FlatList
-        data={State}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) =><View key={item._id}>
-        {(isSmallDevice && occupied.flag) ?
-            <View style={styles.ListIcon} >
-                <AntDesign name="exclamationcircle" size={24} color={item.level == "Hard" ? "red" :
-                    item.level == "Medium" ? "orange" : "green"} padding={50}
-                    onPress={() => { { occupied.flag || handleAlertPress(item._id) } }} />
-            </View> : <TouchableOpacity
-                // disabled={call.status === "in treatment" ? true : false}
-                style={[
-                    (item.status == "in treatment" ?
-                        [styles.alert, styles.inTreatment] : styles.alert),
-                        item.level == "Hard" ? colorHi :
-                        item.level == "Medium" ? colorMed : colorLow ]}
-                onPress={() => { !occupied.flag ? handleAlertPress(item._id, item.status) : alert(" you need to close to changing to a difrent one") }} >
-                <Text style={styles.text}>{item.status}</Text>
-                <Text style={styles.text}>{item.distressDescription}</Text>
-                <Text style={styles.text}>{`${item.date.split('T')[1].split('.')[0]}`} </Text>
-            </TouchableOpacity>}
-    </View>}
-      />
-                    {/* <ScrollView vertical={false} horizontal={false} style={{ flex: 1 }}>
-                        {State.map((call, index) => { return (
+                    <ScrollView vertical={true} style={styles.scrollview}>
+                       
+                      
+                        {State.map((call, index) => {
+                            return (
                                 <View key={call._id}>
                                     {(isSmallDevice && occupied.flag) ?
                                         <View style={styles.ListIcon} >
@@ -211,21 +191,22 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
                                                 (call.status == "in treatment" ?
                                                     [styles.alert, styles.inTreatment] : styles.alert),
                                                 call.level == "Hard" ? colorHi :
-                                                    call.level == "Medium" ? colorMed : colorLow ]}
+                                                    call.level == "Medium" ? colorMed : colorLow]}
                                             onPress={() => { !occupied.flag ? handleAlertPress(call._id, call.status) : alert(" you need to close to changing to a difrent one") }} >
                                             <Text style={styles.text}>{call.status}</Text>
                                             <Text style={styles.text}>{call.distressDescription}</Text>
                                             <Text style={styles.text}>{`${call.date.split('T')[1].split('.')[0]}`} </Text>
                                         </TouchableOpacity>}
-                                </View>) })}
-                    </ScrollView> */}
-                </View>: <Text>"No distress alerts"</Text>}
+                                </View>)
+                        })}
+                    </ScrollView>
+                </View> : <Text>"No distress alerts"</Text>}
         </View>
     );
 }
 const styles = StyleSheet.create({
     container: {
-       
+
         height: '100%',
         width: '100%'
     },
@@ -288,5 +269,9 @@ const styles = StyleSheet.create({
     ListIcon: {
         alignItems: 'flex-start',
         justifyFontent: 'space-around'
-    }
+    },
+    scrollview:{
+        flex: 1,
+    maxHeight: "30%",
+},
 });
