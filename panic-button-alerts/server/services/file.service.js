@@ -3,9 +3,9 @@ const File = require('../models/file.model');
 const saveFile = async (file) => {
   console.log(file)
   const newFile = new File({
-    name: file.originalname,
-    contentType: file.mimetype,
-    data: file.buffer,
+    name: file.name,
+    contentType: file.mimeType,
+    data: file.uri,
   });
 
   await newFile.save();

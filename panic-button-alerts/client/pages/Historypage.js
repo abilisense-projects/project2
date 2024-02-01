@@ -17,7 +17,8 @@ const Historypage = () => {
     const fetchData = async () => {
       try {
         const token = await decodeToken();
-        const response = await axios.get(`history/user/${token._id}`); // Replace with your actual server endpoint
+        const response = await axios.get(`history/user/${token._id}`);
+        console.log(response.data) 
         setAlerts(response.data);
         console.log(alerts.length > 0);
       } catch (error) {

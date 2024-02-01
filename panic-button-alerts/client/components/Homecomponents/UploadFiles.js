@@ -50,8 +50,7 @@ const UploadFiles = () => {
     if (singleFile !== null) {
       try {
         const response = await axios.post(`upload/`, { File: singleFile.assets[0] },);
-        let responseJson = await response.json();
-        if (responseJson.status == 1) {
+        if (response.data===true) {
           alert('Upload Successful');
         }
         else {
