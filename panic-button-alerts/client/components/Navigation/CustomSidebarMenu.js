@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, Switch } from "react-native";
+import { View, Text, Image, StyleSheet, Switch, I18nManager } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
 import { useTheme } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 const { jwtDecode } = require("jwt-decode");
 
-import MyModal from "./Modal";
-import { AppContext } from '../components/context/AppContext';
+import MyModal from "../Modal";
+import { AppContext } from "../context/AppContext";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { get, remove } from "../../services/Storage";
+import { useTranslation } from "react-i18next";
 
 const CustomSidebarMenu = (props) => {
+  const { t, i18n } = useTranslation();
+  const isHebrew = i18n.language === "he";
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
-  const { colors } = useTheme();
-  const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext)
+  const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext);
+  
+  if (isHebrew) {
+    I18nManager.forceRTL(true);
+  } else {
+    I18nManager.forceRTL(false);
+  }
   useEffect(() => {
     // Function to get and decode the token from AsyncStorage
     const fetchTokenAndDecode = async () => {
       try {
-        const token = await AsyncStorage.getItem("accessToken");
-        console.log(token);
+        const token = await get("accessToken");
         if (token) {
-          console.log(jwtDecode(token));
           const decodedToken = jwtDecode(token);
-          console.log(decodedToken);
           setName(decodedToken.name);
         }
       } catch (error) {
@@ -47,14 +51,10 @@ const CustomSidebarMenu = (props) => {
   const hideModal = () => {
     setModalVisible(false);
   };
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    // You can add logic here to change the app theme based on the darkMode state
-    // For example, you can use a library like react-native-appearance or change your styles dynamically
-  };
+
   const handleLogout = async () => {
     try {
-      await AsyncStorage.clear();
+      await remove("accessToken");
       props.navigation.navigate("Auth");
     } catch (error) {
       console.error("Error clearing AsyncStorage:", error);
@@ -65,31 +65,28 @@ const CustomSidebarMenu = (props) => {
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
         <Image
-          source={require("../assets/user.png")}
-          style={{
-            height: 130,
-            width: 130,
-            borderRadius: 65,
-          }}
+          source={require("../../assets/user.png")}
+          style={stylesSidebar.image}
         />
         <Text
-          style={{
-            fontSize: 22,
-            marginVertical: 6,
-            fontWeight: "bold",
-            color: "#111",
-          }}
+          style={stylesSidebar.text}
         >
-          {name}
+          {t(name.toString())}
         </Text>
       </View>
 
       <View style={stylesSidebar.profileHeaderLine} />
 
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
+      <DrawerContentScrollView {...props}
+        style={{ direction: isHebrew ? "rtl" : "ltr" }}
+      >
+        <DrawerItemList
+          {...props}
+          style={{ direction: isHebrew? "rtl" : "ltr" }}
+
+        />
         <DrawerItem
-          label="Log out"
+          label={t("Log out")}
           onPress={showModal}
           icon={({ focused, color, size }) => (
             <MaterialCommunityIcons name="logout" size={size} color={color} />
@@ -97,8 +94,8 @@ const CustomSidebarMenu = (props) => {
         />
 
         <DrawerItem
-          label={isDarkTheme ? "Dark mode" : "Light mode"}
-         onPress={() => setIsDarkTheme(current => !current)}
+          label={isDarkTheme ? t("Light mode") : t("Dark mode")}
+          onPress={() => setIsDarkTheme((current) => !current)}
           icon={({ focused, color, size }) => (
             <Icon
               name={isDarkTheme ? "weather-night" : "weather-sunny"}
@@ -107,15 +104,27 @@ const CustomSidebarMenu = (props) => {
             />
           )}
         />
+        <DrawerItem
+          label={isHebrew ? "אנגלית" : "Hebrew"}
+          onPress={() =>
+           isHebrew
+              ? i18n.changeLanguage("en")
+              : i18n.changeLanguage("he")
+          }
+          icon={({ focused, color, size }) => (
+            <FontAwesome name="language" size={size} color={color} />
+          )}
+        />
       </DrawerContentScrollView>
       <MyModal
-        text={"Are you sure you want to log out?"}
+        text={t("Are you sure you want to log out?")}
         visible={modalVisible}
         onConfirm={() => {
           handleLogout();
           hideModal();
         }}
         onCancel={hideModal}
+        action={t("Log Out")}
       />
     </View>
   );
@@ -130,21 +139,23 @@ const stylesSidebar = StyleSheet.create({
     backgroundColor: "#AD40AF",
     paddingTop: 40,
     color: "white",
+
+  },
+  image:{
+    height: 130,
+    width: 130,
+    borderRadius: 65,
+  },
+  text:{
+    fontSize: 22,
+    marginVertical: 6,
+    fontWeight: "bold",
+    color: "#111",
   },
   profileHeader: {
     // flexDirection: "row",
     backgroundColor: "#AD40AF",
     padding: 15,
-    textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  profileHeaderPicCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 60 / 2,
-    color: "white",
-    backgroundColor: "#ffffff",
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
@@ -158,7 +169,7 @@ const stylesSidebar = StyleSheet.create({
   profileHeaderLine: {
     height: 1,
     marginHorizontal: 20,
-    backgroundColor: "#e2e2e2",
+    backgroundColor: "#AD40AF",
     marginTop: 15,
   },
   logoutIcon: {

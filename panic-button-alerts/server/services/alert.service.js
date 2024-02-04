@@ -3,6 +3,7 @@ const moment = require("moment-timezone");
 const { Alert } = require("../models/alerts.model");
 const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
 const { MedicalConditions } = require("../models/medicalConditions.model");
+const { addHistoryforHelper } = require("./history.service");
 
 var isUpdate = [];
 const status = { $nin: ["treated", "cancel"] };
@@ -55,7 +56,6 @@ const getnewAlerts = async (lastIdAlert) => {
   // Sort in ascending order based on the date
   let updateItemsresult = [];
   if (isUpdate.length != 0) {
-    console.log("came to if");
     updateItemsresult = await find(
       Alert,
       {
@@ -64,9 +64,8 @@ const getnewAlerts = async (lastIdAlert) => {
       (pagination = {}),
       sort
     );
-    isUpdate=[]
+    isUpdate = [];
   }
-  console.log("came");
   return { new: lastItemsresult, update: updateItemsresult };
 };
 
@@ -85,10 +84,16 @@ const updateAlertStatus = async (alertId, status) => {
   console.log(result);
   return result;
 };
+const treatedAlert = async (id, status, userId, duration, summary) => {
+  const update =await  updateAlertStatus(id, status);
+  const add = await addHistoryforHelper(id, userId, duration, summary);
+  return {update:update,add:add}
+};
 
 module.exports = {
   getAlerts,
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
+  treatedAlert
 };

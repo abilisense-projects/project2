@@ -1,236 +1,159 @@
-// import React from 'react';
-// import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
-// //import MapView from 'react-native-maps'; // You'll need to install this package
-// import MapComponent from '../components/MapComponent';
-// export default function App() {
-//   // Example function to handle when an alert is pressed
-//   const handleAlertPress = (alertId) => {
-//     console.log('Alert pressed:', alertId);
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.header}>
-//         <Text style={styles.headerText}>Allsense</Text>
-//         <View style={styles.filterContainer}>
-//           <TouchableOpacity style={styles.filterButton}>
-//             <Text style={styles.filterText}>Filters</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//       <View style={styles.main}>
-//         <ScrollView style={styles.alertList}>
-//           {/* You would map over your alerts here to create these components */}
-//           <TouchableOpacity onPress={() => handleAlertPress(1)} style={styles.alertItem}>
-//             <Text style={styles.alertText}>Fire Alarm</Text>
-//             <Text style={styles.alertTime}>10:41 PM</Text>
-//           </TouchableOpacity>
-//           {/* ... other alerts */}
-//         </ScrollView>
-//         {/* <MapComponent
-//           style={styles.map}
-//           // Initial region should be set based on your requirements
-//           initialRegion={{
-//             latitude: 37.78825,
-//             longitude: -122.4324,
-//             latitudeDelta: 0.0922,
-//             longitudeDelta: 0.0421,
-//           }}
-//         /> */}
-//         {/* ...other components like Specificall, etc. */}
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#121212',
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     padding: 10,
-//     alignItems: 'center',
-//   },
-//   headerText: {
-//     color: 'white',
-//     fontSize: 20,
-//   },
-//   filterContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   filterButton: {
-//     backgroundColor: '#333',
-//     padding: 8,
-//     borderRadius: 5,
-//   },
-//   filterText: {
-//     color: 'white',
-//   },
-//   main: {
-//     flex: 1,
-//     flexDirection: 'row',
-//   },
-//   alertList: {
-//     flex: 1,
-//     backgroundColor: '#222',
-//   },
-//   alertItem: {
-//     padding: 10,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#333',
-//   },
-//   alertText: {
-//     color: 'white',
-//   },
-//   alertTime: {
-//     color: '#aaa',
-//   },
-//   map: {
-//     flex: 2,
-//     borderWidth: 1,
-//     borderColor: 'white',
-//     borderRadius: 10,
-//     overflow: 'hidden',
-//   },
-// });
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text } from 'react-native';
-import Alertscomp from '../components/alertcomps/AlertsComponent';
-import Specificall from '../components/Specificallcomp';
-import MapComponent from '../components/MapComponent';
+import { StyleSheet, ScrollView,TouchableOpacity, View, Text, Dimensions } from 'react-native';
+import Alertscomp from '../components/Homecomponents/AlertsComponent';
+import Specificall from '../components/Homecomponents/Specificallcomp';
+import MapComponent from '../components/Homecomponents/MapComponent';
+import { GridLayer } from 'leaflet';
+import { Switch } from 'react-native-elements';
+import { useTranslation } from 'react-i18next';
+
+//import DailyIframe from "@daily-co/react-native-daily-js";
+//import Daily from '@daily-co/react-native-daily-js';
+
+// Initialize Daily with your API key
+
 export default function Homepage() {
-    useEffect(() => {
-        updatemes();
-    }, []);
-    const [Mes, setMes] = useState('');
-    const [Name, setName] = useState('Malka');
-    const [Id, setId] = useState(null);
-    const [Alerts,setAlerts]=useState([])
-    async function updatemes() {
-        const time = new Date();
-        const hour = time.getHours();
-        if (hour < 13) {
-            setMes('Good morning!');
-        } else if (hour < 18) {
-            setMes('Good afternoon');
-        } else {
-            setMes('Good night');
-        }
+  const { t, i18n } = useTranslation();
+  // const call = Daily.createCallObject();
+
+
+  useEffect(() => {
+    updatemes();
+    setisSmallDevice(Dimensions.get('window').width < 768)
+  }, []);
+  const [Mes, setMes] = useState('');
+  const [Id, setId] = useState('');
+  const [Status, setStatus] = useState('')
+  const [Alerts, setAlerts] = useState([])
+  const [isSmallDevice, setisSmallDevice] = useState(false)
+  //items from specific alert
+ 
+  console.log(Dimensions.get('window').width);
+  async function updatemes() {
+    const time = new Date();
+    const hour = time.getHours();
+    if (hour < 13) {
+      setMes('Good morning!');
+    } else if (hour < 18) {
+      setMes('Good afternoon');
+    } else {
+      setMes('Good night');
     }
-    function updateAlerts(value) {
-        if(value.status=="created"){
-            setAlerts(value.arr)
-        }
-        else if (value.status=="add"){
-            setAlerts(current => [value.arr, ...current])
-        }
-        
+  }
+  function updateAlerts(value) {
+    if (value.status == "created") {
+      setAlerts(value.arr)
     }
-    function updateId(value) {
-        setId(value);
+    else if (value.status == "add") {
+      setAlerts(current => [value.arr, ...current])
     }
-    return (
-        <View style={styles.container}>
-            {/* <Text>{Mes} {Name}</Text> */}
-            <View style={styles.contentContainer}>
-                <Alertscomp onIdchange={updateId} onAlertchange={updateAlerts} />
-                <View style={styles.mapContainer}>
-                    <MapComponent alerts={Alerts}/>
-                </View>
-                {/* <Specificall prop_id={Id}/> */}
-                {Id && <Specificall prop_id={Id} onIdchange={updateId} />}
-                
-            </View>
-            <StatusBar style="auto" />
+
+  }
+  function updateId(value, status) {
+    setId(value);
+    setStatus(status)
+  }
+  // function handleMeet() {
+  //   call.join({ url: 'https://abilisense-meeting.daily.co/allhands' });
+  //   //daily.join({ url: abilisense-meeting.daily.co });
+  // }
+  return (
+    <View style={{ height: '90%', width: ' 100%' }}>
+
+{/* <TouchableOpacity onPress={()=>handleMeet}><Text>start to meeet</Text></TouchableOpacity> */}
+      {/* style={styles.container} */}
+      <Text style={styles.headerTitle}>{Mes}</Text>
+
+      <View style={isSmallDevice ? Id ? styles.smallDeviceSpesific : styles.smallDevice : styles.contentContainer}>
+
+        <View style={isSmallDevice ? Id ? styles.AlertAndr : null : styles.Alert}>
+          {/* <ScrollView horizontal={false} style={{ flex: 1 }}> */}
+          <Alertscomp onIdchange={updateId} onAlertchange={updateAlerts} prop_id={Id} />
+          {/* </ScrollView> */}
         </View>
-    );
+        {/* <Specificall prop_id={Id}/> */}
+        <View style={Id ? isSmallDevice ? styles.mapAndrSpecific : styles.mapWithSpecific : styles.mapContainer}>
+          <MapComponent alerts={Alerts} /></View>
+        {Id && <View style={(isSmallDevice) ? styles.SpecificAndr : styles.SpecificAlert}>
+
+          <Specificall propId={Id} onIdchange={updateId} propStatus={Status} /></View>}
+
+      </View>
+      
+      <StatusBar style="auto" />
+    </View>
+  );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+
   contentContainer: {
+    display: "flex",
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 10,
+    height: '80%',
+    width: '100%',
+    zIndex: '1'
   },
-  mapContainer: {
+  Alert: {
     flex: 1,
+    width: '15%'
+    // alignItems: 'flex-start'
+  },
+  SpecificAlert: {
+    paddingLeft: '2%',
+    width: '25%'
+  },
+
+  mapContainer: {
+    // flex: 1,
+    width: '70%',
+    height: '60%',
     borderWidth: 1, // Add border
     borderColor: 'black', // Border color
     borderRadius: 10, // Border radius
     overflow: 'hidden', // Ensure border-radius works as expected
   },
+  mapWithSpecific: {
+    width: '40%',
+    borderWidth: 1, // Add border
+    borderColor: 'black', // Border color
+    borderRadius: 10, // Border radius
+    overflow: 'hidden', // Ensure border-radius works as expected
+  },
+  mapAndrSpecific: {
+
+    margin: '10%',
+    gridColumn: '1/7',
+    gridRow: '2'
+  },
+  SpecificAndr: {
+    margin: '5%',
+    gridColumn: '2/7',
+    gridRow: ' 1'
+  },
+  AlertAndr: {
+    marginTop: '50%',
+    gridColumn: ' 1',
+    gridRow: ' 1'
+  },
+  smallDevice: {
+    display: 'grid',
+    justifyItems: 'center'
+  },
+  smallDeviceSpesific: {
+    display: 'grid',
+    gridTemplateColumns: ' repeat(6, 1fr)'
+  },
   text: {
     fontSize: 'large',
     color: 'black',
   },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'rgb(197, 141, 200)',
+    textAlign: 'center', 
+    marginVertical: 10, // הוסיפי רווח מעל ומתחת לכותרת
+  },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#121212', // Assuming a dark theme from the picture
-//     },
-//     contentContainer: {
-//         flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         alignItems: 'center',
-//         padding: 10,
-//         backgroundColor: '#1e1e1e', // Adjusted to a dark grey to match the panel background in the picture
-//     },
-//     mapContainer: {
-//         flex: 1,
-//         borderWidth: 2, // The border looks thicker in the picture
-//         borderColor: '#ffffff', // The border color seems to be white
-//         borderRadius: 20, // Increased the border-radius to match the rounded corners in the image
-//         overflow: 'hidden',
-//         margin: 10, // Added margin to separate from other elements
-//         backgroundColor: '#323232', // Adjusting the map background to a grey to mimic the map's look
-//     },
-//     text: {
-//         fontSize: 20, // Assuming 'large' is roughly 20
-//         color: 'white', // Text color is white to stand out on the dark background
-//         fontWeight: 'bold', // The text appears to be bold
-//     },
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-

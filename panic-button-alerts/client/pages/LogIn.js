@@ -1,129 +1,148 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
-  Button,
-  StyleSheet,
   TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import axios from "../services/axiosInstance";
-// import { loginSuccess } from '../redux/actions/loginActions';
-import * as Yup from "yup";
-import { loginValidation } from "../loginValidation";
+import validatePassword from "../services/ValidatePassword";
+import ValidateEmail from "../services/ValidateEmail";
+import CustomButton from "../services/CustomButton";
+import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
+import { save } from "../services/Storage";
+
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { t, i18n } = useTranslation();
+
   const handleLogin = async () => {
-    try {
-      setIsEmailValid(ValidateEmail(email));
+    let currentErrors = {};
+    let isValid = true;
 
-      if (!isEmailValid) {
-        console.error("Invalid email format");
-        return;
-      }
-      setConfirmPassword(password)
-      const isPasswordValid = ValidatePassword(password);
-      if (!isPasswordValid) {
-        console.error("Invalid password format");
-        return;
-      }
-
-      const response = await axios.post("/auth/login", { email, password })
-      if (response.data.message === 'Login Success') {
-        // dispatch(loginSuccess(response.user));
-        // storeTokens(response.data.token, {})
-        <Snackbar
-        message="This is a custom Snackbar"
-        actionText="Dismiss"
-        onActionPress={() => {
-          // Implement the action logic here.
-        }}
-        duration={5000} // Customize duration
-        position="bottom" // Change the position to 'top'/'bottom'
-        backgroundColor="#2E67F8" // Customize background color
-        textColor="white" // Change text color
-        actionTextColor="white" // Customize action text color
-        containerStyle={{ marginHorizontal: 12 }} // Apply additional styling
-        messageStyle={{ }} // Adjust message text styling
-        actionTextStyle={{ }} // Customize action text styling
-      />
-        navigation.navigate('DrawerNavigationRoutes');
-       
-      } else {
-        // if the response is not good there is a error on login
-        console.log("else ", response);
-        setErrorMessage("user name or password invalid");
-      }
-      // if there is error show them
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const yupErrors = {};
-        error.inner.forEach((e) => {
-          yupErrors[e.path] = e.message;
-        });
-        setErrors(yupErrors);
-      }
-      setErrorMessage('user name or password invalid');
+    // Validate email
+    if (!email) {
+      currentErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!ValidateEmail(email)) {
+      currentErrors.email = "Email is invalid.";
+      isValid = false;
     }
 
+    // Validate password
+    const passwordValidationResults = validatePassword(password);
+    if (!password) {
+      currentErrors.password = "Password is required.";
+      isValid = false;
+    } else {
+      if (!passwordValidationResults.length) {
+        currentErrors.passwordlength =
+          "Password must be at least 8 characters.";
+        isValid = false;
+      }
+      if (!passwordValidationResults.number) {
+        currentErrors.passwordnumber = "Password must contain 1 number.";
+        isValid = false;
+      }
+      if (!passwordValidationResults.specialChar) {
+        currentErrors.passwordchar =
+          "Password must contain 1 special character.";
+        isValid = false;
+      }
+    }
 
+    setErrors(currentErrors);
+
+    if (isValid) {
+      try {
+        setIsLoading(true);
+        const response = await axios.post("/auth/login", { email, password });
+        setIsLoading(false);
+        if (response.data.message === "Login Success") {
+          await save("accessToken", response.data.token);
+          navigation.replace("DrawerNavigationRoutes");
+          Toast.show({
+            type: "success",
+            text1: t("Login successful"),
+          });
+        } else {
+          // Handle login failure
+          Toast.show({
+            type: "error",
+            text1: t("Login failed"),
+            text2: response.data.message || t("An unexpected error occurred."),
+          });
+        }
+      } catch (error) {
+        setIsLoading(false);
+        Toast.show({
+          type: "error",
+          text1: t("Login failed"),
+          text2: error.message || t("An unexpected error occurred."),
+        });
+      }
+    }
   };
+  const isHebrew = i18n.language === "he";
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>{t("Login")}</Text>
       <TouchableOpacity
         style={styles.registerContainer}
-        onPress={() => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Register" }],
-          });
-        }}
+        onPress={() => navigation.navigate("Register")}
       >
-        <Text style={styles.register}>Register</Text>
+        <Text style={styles.register}>{t("Register")}</Text>
       </TouchableOpacity>
       <TextInput
-        style={[styles.input, errors.email && styles.invalidInput]}
-        placeholder="Email"
-        onChangeText={(text) => {
-          setEmail(text);
-          setErrors((prevErrors) => ({ ...prevErrors, email: "" })); // Merge state updates
-        }}
+        style={[
+          styles.input,
+          errors.email && styles.invalidInput,
+          isHebrew && styles.rtlInput,
+        ]}
+        placeholder={t("Email")}
+        onChangeText={setEmail}
         value={email}
       />
       <TextInput
-        style={[styles.input, errors.password && styles.invalidInput]}
-        placeholder="Password"
+        style={[
+          styles.input,
+          errors.password && styles.invalidInput,
+          isHebrew && styles.rtlInput,
+        ]}
+        placeholder={t("Password")}
         secureTextEntry
-        onChangeText={(text) => {
-          setPassword(text);
-          setErrors((prevErrors) => ({ ...prevErrors, password: "" })); // Merge state updates
-        }}
+        onChangeText={setPassword}
         value={password}
       />
-      <View style={styles.forgotPasswordContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("PasswordReset")}>
-          <Text style={styles.forgotPassword}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
-      {errorMessage ? (
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
-      ) : null}
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      {Object.values(errors).map((error, index) => (
+        <Text key={index} style={styles.errorMessage}>
+          {error}
+        </Text>
+      ))}
+
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <CustomButton label={"Login"} onPress={handleLogin} />
+      )}
+
+      <TouchableOpacity onPress={() => navigation.navigate("SendEmail")}>
+        <Text style={styles.forgotPassword}>{t("Forgot Password?")}</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -132,51 +151,35 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: "75%", // Adjusted width
-    height: 40, // Adjusted height
-    borderColor: "gray",
-    width: "75%", // Adjusted width
-    height: 40, // Adjusted height
+    width: "75%",
+    height: 40,
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     padding: 10,
   },
-  inputContainer: {
-    marginBottom: 20,
-    width: "80%",
-  },
+
   invalidInput: {
     borderColor: "red",
-    borderColor: "red",
   },
-  warningText: {
-    color: "red",
-    color: "red",
-    fontSize: 12,
-    marginBottom: 5,
-  },
-  forgotPasswordContainer: {
-    fontSize: 16,
-    color: "#ac00e6",
-    textDecorationLine: "underline",
-    marginBottom: 10,
-  },
-  register: {
-    fontSize: 16,
-    color: "#ac00e6",
-    textDecorationLine: "underline",
-    marginLeft: 20,
+  rtlInput: {
+    textAlign: "right",
   },
   registerContainer: {
     position: "absolute",
     top: 10,
     left: 10,
   },
+  register: {
+    fontSize: 16,
+    color: "#ac00e6",
+    textDecorationLine: "underline",
+  },
   forgotPassword: {
     fontSize: 16,
     color: "#ac00e6",
     textDecorationLine: "underline",
+    marginTop: 10,
   },
   errorMessage: {
     color: "red",
@@ -193,5 +196,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-export default Login;
 
+export default Login;

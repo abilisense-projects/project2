@@ -1,13 +1,19 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "../pages/LogInPage";
-import RegisterScreen from "../pages/RegistrScreen";
-import SendEmail from "./forgetPassword/SendEmailScreen";
-import "react-native-gesture-handler";
-import ResetPassword from "./forgetPassword/ResetPasswordScreen";
 import { Linking } from "react-native";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
+import "react-native-gesture-handler";
+import ResetPassword from "../forgetPassword/ResetPasswordScreen";
+import Login from "../../pages/LogIn";
+import RegisterScreen from "../../pages/RegistrScreen";
+import SendEmail from "../forgetPassword/SendEmailScreen";
+import Toast from "react-native-toast-message";
+
 const Stack = createStackNavigator();
 export const Auth = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
+
   // Stack Navigator for Login and Sign up Screen
   useEffect(() => {
     // Add event listener to handle deep linking
@@ -35,10 +41,9 @@ export const Auth = ({ navigation }) => {
         handleDeepLink({ url });
       }
     });
-    
   }, []);
-  
-  return (
+
+  return (<>
     <Stack.Navigator initialRouteName="login">
       <Stack.Screen
         name="Login"
@@ -54,7 +59,7 @@ export const Auth = ({ navigation }) => {
         name="Register"
         component={RegisterScreen}
         options={{
-          title: "Register", //Set Header Title
+          title: t("Register"), //Set Header Title
           headerStyle: {
             backgroundColor: "#AD40AF", //Set Header color
           },
@@ -68,7 +73,7 @@ export const Auth = ({ navigation }) => {
         name="SendEmail"
         component={SendEmail}
         options={{
-          title: "SendEmail", //Set Header Title
+          title: t("SendEmail"), //Set Header Title
           headerStyle: {
             backgroundColor: "#AD40AF", //Set Header color
           },
@@ -79,5 +84,7 @@ export const Auth = ({ navigation }) => {
         }}
       />
     </Stack.Navigator>
+    <Toast />
+    </>
   );
 };

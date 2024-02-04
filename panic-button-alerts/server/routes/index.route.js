@@ -1,34 +1,49 @@
-const {
-  LoginController,
-  registerController,
-  resetPasswordRequestController,
-  resetPasswordController,
-} = require("../controllers/auth.controller");
-const {
-  getAlertsController,
-  getnewAlertController,
-  getAlertDetailController,
-  updateAlertController,
-} = require("../controllers/alert.controller");
+const router = require("express").Router();
+const multer = require('multer');
+
+const upload = multer({ 
+  dest: 'uploads/',
+  limits: { fileSize: 1000* 1024 * 1024 }, // for example, 50 MB
+});
+
+const authController = require("../controllers/auth.controller");
+const alertController = require("../controllers/alert.controller");
+const fileController = require("../controllers/file.controller");
+const HistoryController = require("../controllers/history.controller");
 const ApiRateLimiter = require("../middlewares/ApiRateLimiter");
 const VerifyToken = require("../middlewares/VerifyToken");
-const Auth =require("../middlewares/auth")
+const Auth = require("../middlewares/auth");
 
-const router = require("express").Router();
-
-router.post("/auth/register", registerController);
+router.post("/auth/register", authController.registerController);
 router.post(
   "/auth/requestResetPassword",
   ApiRateLimiter,
-  resetPasswordRequestController
+  authController.resetPasswordRequestController
 );
-router.post("/auth/resetPassword", VerifyToken,resetPasswordController);
-router.post("/auth/login", ApiRateLimiter, LoginController);
-router.use(Auth)
-router.get("/alerts/details/:alertId", getAlertDetailController);
-router.get("/alerts/:lastAlertID", getnewAlertController);
-router.get("/alerts", getAlertsController);
-router.post("/alerts", updateAlertController);
+router.post(
+  "/auth/resetPassword",
+  VerifyToken,
+  authController.resetPasswordController
+);
+router.post("/auth/login", ApiRateLimiter, authController.LoginController);
+router.use(Auth);
+router.get(
+  "/alerts/details/:alertId",
+  alertController.getAlertDetailController
+);
+router.get("/alerts/:lastAlertID", alertController.getnewAlertController);
+router.get("/alerts", alertController.getAlertsController);
+router.post("/alerts", alertController.updateAlertStatusController);
+router.post("/alerts/treated", alertController.updateTreatedController);
 
+router.get(
+  "/history/user/:userId",
+  HistoryController.getHistoryforHelperController
+);
+router.get(
+  "/history/patient/:alertId",
+  HistoryController.getHistoryforPatientController
+);
+router.post("/upload", upload.single('file'),fileController.uploadFile);
 
 module.exports = router;

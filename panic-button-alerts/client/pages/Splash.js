@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View, StyleSheet, Image } from "react-native";
 
-import { get } from "./Storage";
+import { get, remove } from "../services/Storage";
+import { jwtDecode } from "jwt-decode";
 
 const Splash = ({ navigation }) => {
   //State for ActivityIndicator animation
@@ -11,10 +12,17 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
     setTimeout(async () => {
       setAnimating(false);
-      //Check if user_id is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
-      const islogin = await get("accessToken");
+
+      const current_time = new Date();
+      let islogin = await get("accessToken");
+      if (islogin) {
+        const decodedToken = jwtDecode(islogin);
+        if (current_time.getTime() > decodedToken.exp * 1000) {
+          await remove("accessToken");
+          islogin = " ";
+        }
+      }
+
       const to = islogin ? "DrawerNavigationRoutes" : "Auth";
       navigation.navigate(to);
     }, 1800);
@@ -22,10 +30,6 @@ const Splash = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Image
-        source={require("../assets/images/aboutreact.png")}
-        style={{ width: "90%", resizeMode: "contain", margin: 30 }}
-      /> */}
       <ActivityIndicator
         animating={animating}
         color="#FFFFFF"
