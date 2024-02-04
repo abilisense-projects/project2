@@ -100,10 +100,10 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
 
       {data ? 
       <View>
-        < View style={{ top: "5%", height: "20px", width: '200px', right: "250px", zIndex: 5 }}>
+        {propStatus == "not treated" && < View style={{ top: "5%", height: "20px", width: '200px', right: "250px", zIndex: 5 }}>
           <Text style={styles.headerButtonText}> you care:</Text>
           <TimerModal isVisible={alertDataTime.flag} onTime={handleSetTime} />
-        </View >
+        </View >}
         <View style={styles.header}>
           <Text style={styles.headerText}>{data.alert.level}</Text>
           {propStatus == "not treated" ? <Text style={styles.headerButtonText}>Open</Text> :
@@ -126,50 +126,50 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         <View style={styles.menu}>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}>
-              <MaterialCommunityIcons name="map-marker-radius-outline" size={24} color="white" />
-              <Text style={{ color: "white" }}>Map</Text>
+              <MaterialCommunityIcons name="map-marker-radius-outline" size={"200%"} color="white" />
+              <Text style={{ color: "white",fontSize:" 150%", }}>Map</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.column}
               onPress={() => setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Sensor" })}>
-              <MaterialIcons name="sensors" size={24} color="white" />
-              <Text style={{ color: "white" }}>Sensor</Text>
+              <MaterialIcons name="sensors" size={"200%"} color="white" />
+              <Text style={{ color: "white",fontSize:" 150%", }}>Sensor</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}
               onPress={() => { propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Evidence" }) }}>
-              <FontAwesome5 name="magnifying-glass-chart" size={24} color="white" />
-              <Text style={{ color: "white" }}>Evidence</Text>
+              <FontAwesome5 name="magnifying-glass-chart" size={"200%"} color="white" />
+              <Text style={{ color: "white" ,fontSize:" 150%",}}>Evidence</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.column}
               onPress={() => setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Trigger" })}>
-              <MaterialCommunityIcons name="alarm-light-outline" size={24} color="white" />
-              <Text style={{ color: "white" }}>Trigger</Text>
+              <MaterialCommunityIcons name="alarm-light-outline" size={"200%"} color="white" />
+              <Text style={{ color: "white",fontSize:" 150%", }}>Trigger</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}
               onPress={() => { setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Instructions" }) }}>
-              <MaterialIcons name="linear-scale" size={24} color="white" />
-              <Text style={{ color: "white" }}>Instructions</Text>
+              <MaterialIcons name="linear-scale" size={"200%"} color="white" />
+              <Text style={{ color: "white",fontSize:" 150%", }}>Instructions</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.column}
               onPress={() => { propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Ticketing" }) }}>
-              <FontAwesome5 name="clipboard-list" size={24} color="white" />
-              <Text style={{ color: "white" }}>Ticketing</Text>
+              <FontAwesome5 name="clipboard-list" size={"200%"}color="white" />
+              <Text style={{ color: "white" ,fontSize:" 150%",}}>Ticketing</Text>
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.footer}>
           {propStatus == "for treatment" && <TouchableOpacity style={styles.footerButton}
             onPress={() => {{alertData ? (updateAlert(data.alert._id, "treated"), onIdchange(''), setAlertDataTIme({ ...alertDataTime, flag: false }), setAlertData({})) : alert("you need to make summry")}}}>
-            <Ionicons name="checkmark" size={24} color="white" />
-            <Text color="white">Applay</Text>
+            <Ionicons name="checkmark" size={"200%"} color="white" />
+            <Text style={{ color: "white" ,fontSize:"150%",}}>Applay</Text>
           </TouchableOpacity>}
           <TouchableOpacity style={styles.footerButton}
             onPress={() => { showModal(), setdataSpecificAlert({ ...dataSpecificAlert, flag: false, data: "" }) }}>
-            <Ionicons name="close" size={24} color="white" />
-            <Text color="white">Close</Text>
+            <Ionicons name="close" size={"200%"} color="white" />
+            <Text style={{ color: "white" ,fontSize:"150%",}}>Close</Text>
           </TouchableOpacity>
         </View>
       </View> : <Text style={styles.helpButtonText}>the server crashed</Text>}
@@ -209,14 +209,14 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         <Text style={styles.dataSpecificAlertText}>   Diseases:{'\n'}</Text>
 
         {data.medicalConditions.map((item, key) =>{ return ( <View key={item._id}>
-          <Text style={{ color: 'white', fontSize: 16, }} >{item}{'\n'}</Text></View>)}
+          <Text style={{ color: 'white', fontSize: "150%", }} >{item}{'\n'}</Text></View>)}
 
         )}
         <Text style={styles.dataSpecificAlertText}> {'\n'}{'\n'}  Previous alerts:{'\n'}</Text>
         <TouchableOpacity onPress={() => setPreviousAlertShow({ ...PreviousAlertShow, falseAlert: false, trueAlert: true })}>
-          <Text style={{ color: 'white', fontSize: 16, }}>Previous alerts: {PreviousAlert.trueAlert.length}</Text></TouchableOpacity>
+          <Text style={{ color: 'white', fontSize: "150%", }}>Previous alerts: {PreviousAlert.trueAlert.length}</Text></TouchableOpacity>
         <TouchableOpacity onPress={() => setPreviousAlertShow({ ...PreviousAlertShow, falseAlert: true, trueAlert: false })}>
-          <Text style={{ color: 'white', fontSize: 16, }}>Previous false alerts: {PreviousAlert.falseAlert.length}</Text></TouchableOpacity>
+          <Text style={{ color: 'white', fontSize: "150%", }}>Previous false alerts: {PreviousAlert.falseAlert.length}</Text></TouchableOpacity>
         {PreviousAlertShow.trueAlert && <FlatList
         data={PreviousAlert.trueAlert}
         keyExtractor={(item) => item._id}
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: '#FFF',
-    fontSize: 20,
+    fontSize: "150%",
     fontWeight: 'bold',
   },
   helpButton: {
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   },
   helpButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize:" 150%",
   },
   dateTime: {
     backgroundColor: '#1F1F1F', // A slightly lighter shade for cards
@@ -285,16 +285,16 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   headerButtonText: {
-    color: 'white'
-
+    color: 'white',
+    fontSize:" 150%"
   },
   dateText: {
     color: '#BBB',
-    fontSize: 16,
+    fontSize:" 150%",
   },
   timeText: {
     color: '#BBB',
-    fontSize: 16,
+    fontSize:" 150%",
   },
   audioButton: {
     flexDirection: 'row',
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   },
   audioText: {
     color: '#FFF',
-    fontSize: 16,
+    fontSize:" 150%",
     marginLeft: 10,
   },
   menu: {
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   },
   dataSpecificAlertText: {
     color: '#FFF',
-    fontSize: 16,
+    fontSize:" 150%",
   },
   more: {
     backgroundColor: '#1F1F1F',

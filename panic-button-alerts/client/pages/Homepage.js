@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView,TouchableOpacity, View, Text, Dimensions } from 'react-native';
 import Alertscomp from '../components/Homecomponents/AlertsComponent';
 import Specificall from '../components/Homecomponents/Specificallcomp';
 import MapComponent from '../components/Homecomponents/MapComponent';
 import { GridLayer } from 'leaflet';
 import { Switch } from 'react-native-elements';
 import { useTranslation } from 'react-i18next';
+
+//import DailyIframe from "@daily-co/react-native-daily-js";
+//import Daily from '@daily-co/react-native-daily-js';
+
+// Initialize Daily with your API key
+
 export default function Homepage() {
   const { t, i18n } = useTranslation();
+  // const call = Daily.createCallObject();
+
 
   useEffect(() => {
     updatemes();
@@ -46,8 +54,14 @@ export default function Homepage() {
     setId(value);
     setStatus(status)
   }
+  // function handleMeet() {
+  //   call.join({ url: 'https://abilisense-meeting.daily.co/allhands' });
+  //   //daily.join({ url: abilisense-meeting.daily.co });
+  // }
   return (
     <View style={{ height: '90%', width: ' 100%' }}>
+
+{/* <TouchableOpacity onPress={()=>handleMeet}><Text>start to meeet</Text></TouchableOpacity> */}
       {/* style={styles.container} */}
       <Text style={styles.headerTitle}>{Mes}</Text>
 
@@ -94,7 +108,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     // flex: 1,
     width: '70%',
-    height: '70%',
+    height: '60%',
     borderWidth: 1, // Add border
     borderColor: 'black', // Border color
     borderRadius: 10, // Border radius
