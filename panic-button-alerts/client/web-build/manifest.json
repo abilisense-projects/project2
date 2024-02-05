@@ -1,0 +1,9 @@
+{
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "lang": "en",
+  "name": "panic-button-alerts",
+  "short_name": "panic-button-alerts",
+  "start_url": "/?utm_source=web_app_manifest",
+  "orientation": "portrait"
+}
