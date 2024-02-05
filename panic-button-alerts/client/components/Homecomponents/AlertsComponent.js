@@ -34,17 +34,13 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     ...ListLow,
   ]);
   const isSmallDevice = Dimensions.get("window").width < 768;
-  const colorHi = {
-    backgroundImage:
-      "linear-gradient(220deg, rgb(255, 0, 0), rgb(255, 255, 255))",
-  };
-  const colorMed = {
-    backgroundImage:
-      "linear-gradient(220deg, rgb(253 95 6 / 99%), rgb(255, 255, 255))",
-  };
-  const colorLow = {
-    backgroundImage:
-      "linear-gradient(220deg, rgb(41 225 25 / 98%), rgb(255, 255, 255))",
+  const getBackgroundColor = (type) => {
+    switch (type) {
+      case 'Hard': return 'red';
+      case 'Medium': return 'orange';
+      case 'Easy': return 'green';
+      default: return '#ffffff';
+    }
   };
 
   useEffect(() => {
@@ -59,17 +55,17 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
               setflag(false))
             : null;
         }
-        {
-          propId
-            ? setoccupied({ ...occupied, flag: true, Id: propId })
-            : setoccupied({ ...occupied, flag: false, Id: null });
-        }
         getnewAlert();
       }, 1000);
       return () => clearInterval(interval);
     }
     getListAlerts();
   }, [lastIdAlert]);
+  useEffect(()=>{ {
+          propId
+            ? setoccupied({ ...occupied, flag: true, Id: propId })
+            : setoccupied({ ...occupied, flag: false, Id: null });
+        }},[propId])
   async function getListAlerts() {
     try {
       console.log("enter");
@@ -170,6 +166,7 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
     }
   }
   async function handleAlertPress(value, state) {
+    setoccupied({ ...occupied, flag: true, Id: value });
     if (state == "in treatment") {
       onIdchange(value, "in treatment");
     } else {
@@ -184,40 +181,35 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
         console.log(error);
       }
     }
-    setoccupied({ ...occupied, flag: true, Id: value });
+    
   }
-  function alertsShow(call) {
+  function alertsShow(alert) {
     return (
-      <View key={call._id}>
+        <View >
         <TouchableOpacity
-          // disabled={call.status === "in treatment" ? true : false}
-          style={[
-            call.status == "in treatment"
-              ? [styles.alert, styles.inTreatment]
-              : styles.alert,
-            call.level == "Hard"
-              ? colorHi
-              : call.level == "Medium"
-              ? colorMed
-              : colorLow,
-          ]}
-          onPress={() => {
-            !occupied.flag
-              ? handleAlertPress(call._id, call.status)
-              : alert(" you need to close to changing to a difrent one");
-          }}
-        >
-          <Text style={styles.text}>{call.distressDescription}</Text>
-          <Text style={styles.text}>
-            {`${call.date.split("T")[1].split(".")[0]}`}{" "}
-          </Text>
-        </TouchableOpacity>
-      </View>
+                 key={alert._id}
+                 style={[
+                    alert.status == "in treatment"
+                      ? [styles.alert, styles.inTreatment,{ backgroundColor: getBackgroundColor(alert.level) }]
+                      : [styles.alert,{ backgroundColor: getBackgroundColor(alert.level) }]
+                  ]}
+                 onPress={() => {
+                   !occupied.flag
+                     ? handleAlertPress(alert._id, alert.status)
+                     : alert(" you need to close to changing to a difrent one");
+                 }}
+               >
+                 <Text style={{ color: "#ffffff", textAlign: "center" }}>
+                    
+                  {`${alert.distressDescription}   ${alert.date.split("T")[1].split(".")[0]}`}
+                 </Text>
+               </TouchableOpacity>
+     </View>
     );
   }
   return (
     <View style={styles.container}>
-      <View style={styles.buttons}>
+     { isSmallDevice && occupied.flag|| <View style={styles.buttons}>
         <CustomButton
           labal={t(`High${ListHigh.length}`)}
           onPress={() => {
@@ -242,10 +234,11 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
             changeState("All");
           }}
         ></CustomButton>
-      </View>
+      </View>}
       <View style={styles.containerCalls}>
         {State != [] ? (
           isSmallDevice && occupied.flag ? (
+            State.map((call, index) => {
             <View style={styles.ListIcon}>
               <AntDesign
                 name="exclamationcircle"
@@ -259,8 +252,8 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
                 }
                 padding={50}
               />
-            </View>
-          ) : State.length > 4 ? (
+            </View>})
+          ) : State.length > 5 ? (
             <ScrollView vertical={true} style={styles.scrollview}>
               {State.map((call, index) => {
                 return alertsShow(call);
@@ -290,16 +283,20 @@ const styles = StyleSheet.create({
   },
   alert: {
     // width: '50%', // Adjust the width to fit two alerts in a row
-    height: 80, // Adjust the height as needed
-    marginBottom: 10, // Add bottom margin between alerts
-    borderRadius: 10, // Add border radius for a rounded look
-    overflow: "hidden", // Hide any overflow content
-    display: "flex",
-    flexDirection: "row-reverse",
-    flexWrap: "wrap",
-    alignContent: "center",
-    justifyContent: "center",
-    alignItems: "center",
+    // height: 80, // Adjust the height as needed
+    // marginBottom: 10, // Add bottom margin between alerts
+    // borderRadius: 10, // Add border radius for a rounded look
+    // overflow: "hidden", // Hide any overflow content
+    // display: "flex",
+    // flexDirection: "row-reverse",
+    // flexWrap: "wrap",
+    // alignContent: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
+    marginBottom: 10,
+    width: "200px",
+    padding: 20,
+    borderRadius: 5
   },
   text: {
     fontSize: " 150%",
@@ -346,6 +343,6 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     flex: 1,
-    maxHeight: "40%",
+    maxHeight: "80%",
   },
 });
