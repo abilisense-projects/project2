@@ -12,8 +12,6 @@ import {
 } from "react-native";
 import axios from "../../services/axiosInstance";
 import { Icon } from "react-native-elements";
-import { AntDesign } from '@expo/vector-icons';
-
 import { AntDesign } from "@expo/vector-icons";
 import CustomButton from "../../services/CustomButton";
 import { useTranslation } from "react-i18next";
