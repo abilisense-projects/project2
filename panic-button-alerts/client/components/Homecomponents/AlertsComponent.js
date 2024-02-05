@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import axios from "../../services/axiosInstance";
 import { Icon } from "react-native-elements";
+import { AntDesign } from '@expo/vector-icons';
+
 import { AntDesign } from "@expo/vector-icons";
 import CustomButton from "../../services/CustomButton";
 import { useTranslation } from "react-i18next";
@@ -238,17 +240,19 @@ export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
       <View style={styles.containerCalls}>
         {State != [] ? (
           isSmallDevice && occupied.flag ? (
-            State.map((call, index) => {
+            State.map((alert, index) => {
             <View style={styles.ListIcon}>
               <AntDesign
-                name="exclamationcircle"
+              key={index}
+                name={
+                    alert.level == 'Hard'
+                      ? "exclamationcircle"
+                      : alert.level == "Medium"
+                      ? "warning"
+                      : "infocirlce"
+                  }
                 size={24}
-                color={
-                  call.level == "Hard"
-                    ? "red"
-                    : call.level == "Medium"
-                    ? "orange"
-                    : "green"
+                color={getBackgroundColor(alert.level)
                 }
                 padding={50}
               />
