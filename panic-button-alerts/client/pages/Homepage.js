@@ -73,8 +73,8 @@ export default function Homepage() {
           {/* </ScrollView> */}
         </View>
         {/* <Specificall prop_id={Id}/> */}
-        <View style={Id ? isSmallDevice ? styles.mapAndrSpecific : styles.mapWithSpecific : styles.mapContainer}>
-          <MapComponent alerts={Alerts} /></View>
+        { Id&&isSmallDevice||<View style={Id ? styles.mapWithSpecific : styles.mapContainer}>
+          <MapComponent alerts={Alerts} /></View>}
         {Id && <View style={(isSmallDevice) ? styles.SpecificAndr : styles.SpecificAlert}>
 
           <Specificall propId={Id} onIdchange={updateId} propStatus={Status} /></View>}
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     // flex: 1,
     width: '70%',
-    height: '60%',
+    height: '120%',
     borderWidth: 1, // Add border
     borderColor: 'black', // Border color
     borderRadius: 10, // Border radius
@@ -124,26 +124,26 @@ const styles = StyleSheet.create({
   mapAndrSpecific: {
 
     margin: '10%',
-    gridColumn: '1/7',
-    gridRow: '2'
+    // gridColumn: '1/7',
+    // gridRow: '2'
   },
   SpecificAndr: {
     margin: '5%',
-    gridColumn: '2/7',
-    gridRow: ' 1'
+    // gridColumn: '2/7',
+    // gridRow: ' 1'
   },
   AlertAndr: {
     marginTop: '50%',
-    gridColumn: ' 1',
-    gridRow: ' 1'
+    // gridColumn: ' 1',
+    // gridRow: ' 1'
   },
   smallDevice: {
-    display: 'grid',
-    justifyItems: 'center'
+    display: "flex",
+    alignItems: "center"
   },
   smallDeviceSpesific: {
-    display: 'grid',
-    gridTemplateColumns: ' repeat(6, 1fr)'
+    display: 'flex',
+    flexDirection: 'row-reverse'
   },
   text: {
     fontSize: 'large',
