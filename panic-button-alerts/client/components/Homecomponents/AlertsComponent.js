@@ -226,7 +226,17 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
         </View>
       )}
       <View style={styles.containerCalls}>
-        {currentAlerts.length > 0 ? (
+        {currentAlerts.length > 0 ?(
+               isSmallDevice && occupied.flag?
+                  currentAlerts.map((alert) =>{
+                  return(
+                   <AntDesign
+                  name={getNameIcon(alert.level)}
+                  size={50}
+                  color={getBackgroundColor(alert.level)}
+                style={{padding:"2%"}}  
+                />)})
+                :
           <ScrollView vertical={true} style={styles.scrollView}>
             {currentAlerts.map((alert) => renderAlert(alert))}
           </ScrollView>
@@ -277,6 +287,8 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: "100%",
-    height:'80%'
+    maxHeight:"100%",
+    // alignItems: "center"
+
   },
 });
