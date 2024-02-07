@@ -2,318 +2,242 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
-  Pressable,
+  TouchableOpacity,
   Text,
   View,
   Dimensions,
 } from "react-native";
 import axios from "../../services/axiosInstance";
 import { AntDesign } from "@expo/vector-icons";
-import CustomButton from "../cors/CustomButton";
+import CustomButton from "../../services/CustomButton";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@react-navigation/native";
-import Container from "../cors/ContainerPage";
-export default function Alertscomp({ onIdchange, onAlertchange, propId }) {
-  const { t, i18n } = useTranslation();
-  const [ListLow, setListLow] = useState([]);
-  const [ListMedium, setListMedium] = useState([]);
-  const [ListHigh, setListHigh] = useState([]);
-  const [ListAlertsAvailability, setListAlertsAvailability] = useState([]);
-  const [ListAlertsUrgency, setListAlertsUrgency] = useState([]);
-  const [State, setState] = useState([]);
-  const [lastIdAlert, setlastIdAlert] = useState(null);
-  const [lastIdUPdateAlert, setlastIdUPdateAlert] = useState(null);
-  const [occupied, setoccupied] = useState({ flag: false, Id: null });
-  const [chosenAlert, setchosenAlert] = useState("");
-  const [flag, setflag] = useState(false);
-  const { colors } = useTheme();
-  const [AllList, setAllList] = useState([
-    ...ListHigh,
-    ...ListMedium,
-    ...ListLow,
-  ]);
+
+export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
+  const { t } = useTranslation();
+  const [alerts, setAlerts] = useState({ Hard: [], Medium: [], Easy: [] });
+  const [lastIdAlert, setLastIdAlert] = useState(null);
+  const [occupied, setOccupied] = useState({ flag: false, Id: null });
+  const [currentAlerts, setCurrentAlerts] = useState([]);
   const isSmallDevice = Dimensions.get("window").width < 768;
-  const colorHi = {
-    backgroundImage:
-      "linear-gradient(220deg, rgb(255, 0, 0), rgb(255, 255, 255))",
-  };
-  const colorMed = {
-    backgroundImage:
-      "linear-gradient(220deg, rgb(253 95 6 / 99%), rgb(255, 255, 255))",
-  };
-  const colorLow = {
-    backgroundImage:
-      "linear-gradient(220deg, rgb(41 225 25 / 98%), rgb(255, 255, 255))",
-  };
 
   useEffect(() => {
-    if (lastIdAlert) {
-      setAllList([...ListHigh, ...ListMedium, ...ListLow]);
-      setState([...ListHigh, ...ListMedium, ...ListLow]);
-      const interval = setInterval(() => {
-        {
-          flag
-            ? (setAllList([...ListHigh, ...ListMedium, ...ListLow]),
-              setState([...ListHigh, ...ListMedium, ...ListLow]),
-              setflag(false))
-            : null;
-        }
-        {
-          propId
-            ? setoccupied({ ...occupied, flag: true, Id: propId })
-            : setoccupied({ ...occupied, flag: false, Id: null });
-        }
-        getnewAlert();
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-    getListAlerts();
-  }, [lastIdAlert]);
-  async function getListAlerts() {
-    try {
-      console.log("enter");
-      const response = await axios.get("http://localhost:8120/api/alerts");
-      const result = response.data;
-      {
-        result && onAlertchange({ status: "created", arr: result });
-        setlastIdAlert(result[result.length - 1]._id);
-        setlastIdUPdateAlert(result[result.length - 1]._id);
-        for (let index = 0; index < result.length; index++) {
-          const element = result[index];
-          if (element.level == "Hard") {
-            setListHigh((current) => [element, ...current]);
-          } else if (element.level == "Medium") {
-            setListMedium((current) => [element, ...current]);
-          } else {
-            setListLow((current) => [element, ...current]);
-          }
-          setListAlertsAvailability((current) => [element, ...current]);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function getnewAlert() {
-    if (lastIdAlert) {
+    const fetchAlerts = async () => {
       try {
-        const response = await axios.get(`alerts/${lastIdAlert}`);
-        const result = response.data;
-        if (result.isNew) {
-          onAlertchange({ status: "add", arr: result });
-          setlastIdAlert(result.newAlerts[result.newAlerts.length - 1]._id);
-          for (let index = 0; index < result.newAlerts.length; index++) {
-            const element = result.newAlerts[index];
-            if (element.level == "Hard") {
-              setListHigh((current) => [element, ...current]);
-            } else if (element.level == "Medium") {
-              setListMedium((current) => [element, ...current]);
+        const response = await axios.get("/alerts");
+        const fetchedAlerts = response.data;
+        if (fetchedAlerts && fetchedAlerts.length > 0) {
+          onAlertChange({ status: "created", arr: fetchedAlerts });
+
+          const sortedAlerts = { Hard: [], Medium: [], Easy: [] };
+          fetchedAlerts.forEach((alert) => {
+            if (sortedAlerts.hasOwnProperty(alert.level)) {
+              const mylevel = JSON.stringify(alert.level);
+              sortedAlerts[alert.level].push(alert);
             } else {
-              setListLow((current) => [element, ...current]);
+              console.warn(`Unexpected alert level: ${alert.level}`);
             }
-          }
-          setflag(true);
+          });
+
+          setAlerts(sortedAlerts);
+          setCurrentAlerts([
+            ...sortedAlerts.Hard,
+            ...sortedAlerts.Medium,
+            ...sortedAlerts.Easy,
+          ]);
+          setLastIdAlert(fetchedAlerts[fetchedAlerts.length - 1]._id);
         }
-        //update
-        else if (result.isUpdate) {
-          console.log("AllList0" + AllList);
-          let index = 0;
-          let j = 0,
-            i = 0;
-          setlastIdUPdateAlert(
-            result.updateAlerts[result.updateAlerts.length - 1]._id
-          );
-          for (; i < result.updateAlerts.length; i++) {
-            const element = result.updateAlerts[i];
-            let tmparr = [];
-            element.level === "Hard"
-              ? (tmparr = ListHigh)
-              : element.level === "Medium"
-              ? (tmparr = ListMedium)
-              : (tmparr = ListLow);
-            for (; j < tmparr.length; j++) {
-              if (tmparr[j]._id === element._id) {
-                if (
-                  element.status == "not treated" ||
-                  element.status == "in treatment"
-                ) {
-                  tmparr[j].update = element.update;
-                  tmparr[j].status = element.status;
-                } else {
-                  delete tmparr[j];
-                }
+      } catch (error) {
+        console.error("Failed to fetch alerts:", error);
+      }
+    };
+
+    fetchAlerts();
+  }, []);
+
+  useEffect(() => {
+    const fetchNewAlerts = async () => {
+      if (lastIdAlert) {
+        try {
+          const response = await axios.get(`/alerts/${lastIdAlert}`);
+          const newAlerts = response.data;
+          if (newAlerts.isNew && newAlerts.newAlerts.length > 0) {
+            onAlertChange({ status: "add", arr: newAlerts });
+
+            const addAlerts = { ...alerts };
+            newAlerts.newAlerts.forEach((alert) => {
+              if (adddAlerts.hasOwnProperty(alert.level)) {
+                addAlerts[alert.level].push(alert);
+              } else {
+                console.warn(`Unexpected alert level: ${alert.level}`);
               }
-            }
-            element.level === "Hard"
-              ? setListHigh(tmparr)
-              : element.level === "Medium"
-              ? setListMedium(tmparr)
-              : setListLow(tmparr);
-            setflag(true);
+            });
+
+            setAlerts(addAlerts);
+            setCurrentAlerts([
+              ...addAlerts.Hard,
+              ...addAlerts.Medium,
+              ...addAlerts.Easy,
+            ]);
+            setLastIdAlert(
+              newAlerts.newAlerts[newAlerts.newAlerts.length - 1]._id
+            );
+          } 
+          if (newAlerts.isUpdate && newAlerts.updateAlerts.length > 0) {
+            onAlertChange({ status: "update", arr: newAlerts });
+
+            const updatedAlerts = { ...alerts };
+            newAlerts.updateAlerts.forEach((alert) => {
+              updatedAlerts[alert.level].forEach((alert1) => {
+                if (alert._id == alert1._id) {
+                  if (
+                    alert.status == "not treated" ||
+                    alert.status == "in treatment"
+                  ) {
+                    alert1.update = alert.update;
+                    alert1.status = alert.status;
+                  } else {const index=updatedAlerts[alert.level].indexOf(alert1)
+                  if(index!=1){
+                    updatedAlerts[alert.level].splice(index,1)
+                  }};
+                } else {
+                  console.warn(`Unexpected alert level: ${alert.level}`);
+                }
+              });
+            });
+
+            setAlerts(updatedAlerts);
+            setCurrentAlerts([
+              ...updatedAlerts.Hard,
+              ...updatedAlerts.Medium,
+              ...updatedAlerts.Easy,
+            ]);
           }
+        } catch (error) {
+          console.error("Failed to fetch new alerts:", error);
         }
-      } catch (error) {
-        console.log(error);
       }
-    }
-  }
-  function changeState(params) {
-    if (params === "High") {
-      setState([...ListHigh]);
-    } else if (params === "Med") {
-      setState([...ListMedium]);
-    } else if (params === "Low") {
-      setState([...ListLow]);
-    } else {
-      setState([...AllList]);
-    }
-  }
-  async function handleAlertPress(value, state) {
-    if (state == "in treatment") {
-      onIdchange(value, "in treatment");
-    } else {
-      onIdchange(value, "for treatment");
+    };
+
+    const intervalId = setInterval(fetchNewAlerts, 10000); // Adjust the interval as needed
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [lastIdAlert, alerts]);
+
+  useEffect(() => {
+    setOccupied(
+      propId ? { flag: true, Id: propId } : { flag: false, Id: null }
+    );
+  }, [propId]);
+
+  const handleAlertPress = async (alertId, status) => {
+    setOccupied({ flag: true, Id: alertId });
+    onIdChange(
+      alertId,
+      status === "in treatment" ? "in treatment" : "for treatment"
+    );
+    if (status !== "in treatment") {
       try {
-        const response = await axios.post(`alerts/`, {
-          id: value,
-          status: "in treatment",
-        });
-        const result = response.data;
+        await axios.post("alerts/", { id: alertId, status: "in treatment" });
       } catch (error) {
-        console.log(error);
+        console.error("Error updating alert status:", error);
       }
     }
-    setoccupied({ ...occupied, flag: true, Id: value });
-  }
+  };
+
+  const renderAlert = (alert) => (
+    <TouchableOpacity
+      key={alert._id}
+      style={[
+        styles.alert,
+        alert.status === "in treatment" && styles.inTreatment,
+        { borderColor: getBackgroundColor(alert.level) },
+      ]}
+      onPress={() => {
+        if (!occupied.flag) {
+          handleAlertPress(alert._id, alert.status);
+        } else {
+        window.alert(
+            "You need to close the current alert before changing to a different one."
+          );
+        }
+      }}
+    >
+      <AntDesign
+        name={getNameIcon(alert.level)}
+        size={24}
+        color={getBackgroundColor(alert.level)}
+      />
+      <Text style={styles.alertText}>
+        {`${alert.distressDescription} ${
+          alert.date.split("T")[1].split(".")[0]
+        }`}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const getBackgroundColor = (level) => {
+    switch (level) {
+      case "Hard":
+        return "red";
+      case "Medium":
+        return "orange";
+      case "Easy":
+        return "green";
+      default:
+        return "#ffffff";
+    }
+  };
+
+  const getNameIcon = (level) => {
+    switch (level) {
+      case "Hard":
+        return "exclamationcircle";
+      case "Medium":
+        return "warning";
+      case "Easy":
+        return "infocirlce";
+      default:
+        return "exclamationcircle";
+    }
+  };
+
+  const changeState = (level) => {
+    setCurrentAlerts(
+      level === "All"
+        ? [...alerts.Hard, ...alerts.Medium, ...alerts.Easy]
+        : [...alerts[level]]
+    );
+  };
+
   return (
     <View style={styles.container}>
-      {isSmallDevice || (
+      {(!isSmallDevice || !occupied.flag) && (
         <View style={styles.buttons}>
-          <Pressable
-            style={[
-              styles.button,
-              { backgroundColor: colors.background, borderColor: "red" },
-            ]}
-            onPress={() => {
-              changeState("High");
-            }}
-          >
-            <Text style={[styles.textb, { color: colors.primary }]}>
-              {" "}
-              {t(`High ${ListHigh.length}`)}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.button,
-              { backgroundColor: colors.background, borderColor: "orange" },
-            ]}
-            onPress={() => {
-              changeState("Med");
-            }}
-          >
-            <Text style={[styles.textb, { color: colors.primary }]}>
-              {" "}
-              {t(`Medium ${ListMedium.length}`)}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.button,
-              { backgroundColor: colors.background, borderColor: "green" },
-            ]}
-            onPress={() => {
-              changeState("Low");
-            }}
-          >
-            <Text style={[styles.textb, { color: colors.primary }]}>
-              {" "}
-              {t(`Low ${ListLow.length}`)}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.button,
-              { backgroundColor: colors.background, borderColor: "yellow" },
-            ]}
-            onPress={() => {
-              changeState("All");
-            }}
-          >
-            <Text style={[styles.textb, { color: colors.primary }]}>
-              {" "}
-              {t(`All${AllList.length}`)}
-            </Text>
-          </Pressable>
+          <CustomButton
+            label={t(`Hard${alerts.Hard.length}`)}
+            onPress={() => changeState("Hard")}
+          />
+          <CustomButton label="Medium" onPress={() => changeState("Medium")} />
+          <CustomButton label="Easy" onPress={() => changeState("Easy")} />
+          <CustomButton
+            label={t(`All${currentAlerts.length}`)}
+            onPress={() => changeState("All")}
+          />
         </View>
       )}
-      {State != [] ? (
-        <View style={styles.containerCalls}>
-          <ScrollView vertical={true} style={styles.scrollview}>
-            {State.map((call, index) => {
-              return (
-                <View key={call._id}>
-                  {isSmallDevice && occupied.flag ? (
-                    <View style={styles.ListIcon}>
-                      <AntDesign
-                        name="exclamationcircle"
-                        size={24}
-                        color={
-                          call.level == "Hard"
-                            ? "red"
-                            : call.level == "Medium"
-                            ? "orange"
-                            : "green"
-                        }
-                        padding={50}
-                        onPress={() => {
-                          {
-                            occupied.flag || handleAlertPress(call._id);
-                          }
-                        }}
-                      />
-                    </View>
-                  ) : (
-                    <Pressable
-                      // disabled={call.status === "in treatment" ? true : false}
-                      style={[
-                        call.status == "in treatment"
-                          ? [styles.alert, styles.inTreatment]
-                          : styles.alert,
-                        call.level == "Hard"
-                          ? colorHi
-                          : call.level == "Medium"
-                          ? colorMed
-                          : colorLow,
-                      ]}
-                      onPress={() => {
-                        !occupied.flag
-                          ? handleAlertPress(call._id, call.status)
-                          : alert(
-                              " you need to close to changing to a difrent one"
-                            );
-                      }}
-                    >
-                      <Text style={styles.text}>{call.status}</Text>
-                      <Text style={styles.text}>
-                        {call.distressDescription}
-                      </Text>
-                      <Text style={styles.text}>
-                        {`${call.date.split("T")[1].split(".")[0]}`}{" "}
-                      </Text>
-                    </Pressable>
-                  )}
-                </View>
-              );
-            })}
+      <View style={styles.containerCalls}>
+        {currentAlerts.length > 0 ? (
+          <ScrollView vertical={true} style={styles.scrollView}>
+            {currentAlerts.map((alert) => renderAlert(alert))}
           </ScrollView>
-        </View>
-      ) : (
-          <Text>"No distress alerts"</Text>
-      )}
+        ) : (
+          <Text style={styles.noAlertsText}>No distress alerts</Text>
+        )}
+      </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     height: "100%",
@@ -321,67 +245,38 @@ const styles = StyleSheet.create({
   },
   containerCalls: {
     display: "flex",
-    alignContent: "center",
     alignItems: "center",
   },
   alert: {
-    // width: '50%', // Adjust the width to fit two alerts in a row
-    height: 80, // Adjust the height as needed
-    marginBottom: 20, // Add bottom margin between alerts
-    borderRadius: 10, // Add border radius for a rounded look
-    overflow: "hidden", // Hide any overflow content
-    display: "flex",
-    flexDirection: "row-reverse",
-    flexWrap: "wrap",
-    alignContent: "center",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: "black",
-    textAlign: "center", // Center text within each alert
-    marginVertical: 5, // Add vertical margin to separate text lines
-    padding: "2%",
+    borderWidth: 2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+    width: 200,
+    padding: 20,
+    borderRadius: 5,
   },
   inTreatment: {
-    borderWidth: "medium",
-    opacity: "40%",
+    opacity: 0.4,
   },
-
+  alertText: {
+    color: "black",
+    textAlign: "center",
+  },
   buttons: {
-    flexDirection: "row", // סדר כפתורים בשורה
-    justifyContent: "center", // הפצל את הכפתורים באופן שווה
-    marginTop: 20, // הוסף רווח עליון
-    marginBottom: 20, // הוסף רווח תחתון לפני הכרטיסיות
-    paddingHorizontal: 10, // הקטן את הרווח האופקי בקצוות
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
-  button: {
-    height: 40, // גובה הכפתור
-    paddingHorizontal: 15, // רווח אופקי פנימי
-    borderRadius: 10, // קירות עגולות
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 2, // הקטן את הרווח בין הכפתורים
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderWidth: 1,
-    paddingVertical: 10,
+  noAlertsText: {
+    fontSize: 18,
+    color: "black",
+    textAlign: "center",
+    marginTop: 20,
   },
-  textb: {
-    fontSize: 16,
-    color: "white",
-    fontWeight: "bold",
-  },
-
-  ListIcon: {
-    alignItems: "flex-start",
-    justifyFontent: "space-around",
-  },
-  scrollview: {
-    flex: 1,
-    maxHeight: "45%",
+  scrollView: {
+    width: "100%",
+    height:'80%'
   },
 });
