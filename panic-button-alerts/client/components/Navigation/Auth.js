@@ -5,9 +5,10 @@ import { useTranslation } from "react-i18next";
 
 import "react-native-gesture-handler";
 import ResetPassword from "../forgetPassword/ResetPasswordScreen";
-import Login from "../../pages/LogIn";
+import Login from "../../pages/LoginScreen";
 import RegisterScreen from "../../pages/RegistrScreen";
-import SendEmail from "../forgetPassword/SendEmailScreen";
+import SendEmail from "../../pages/SendEmailScreen";
+import CustomHeader from "./CustomHeader";
 import Toast from "react-native-toast-message";
 
 const Stack = createStackNavigator();
@@ -43,48 +44,51 @@ export const Auth = ({ navigation }) => {
     });
   }, []);
 
-  return (<>
-    <Stack.Navigator initialRouteName="login">
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ResetPassword"
-        component={ResetPassword}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{
-          title: t("Register"), //Set Header Title
-          headerStyle: {
-            backgroundColor: "#AD40AF", //Set Header color
-          },
-          headerTintColor: "#fff", //Set Header text color
-          headerTitleStyle: {
-            fontWeight: "bold", //Set Header text style
-          },
-        }}
-      />
-      <Stack.Screen
-        name="SendEmail"
-        component={SendEmail}
-        options={{
-          title: t("SendEmail"), //Set Header Title
-          headerStyle: {
-            backgroundColor: "#AD40AF", //Set Header color
-          },
-          headerTintColor: "#fff", //Set Header text color
-          headerTitleStyle: {
-            fontWeight: "bold", //Set Header text style
-          },
-        }}
-      />
-    </Stack.Navigator>
-    <Toast />
+  return (
+    <>
+      <Stack.Navigator initialRouteName="login">
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{
+            title: t("Register"), //Set Header Title
+            headerStyle: {
+              backgroundColor: "#E33458", //Set Header color
+            },
+            headerTintColor: "#fff", //Set Header text color
+            headerTitleStyle: {
+              fontWeight: "bold", //Set Header text style
+            },
+          }}
+        />
+        <Stack.Screen
+          name="SendEmail"
+          component={SendEmail}
+          options={{
+            title: t("SendEmail"), //Set Header Title
+            headerStyle: {
+              backgroundColor: "#E33458", //Set Header color
+            },
+            headerTintColor: "#fff", //Set Header text color
+            headerTitleStyle: {
+              fontWeight: "bold", //Set Header text style
+            },
+          }}
+        />
+      </Stack.Navigator>
+      <Toast />
     </>
   );
 };

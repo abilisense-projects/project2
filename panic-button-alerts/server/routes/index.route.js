@@ -3,13 +3,14 @@ const multer = require('multer');
 
 const upload = multer({ 
   dest: 'uploads/',
-  limits: { fileSize: 1000* 1024 * 1024 }, // for example, 50 MB
+  limits: { fileSize: 1000* 1024 * 1024 },
 });
 
 const authController = require("../controllers/auth.controller");
 const alertController = require("../controllers/alert.controller");
 const fileController = require("../controllers/file.controller");
 const HistoryController = require("../controllers/history.controller");
+const UserController = require("../controllers/user.controller")
 const ApiRateLimiter = require("../middlewares/ApiRateLimiter");
 const VerifyToken = require("../middlewares/VerifyToken");
 const Auth = require("../middlewares/auth");
@@ -45,5 +46,6 @@ router.get(
   HistoryController.getHistoryforPatientController
 );
 router.post("/upload", upload.single('file'),fileController.uploadFile);
+router.post("/user/",UserController.updateUserController)
 
 module.exports = router;

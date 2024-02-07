@@ -18,6 +18,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  
 });
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
@@ -36,9 +37,13 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 userSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign({ _id: this._id,name:this.name }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
+  const token = jwt.sign(
+    { _id: this._id, name: this.name, email: this.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
   return token;
 };
 userSchema.static.findByToken = function (token) {
@@ -49,15 +54,13 @@ userSchema.static.findByToken = function (token) {
     throw new Error(`Error verifying token: ${err.message}`);
   }
 };
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 const validate = (user) => {
   const schema = Joi.object({
     name: Joi.string().required(),
-    email: Joi.string().email({ minDomainSegments: 2}).required(),
-    password: Joi.string()
-      .required()
-      .min(8),
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    password: Joi.string().required().min(8),
   });
   return schema.validate(user);
 };

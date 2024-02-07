@@ -1,16 +1,20 @@
 // MainScreen.js
 
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { FlatList, View, Text, StyleSheet, Pressable } from "react-native";
 import axios from "../services/axiosInstance";
 import AlertCard from "../components/AlertCard";
 import { decodeToken } from "../services/JwtService";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@react-navigation/native";
+import Container from "../components/cors/ContainerPage";
+import Loader from "../components/cors/Loader";
 
-const Historypage = () => {
+export default function Historypage() {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t, i18n } = useTranslation();
+  const { colors } = useTheme();
 
   useEffect(() => {
     // Fetch data from the server
@@ -18,7 +22,7 @@ const Historypage = () => {
       try {
         const token = await decodeToken();
         const response = await axios.get(`history/user/${token._id}`);
-        console.log(response.data) 
+        console.log(response.data);
         setAlerts(response.data);
         console.log(alerts.length > 0);
       } catch (error) {
@@ -33,35 +37,26 @@ const Historypage = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
+      <Loader loading={loading}/>
+      );
   }
-
   if (alerts.length !== 0) {
     return (
-      <FlatList
-        data={alerts}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <AlertCard alert={item} />}
-      />
+      <Container>
+        <FlatList
+          data={alerts}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => <AlertCard alert={item} />}
+        />
+      </Container>
     );
   } else {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>{t("you did not help yet 😒...")}</Text>
-      </View>
+      <Container>
+        <Text style={{ color: colors.text }}>
+          {t("you did not help yet 😒...")}
+        </Text>
+      </Container>
     );
   }
-};
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
-
-export default Historypage;
+}

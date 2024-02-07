@@ -20,8 +20,6 @@
   "Enter Email": "הכנס אימייל",
   "Enter New Password": "הזן סיסמה חדשה",
   "Forgot Password?": "שכחת סיסמה?",
-  "History ": "היסטוריה ",
-  "History Scree": "מסך היסטוריה",
   "History Screen": "מסך היסטוריה",
   "Home": "בית",
   "Home Screen": "מסך הבית",
@@ -60,5 +58,14 @@
   "password must contain 1 number;": "הסיסמה חייבת להכיל מספר 1;",
   "password must contain 1 special carracter;": "הסיסמה חייבת להכיל תו מיוחד 1;",
   "submit": "שלח",
-  "you did not help yet 😒...": "עדיין לא עזרת 😒..."
+  "you did not help yet 😒...": "עדיין לא עזרת 😒...",
+  "Dark Mode": "מצב כהה",
+  "Good Afternoon": "צהריים טובים",
+  "Good Morning": "בוקר טוב",
+  "Good Night": "לילה טוב",
+  "History ": "היסטוריה",
+  "Language": "שפה",
+  "password must contain 1 special character;": "הסיסמה חייבת להכיל תו מיוחד אחד;",
+  "Contact Us":"צור קשר",
+  "Report Bug":"דווח על בעיה"
 }

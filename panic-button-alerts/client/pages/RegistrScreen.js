@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
-import CustomButton from "../services/CustomButton";
+import CustomButton from "../components/cors/CustomButton";
 import ValidateEmail from "../services/ValidateEmail";
 import validatePassword from "../services/ValidatePassword";
 import axios from "../services/axiosInstance";
-import Loader from "../components/Loader";
+import Loader from "../components/cors/Loader";
 import { useTranslation } from "react-i18next";
+import Container from "../components/cors/ContainerPage";
+import CustomHeader from "../components/Navigation/CustomHeader";
 
-const RegisterScreen = ({ navigation }) => {
+export default function RegisterScreen ({ navigation })  {
   // State hooks for form fields and validation
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,6 +26,7 @@ const RegisterScreen = ({ navigation }) => {
 
   // Translation hook
   const { t, i18n } = useTranslation();
+  const isHebrew = i18n.language === "he";
 
   // Function to validate the form
   const validateForm = () => {
@@ -37,9 +40,12 @@ const RegisterScreen = ({ navigation }) => {
     setValidationResults(validatePassword(password));
     if (!password) errors.password = t("Password is required.");
     else {
-      if (!validationResults.length) errors.passwordlength = t("Password must be at least 8 characters.");
-      if (!validationResults.number) errors.passwordnumber = t("Password must contain 1 number.");
-      if (!validationResults.specialChar) errors.passwordchar = t("Password must contain 1 special character.");
+      if (!validationResults.length)
+        errors.passwordlength = t("Password must be at least 8 characters.");
+      if (!validationResults.number)
+        errors.passwordnumber = t("Password must contain 1 number.");
+      if (!validationResults.specialChar)
+        errors.passwordchar = t("Password must contain 1 special character.");
     }
     // Update errors and form validity
     setErrors(errors);
@@ -74,37 +80,72 @@ const RegisterScreen = ({ navigation }) => {
     if (error.response) {
       setRegistrationError(error.response.data);
     } else if (error.request) {
-      setRegistrationError(t("Network error. Please check your internet connection."));
+      setRegistrationError(
+        t("Network error. Please check your internet connection.")
+      );
     } else {
-      setRegistrationError("An unexpected error occurred. Please try again later.");
+      setRegistrationError(
+        "An unexpected error occurred. Please try again later."
+      );
     }
   };
 
   // Check for RTL language
-  const isHebrew = i18n.language === "he";
 
   return (
-    <View style={styles.container}>
+    <Container>
+      <CustomHeader/>
       <Loader loading={loading} />
-      <TextInput style={[styles.input, isHebrew && styles.rtlInput, errors.name && styles.invalidInput]} placeholder={t("Name")} value={name} onChangeText={setName} />
-      <TextInput style={[styles.input, isHebrew && styles.rtlInput, errors.email && styles.invalidInput]} placeholder={t("Email")} value={email} onChangeText={setEmail} />
-      <TextInput style={[styles.input, isHebrew && styles.rtlInput, errors.password && styles.invalidInput]} placeholder={t("Password")} value={password} onChangeText={setPassword} secureTextEntry />
+      <TextInput
+        style={[
+          styles.input,
+          isHebrew && styles.rtlInput,
+          errors.name && styles.invalidInput,
+        ]}
+        placeholder={t("Name")}
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={[
+          styles.input,
+          isHebrew && styles.rtlInput,
+          errors.email && styles.invalidInput,
+        ]}
+        placeholder={t("Email")}
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={[
+          styles.input,
+          isHebrew && styles.rtlInput,
+          errors.password && styles.invalidInput,
+        ]}
+        placeholder={t("Password")}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
       {Object.values(errors).map((error, index) => (
-        <Text key={index} style={styles.error}>{error}</Text>
+        <Text key={index} style={styles.error}>
+          {error}
+        </Text>
       ))}
-      {registrationError && <Text style={styles.error}>{registrationError}</Text>}
-      <CustomButton label={t("submit")} style={{ opacity: isFormValid ? 1 : 0.3 }} disabled={!isFormValid} onPress={handleSubmit} />
-    </View>
+      {registrationError && (
+        <Text style={styles.error}>{registrationError}</Text>
+      )}
+      <CustomButton
+        label={t("submit")}
+        style={{ opacity: isFormValid ? 1 : 0.3 }}
+        disabled={!isFormValid}
+        onPress={handleSubmit}
+      />
+    </Container>
   );
 };
 // Styles for the components
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   input: {
     width: "75%",
     height: 40,
@@ -126,4 +167,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
