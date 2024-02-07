@@ -6,20 +6,20 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "../../services/axiosInstance";
-import CustomButton from "../../services/CustomButton";
+import CustomButton from "../cors/CustomButton";
 import ValidatePassword from "../../services/ValidatePassword";
 import Snackbar from "../../services/snackbar";
+import Container from "../cors/ContainerPage";
+import { useTranslation } from "react-i18next";
 
 const ResetPassword = ({ route, navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
-  const [tokenVerified, setTokenVerified] = useState(false);
   const [isResetSuccess, setIsResetSuccess] = useState(false);
   const [resetToken, setResetToken] = useState("");
   const [validationResults, setValidationResults] = useState({
@@ -28,6 +28,8 @@ const ResetPassword = ({ route, navigation }) => {
     specialChar: false,
     // match: false,
   });
+  const { t, i18n } = useTranslation();
+  const isHebrew = i18n.language === "he";
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleResetPassword();
@@ -59,11 +61,12 @@ const ResetPassword = ({ route, navigation }) => {
       });
 
       if (response.data.success) {
-       
         setMessage(
-          t("Password reset successful. You can now log in with your new password.")
+          t(
+            "Password reset successful. You can now log in with your new password."
+          )
         );
-        
+
         setIsResetSuccess(true);
         navigation.navigate("LoginScreen");
       } else {
@@ -72,7 +75,9 @@ const ResetPassword = ({ route, navigation }) => {
     } catch (error) {
       console.error("Error resetting password:", error.message);
       setMessage(
-       t( "An error occurred while resetting the password,check password again...")
+        t(
+          "An error occurred while resetting the password,check password again..."
+        )
       );
     }
   };
@@ -87,16 +92,15 @@ const ResetPassword = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <Container>
       <View style={styles.passwordContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isHebrew && styles.rtlInput]}
           placeholder={t("Enter New Password")}
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={handlePasswordChange}
           onKeyPress={handleKeyPress}
-
         />
         <Pressable
           style={styles.eyeIcon}
@@ -110,7 +114,10 @@ const ResetPassword = ({ route, navigation }) => {
         </Pressable>
       </View>
 
-      {renderValidationItem(t("Minimum 8 characters"), validationResults.length)}
+      {renderValidationItem(
+        t("Minimum 8 characters"),
+        validationResults.length
+      )}
       {renderValidationItem(t("At least 1 number"), validationResults.number)}
       {renderValidationItem(
         t("At least 1 special character"),
@@ -118,13 +125,12 @@ const ResetPassword = ({ route, navigation }) => {
       )}
       <View style={styles.passwordContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isHebrew && styles.rtlInput]}
           placeholder={t("Confirm New Password")}
           secureTextEntry={!showPassword}
           value={confirmPassword}
           onChangeText={handleConfirmPasswordChange}
           onKeyPress={handleKeyPress}
-
         />
         <Pressable
           style={styles.eyeIcon}
@@ -140,9 +146,8 @@ const ResetPassword = ({ route, navigation }) => {
       {/* {renderValidationItem("Passwords match", password===confirmPassword)} */}
       <CustomButton label={t("Send me link")} onPress={handleResetPassword} />
 
-      
       {message && <Text style={styles.message}>{message}</Text>}
-    </View>
+    </Container>
   );
 };
 
@@ -156,14 +161,6 @@ const renderValidationItem = (text, isValid) => (
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -178,6 +175,9 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     padding: 8,
+  },
+  rtlInput: {
+    textAlign: "right",
   },
   eyeIcon: {
     padding: 8,

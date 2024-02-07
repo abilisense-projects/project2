@@ -1,10 +1,10 @@
 const DarkTheme = {
     dark: true,
     colors: {
-        primary: '#0A84FF',
+        primary: '#fbfefe',
         background: '#141a1f',
         card: '#202934',
-        text: '#fbfefe',
+        text: '#E33458',
         border: '#272729',
         notification: '#FF453A',
         placeholder: '#9a9ea4',

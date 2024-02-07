@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 
 export default function SOSAlertForm(onDataAlert,toClose) {
     const [alertData, setAlertData] = useState({
@@ -128,7 +128,7 @@ export default function SOSAlertForm(onDataAlert,toClose) {
 />
 
       
-      <TouchableOpacity onPress={() => {submitAlert()}}> <Text>Submit Alert </Text></TouchableOpacity>
+      <Pressable onPress={() => {submitAlert()}}> <Text>Submit Alert </Text></Pressable>
     </View>
   );
 }

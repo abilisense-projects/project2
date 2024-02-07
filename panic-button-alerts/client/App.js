@@ -1,24 +1,7 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import {
-  Alert,
-  Image,
-  Linking,
-  PanResponder,
-  SafeAreaView,
-  Text,
-  View,
-  useColorScheme,
-} from "react-native";
-
-import Map from "./components/Homecomponents/MapComponent";
+import { PanResponder } from "react-native";
 import "react-native-gesture-handler";
 import Splash from "./pages/Splash";
 import DrawerNavigatorRoutes from "./components/Navigation/DrawerNavigatorRoutes";
@@ -67,7 +50,7 @@ i18n.use(initReactI18next).init({
     },
   },
   lng: getLocales()[0].languageCode,
-  fallbackLng: "en", 
+  fallbackLng: "en",
   interpolation: {
     escapeValue: false, // https://www.i18next.com/translation-function/interpolation#unescape
   },
@@ -88,13 +71,14 @@ const App = () => {
   const [lastInteraction, setLastInteraction] = useState(Date.now());
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (Date.now() - lastInteraction >= 1000 * 60 * 30) { // 30 minutes
-       
-        Alert.alert('User is inactive for 30 minutes. Logging out...');
+    const interval = setInterval(async() => {
+      if (Date.now() - lastInteraction >= 1000 * 60 * 30) {
+
+        alert("User is inactive for 30 minutes. Logging out...");
         // Reset the last interaction time to prevent multiple logouts
         setLastInteraction(Date.now());
-        remove("accessToken")
+        await remove("accessToken");
+        window.location.href = "/Login";
       }
     }, 1000 * 60); // Check every minute
 

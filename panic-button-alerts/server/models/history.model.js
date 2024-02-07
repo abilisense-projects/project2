@@ -5,12 +5,12 @@ const historySchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "user",
+    ref: "User",
   },
   alertId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "alert",
+    ref: "Alert",
   },
   duration: {
     type: String,
@@ -21,6 +21,6 @@ const historySchema = new Schema({
   }
 });
 
-const History = mongoose.model("history", historySchema);
+const History = mongoose.model("History", historySchema);
 
 module.exports = { History };

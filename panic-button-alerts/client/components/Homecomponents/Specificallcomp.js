@@ -3,11 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import axios from '../../services/axiosInstance';
 import { StyleSheet, View, Text, TouchableOpacity,FlatList } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import MyModal from "../Modal";
+import MyModal from "../../components/cors/Modal";
 import TimerModal from './Time'
 import UploadFiles from "./UploadFiles";
 import SOSAlertForm from './SummarizeAlert';
-import AlertCard from '../AlertCard'
+import AlertCard from '../AlertCard';
+import { decodeToken } from "../../services/JwtService";
 // run animation... (`runAfterInteractions` tasks are queued)
 // later, on animation completion:
 //InteractionManager.clearInteractionHandle(handle);
@@ -88,7 +89,8 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
   }
   async function updateAlert(IdAlert, msgState) {
     try {
-      const response = await axios.post(`alerts/treated/`, { id: IdAlert, status: msgState, userId: data.alert.patient, duration: alertDataTime.time, summary: alertData });
+      const token = await decodeToken();
+      const response = await axios.post(`alerts/treated/`, { id: IdAlert, status: msgState, userId: token.id, duration: alertDataTime.time, summary: alertData });
       const result = response.data
 
     } catch (error) {
@@ -162,7 +164,8 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         </View>
         <View style={styles.footer}>
           {propStatus == "for treatment" && <TouchableOpacity style={styles.footerButton}
-            onPress={() => {{alertData ? (updateAlert(data.alert._id, "treated"), onIdchange(''), setAlertDataTIme({ ...alertDataTime, flag: false }), setAlertData({})) : alert("you need to make summry")}}}>
+            onPress={() =>{alertData ? (updateAlert(data.alert._id, "treated"), onIdchange(''), setAlertDataTIme({ ...alertDataTime, flag: false }), setAlertData({})) : alert("you need to make summry")}}
+              >
             <Ionicons name="checkmark" size={"200%"} color="white" />
             <Text style={{ color: "white" ,fontSize:"150%",}}>Applay</Text>
           </TouchableOpacity>}
@@ -248,7 +251,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212', // A standard dark background
-    padding: 20,
+    padding: '5%',
     borderRadius: 20,
   },
   header: {

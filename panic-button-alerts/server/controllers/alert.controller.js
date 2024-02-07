@@ -5,30 +5,27 @@ const {
   updateAlertStatus,
   treatedAlert
 } = require("../services/alert.service");
-const { addHistoryforHelper } = require("../services/history.service");
 
-const getAlertsController = async (req, res) => {
+const getAlertsController = async (req, res,next) => {
   try {
     const alerts = await getAlerts();
     alerts !== null ? res.send(alerts) : res.status(404).send("no alerts");
   } catch (error) {
-    res.status(500).send(error);
-    console.error(error);
+   next(error)
   }
 };
-const getAlertDetailController = async (req, res) => {
+const getAlertDetailController = async (req, res,next) => {
   try {
     const alertDetails = await getAlertDetails(req.params.alertId);
     alertDetails !== null
       ? res.send(alertDetails)
       : res.status(404).send("no alerts");
   } catch (error) {
-    res.status(500).send(error);
-    console.error(error);
+  next(error)
   }
 };
 
-const getnewAlertController = async (req, res) => {
+const getnewAlertController = async (req, res,next) => {
   try {
     const { lastAlertID } = req.params;
     if (!lastAlertID) {
@@ -62,7 +59,7 @@ const getnewAlertController = async (req, res) => {
         });
     } else return res.send({ isNew: false, isUpdate: false });
   } catch (error) {
-    return res.status(500).send(error);
+    next(error);
   }
 };
 const updateTreatedController = async (req, res, next) => {

@@ -1,10 +1,10 @@
 const DefaultTheme = {
   dark: false,
   colors: {
-      primary: '#007AFF',
+      primary: '#000',
       background: '#f9f9f9',
       card: '#ffffff',
-      text: '#083371',
+      text: '#E33458',
       border: '#D8D8D8',
       notification: '#FF3B30',
       placeholder: '#9a9ea4',

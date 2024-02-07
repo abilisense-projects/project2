@@ -4,14 +4,13 @@ module.exports = function (api) {
     presets: ["babel-preset-expo"],
     plugins: [
       [
-        
         "module:react-native-dotenv",
         {
           moduleName: "@env",
           path: ".env",
         },
       ],
-      "react-native-reanimated/plugin",
+ 
       [
         "i18next-extract",
         {
@@ -22,6 +21,7 @@ module.exports = function (api) {
           nsSeparator: null,
         },
       ],
+      "react-native-reanimated/plugin"
     ],
   };
 };
