@@ -69,7 +69,7 @@ export default function Homepage() {
 
         <View style={isSmallDevice ? Id ? styles.AlertAndr : null : styles.Alert}>
           {/* <ScrollView horizontal={false} style={{ flex: 1 }}> */}
-          <Alertscomp onIdchange={updateId} onAlertchange={updateAlerts} prop_id={Id} />
+          <Alertscomp onIdChange={updateId} onAlertChange={updateAlerts} propId={Id}/>
           {/* </ScrollView> */}
         </View>
         {/* <Specificall prop_id={Id}/> */}
@@ -128,12 +128,16 @@ const styles = StyleSheet.create({
     // gridRow: '2'
   },
   SpecificAndr: {
-    margin: '5%',
+    width:'80%',
+    height:'100%',
+   // margin: '5%',
     // gridColumn: '2/7',
     // gridRow: ' 1'
   },
   AlertAndr: {
-    marginTop: '50%',
+    width:'20%',
+    height:'100%',
+    //marginTop: '50%',
     // gridColumn: ' 1',
     // gridRow: ' 1'
   },
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
   },
   smallDeviceSpesific: {
     display: 'flex',
-    flexDirection: 'row-reverse'
+    flexDirection: 'row'
   },
   text: {
     fontSize: 'large',
