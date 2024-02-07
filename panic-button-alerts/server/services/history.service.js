@@ -3,7 +3,6 @@ const { Alert } = require("../models/alerts.model");
 const { History } = require("../models/history.model");
 
 const addHistoryforHelper = async (id, userId, duration, summary) => {
-  
   history = {
     userId: userId,
     alertId: id,
@@ -14,17 +13,14 @@ const addHistoryforHelper = async (id, userId, duration, summary) => {
   console.log(result);
 };
 const getHistoryforHelper = async (userId) => {
-  const history = await History.find({ userId: userId }).populate({
-    path: "alertId",
-    model: "alert",
-  });
+  const history = await History.find({ userId: userId }).populate("alertId");
   return history;
 };
 const getHistoryforPatient = async (alertId) => {
   const alert = await findByID(Alert, alertId);
   console.log(alert);
-  const history = await Alert.find( { patient: alert.patient._id })
-  
+  const history = await Alert.find({ patient: alert.patient._id });
+
   return history;
 };
 module.exports = {

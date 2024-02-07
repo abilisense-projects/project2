@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 
 const Snackbar = ({
   message,
@@ -39,7 +39,7 @@ const Snackbar = ({
         {message}
       </Text>
       {actionText && (
-        <TouchableOpacity onPress={onActionPress}>
+        <Pressable onPress={onActionPress}>
           <Text
             style={[
               styles.actionText,
@@ -49,7 +49,7 @@ const Snackbar = ({
           >
             {actionText}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
     </View>
   ) : null;

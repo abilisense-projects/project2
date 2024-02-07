@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import axios from '../../services/axiosInstance';
 import { StyleSheet, View, Text, TouchableOpacity,FlatList } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import MyModal from "../Modal";
+import MyModal from "../../components/cors/Modal";
 import TimerModal from './Time'
 import UploadFiles from "./UploadFiles";
 import SOSAlertForm from './SummarizeAlert';

@@ -5,11 +5,11 @@ import {
   TouchableOpacity,
   Text,
   View,
+  Pressable,
   Dimensions,
 } from "react-native";
 import axios from "../../services/axiosInstance";
 import { AntDesign } from "@expo/vector-icons";
-import CustomButton from "../../services/CustomButton";
 import { useTranslation } from "react-i18next";
 
 export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
@@ -212,17 +212,13 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
   return (
     <View style={styles.container}>
       {(!isSmallDevice || !occupied.flag) && (
-        <View style={styles.buttons}>
-          <CustomButton
-            label={t(`Hard${alerts.Hard.length}`)}
-            onPress={() => changeState("Hard")}
-          />
-          <CustomButton label="Medium" onPress={() => changeState("Medium")} />
-          <CustomButton label="Easy" onPress={() => changeState("Easy")} />
-          <CustomButton
-            label={t(`All${currentAlerts.length}`)}
+        <View style={styles.buttons}>  
+          <Pressable  onPress={() => changeState("Hard")}>{t(`Hard${alerts.Hard.length}`)}</Pressable>
+          <Pressable onPress={() => changeState("Medium")} >{t(`Medium${alerts.Medium.length}`)}</Pressable>
+          <Pressable onPress={() => changeState("Easy")} >{t(`Easy${alerts.Easy.length}`)}</Pressable>
+          <Pressable
             onPress={() => changeState("All")}
-          />
+          >{t(`All${currentAlerts.length}`)}</Pressable>
         </View>
       )}
       <View style={styles.containerCalls}>

@@ -3,22 +3,27 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
 import axios from "../services/axiosInstance";
 import validatePassword from "../services/ValidatePassword";
 import ValidateEmail from "../services/ValidateEmail";
-import CustomButton from "../services/CustomButton";
+import CustomButton from "../components/cors/CustomButton";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 import { save } from "../services/Storage";
+import CustomHeader from "../components/Navigation/CustomHeader";
+import Container from "../components/cors/ContainerPage";
+import Loader from "../components/cors/Loader";
+import { Ionicons } from "@expo/vector-icons";
 
-const Login = ({ navigation }) => {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { t, i18n } = useTranslation();
 
@@ -65,12 +70,13 @@ const Login = ({ navigation }) => {
         const response = await axios.post("/auth/login", { email, password });
         setIsLoading(false);
         if (response.data.message === "Login Success") {
-          await save("accessToken", response.data.token);
-          navigation.replace("DrawerNavigationRoutes");
           Toast.show({
             type: "success",
             text1: t("Login successful"),
           });
+          await save("accessToken", response.data.token);
+
+          await navigation.replace("DrawerNavigationRoutes");
         } else {
           // Handle login failure
           Toast.show({
@@ -92,14 +98,15 @@ const Login = ({ navigation }) => {
   const isHebrew = i18n.language === "he";
 
   return (
-    <View style={styles.container}>
+    <Container>
+      <CustomHeader />
       <Text style={styles.title}>{t("Login")}</Text>
-      <TouchableOpacity
+      <Pressable
         style={styles.registerContainer}
         onPress={() => navigation.navigate("Register")}
       >
         <Text style={styles.register}>{t("Register")}</Text>
-      </TouchableOpacity>
+      </Pressable>
       <TextInput
         style={[
           styles.input,
@@ -110,45 +117,62 @@ const Login = ({ navigation }) => {
         onChangeText={setEmail}
         value={email}
       />
-      <TextInput
-        style={[
-          styles.input,
-          errors.password && styles.invalidInput,
-          isHebrew && styles.rtlInput,
-        ]}
-        placeholder={t("Password")}
-        secureTextEntry
-        onChangeText={setPassword}
-        value={password}
-      />
+      {/* <View style={styles.container}> */}
+        <TextInput
+          style={[
+            styles.input,
+            errors.password && styles.invalidInput,
+            isHebrew && styles.rtlInput,
+          ]}
+          placeholder={t("Password")}
+          secureTextEntry={!showPassword}
+          onChangeText={setPassword}
+          value={password}
+        />
+        {/* <Ionicons
+          name={showPassword ? "eye-off" : "eye"}
+          size={24}
+          color="black"
+          style={styles.icon}
+          onPress={() => setShowPassword(!showPassword)}
+        /> */}
+      {/* </View> */}
+      <Pressable
+        style={{ textAlign: "right" }}
+        onPress={() => navigation.navigate("SendEmail")}
+      >
+        <Text style={[styles.forgotPassword, isHebrew && styles.rtlInput]}>
+          {t("Forgot Password?")}
+        </Text>
+      </Pressable>
       {Object.values(errors).map((error, index) => (
         <Text key={index} style={styles.errorMessage}>
           {error}
         </Text>
       ))}
+      <CustomButton label={t("Login")} onPress={handleLogin} />
 
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <CustomButton label={"Login"} onPress={handleLogin} />
-      )}
-
-      <TouchableOpacity onPress={() => navigation.navigate("SendEmail")}>
-        <Text style={styles.forgotPassword}>{t("Forgot Password?")}</Text>
-      </TouchableOpacity>
-    </View>
+      <Loader loading={isLoading} />
+    </Container>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   title: {
     fontSize: 24,
     marginBottom: 20,
+  },
+  
+  container: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    // justifyContent: 'center', 
+    // backgroundColor: '#f3f3f3', 
+    // borderRadius: 8, 
+    paddingHorizontal: 14, 
+}, 
+  icon: {
+    marginRight: 20,
   },
   input: {
     width: "75%",
@@ -172,29 +196,21 @@ const styles = StyleSheet.create({
   },
   register: {
     fontSize: 16,
-    color: "#ac00e6",
+    color: "#E33458",
     textDecorationLine: "underline",
   },
   forgotPassword: {
-    fontSize: 16,
-    color: "#ac00e6",
+    fontSize: 14,
+    color: "#E33458",
     textDecorationLine: "underline",
-    marginTop: 10,
   },
   errorMessage: {
     color: "red",
     marginBottom: 10,
   },
-  loginButton: {
-    backgroundColor: "#ac00e6",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
+
   buttonText: {
     color: "white",
     fontWeight: "bold",
   },
 });
-
-export default Login;

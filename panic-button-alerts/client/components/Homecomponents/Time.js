@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Modal, Pressable, StyleSheet } from 'react-native';
 
 const formatTime = (seconds) => {
   const hours = Math.floor(seconds / 3600);
@@ -48,9 +48,9 @@ export default  function TimerModal({ isVisible, onTime }) {
     >
         <View style={styles.timerContainer}>
           <Text style={styles.timerText}>{formatTime(seconds)}</Text>
-          {/* <TouchableOpacity onPress={handleClose}>
+          {/* <Pressable onPress={handleClose}>
             <Text style={styles.closeButton}>Close</Text>
-          </TouchableOpacity> */}
+          </Pressable> */}
       </View>
      </View>
   );

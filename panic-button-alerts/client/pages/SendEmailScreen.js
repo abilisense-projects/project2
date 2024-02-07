@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import axios from "../../services/axiosInstance";
-import validateEmail from "../../services/ValidateEmail";
-import CustomButton from "../../services/CustomButton";
+import axios from "../services/axiosInstance";
+import validateEmail from "../services/ValidateEmail";
+import CustomButton from "../components/cors/CustomButton";
+import Container from "../components/cors/ContainerPage";
+import CustomHeader from "../components/Navigation/CustomHeader";
 
 const SendEmail = ({ route }) => {
   const { t, i18n } = useTranslation();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const isHebrew = i18n.language === "he";
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSendResetEmail();
@@ -37,7 +41,9 @@ const SendEmail = ({ route }) => {
         setIsError(false);
       } else {
         setMessage(
-         t( "An error occurred while sending the reset email. Please try again.")
+          t(
+            "An error occurred while sending the reset email. Please try again."
+          )
         );
         setIsError(true);
       }
@@ -49,13 +55,10 @@ const SendEmail = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {route.params && (
-        <Text>Deep Link Params: {JSON.stringify(route.params)}</Text>
-      )}
-
+    <Container>
+      <CustomHeader />
       <TextInput
-        style={styles.input}
+        style={[styles.input, isHebrew && styles.rtlInput]}
         placeholder={t("Enter Email")}
         value={email}
         onChangeText={(text) => setEmail(text)}
@@ -63,7 +66,6 @@ const SendEmail = ({ route }) => {
       />
       <CustomButton
         label={t("Send Reset Email")}
-       
         onPress={handleSendResetEmail}
       />
       {message ? (
@@ -76,24 +78,21 @@ const SendEmail = ({ route }) => {
           {message}
         </Text>
       ) : null}
-    </View>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
   input: {
+    width: "75%",
     height: 40,
-    width: "100%",
     borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 20,
+    marginBottom: 10,
     padding: 10,
+  },
+  rtlInput: {
+    textAlign: "right",
   },
   message: {
     marginTop: 20,

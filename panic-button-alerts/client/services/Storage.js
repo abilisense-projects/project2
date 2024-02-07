@@ -1,6 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const saveString = async (key, value) => {
+const saveString = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
     return true;
@@ -10,9 +10,9 @@ export const saveString = async (key, value) => {
 };
 
 export const save = async (key, value) =>
-  saveString(key, JSON.stringify(value));
+  await saveString(key, JSON.stringify(value));
 
-export const get = async key => {
+export const get = async (key) => {
   try {
     const itemString = await AsyncStorage.getItem(key);
     if (itemString) {
@@ -24,17 +24,11 @@ export const get = async key => {
     return null;
   }
 };
-export const remove= async (key) => {
+export const remove = async (key) => {
   try {
     await AsyncStorage.removeItem(key);
     return true;
   } catch (error) {
     return false;
   }
-};
-
-export default {
-  saveString,
-  save,
-  get,
 };

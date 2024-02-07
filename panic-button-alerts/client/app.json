@@ -1,5 +1,4 @@
 {
- 
   "expo": {
     "name": "panic-button-alerts",
     "slug": "panic-button-alerts",
@@ -11,10 +10,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -25,9 +21,8 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/abilisense.png",
+      "title":"abilisense"
     }
-
-    
   }
 }

@@ -1,9 +1,12 @@
 const moment = require("moment-timezone");
 
-const { Alert } = require("../models/alerts.model");
-const { find, findByID, findOne, findOneAndUpdate } = require("../dal/dal");
-const { MedicalConditions } = require("../models/medicalConditions.model");
+const { find, findByID, findOneAndUpdate } = require("../dal/dal");
 const { addHistoryforHelper } = require("./history.service");
+
+const { Alert } = require("../models/alerts.model");
+const { Patient } = require("../models/patient.model");
+
+const { MedicalConditions } = require("../models/medicalConditions.model");
 
 var isUpdate = [];
 const status = { $nin: ["treated", "cancel"] };
@@ -18,24 +21,24 @@ const getAlerts = async () => {
 };
 
 const getAlertDetails = async (alertId) => {
-  console.log(alertId);
 
-  const alert = await findByID(Alert, alertId);
-
-  if (!alert) {
-    throw new Error("Alert not foun");
-  }
-
-  // Find the medical conditions for the patient associated with the alert
-  const patientMedicalConditions = await find(MedicalConditions, {
+  const alert = await Alert.findById(alertId)
+ 
+  console.log(alert);
+  const patient = await findByID(Patient,{_id:alert.patient._id})
+  const patientMedicalConditions = await MedicalConditions.find( {
     patient: alert.patient._id,
-  });
-
-  console.log(patientMedicalConditions);
+  })
+  // .populate("patient");
+  
+  if (!alert) {
+    throw new Error("Alert not found");
+  }
   if (!patientMedicalConditions) {
     throw new Error("Medical conditions not found for the patient");
   }
   return {
+    patient:patient,
     medicalConditions: patientMedicalConditions[0].medicalConditions,
     alert: alert,
   };
@@ -85,9 +88,9 @@ const updateAlertStatus = async (alertId, status) => {
   return result;
 };
 const treatedAlert = async (id, status, userId, duration, summary) => {
-  const update =await  updateAlertStatus(id, status);
+  const update = await updateAlertStatus(id, status);
   const add = await addHistoryforHelper(id, userId, duration, summary);
-  return {update:update,add:add}
+  return { update: update, add: add };
 };
 
 module.exports = {
@@ -95,5 +98,5 @@ module.exports = {
   getnewAlerts,
   getAlertDetails,
   updateAlertStatus,
-  treatedAlert
+  treatedAlert,
 };
