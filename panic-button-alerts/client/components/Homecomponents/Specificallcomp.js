@@ -3,12 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import axios from '../../services/axiosInstance';
 import { StyleSheet, View, Text, TouchableOpacity,FlatList } from 'react-native';
 import { Ionicons, FontAwesome5, FontAwesome6, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import MyModal from "../Modal";
+import MyModal from "../cors/Modal";
 import TimerModal from './Time'
 import UploadFiles from "./UploadFiles";
 import SOSAlertForm from './SummarizeAlert';
 import AlertCard from '../AlertCard';
-import { decodeToken } from "../../services/";
+import { decodeToken } from "../../services/JwtService";
 // run animation... (`runAfterInteractions` tasks are queued)
 // later, on animation completion:
 //InteractionManager.clearInteractionHandle(handle);

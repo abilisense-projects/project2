@@ -13,7 +13,6 @@ export default function Homepage() {
   useEffect(() => {
     setisSmallDevice(Dimensions.get("window").width < 768);
   }, []);
-  const [Mes, setMes] = useState("");
   const [Id, setId] = useState("");
   const [Status, setStatus] = useState("");
   const [Alerts, setAlerts] = useState([]);

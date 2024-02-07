@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import axios from "../../services/axiosInstance";
 import { AntDesign } from "@expo/vector-icons";
-import CustomButton from "../../services/CustomButton";
+import CustomButton from "../../components/cors/CustomButton";
 import { useTranslation } from "react-i18next";
 
 export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
