@@ -11,6 +11,8 @@ import {
 import axios from "../../services/axiosInstance";
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import Loader from "../cors/Loader";
+
 
 export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
   const { t } = useTranslation();
@@ -18,6 +20,7 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
   const [lastIdAlert, setLastIdAlert] = useState(null);
   const [occupied, setOccupied] = useState({ flag: false, Id: null });
   const [currentAlerts, setCurrentAlerts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const isSmallDevice = Dimensions.get("window").width < 768;
 
   useEffect(() => {
@@ -222,7 +225,9 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
         </View>
       )}
       <View style={styles.containerCalls}>
-        {currentAlerts.length > 0 ?(
+        {currentAlerts.length > 0 ?
+                 
+                  (
                isSmallDevice && occupied.flag?
                   currentAlerts.map((alert) =>{
                   return(
@@ -237,9 +242,12 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
             {currentAlerts.map((alert) => renderAlert(alert))}
           </ScrollView>
         ) : (
-          <Text style={styles.noAlertsText}>No distress alerts</Text>
+          <Text></Text>
+
         )}
       </View>
+      <Loader loading={isLoading} />
+
     </View>
   );
 }

@@ -34,28 +34,54 @@ export default function Homepage() {
     setStatus(status);
   }
   return (
-<View style={{ height: '90%', width: ' 100%' }}>
-
-{/* <TouchableOpacity onPress={()=>handleMeet}><Text>start to meeet</Text></TouchableOpacity> */}
+    <View style={{ height: "90%", width: " 100%" }}>
       {/* style={styles.container} */}
-      <Text style={styles.headerTitle}>{Mes}</Text>
 
-      <View style={isSmallDevice ? Id ? styles.smallDeviceSpesific : styles.smallDevice : styles.contentContainer}>
-
-        <View style={isSmallDevice ? Id ? styles.AlertAndr : null : styles.Alert}>
+      <View
+        style={
+          isSmallDevice
+            ? Id
+              ? styles.smallDeviceSpesific
+              : styles.smallDevice
+            : styles.contentContainer
+        }
+      >
+        <View
+          style={isSmallDevice ? (Id ? styles.AlertAndr : null) : styles.Alert}
+        >
           {/* <ScrollView horizontal={false} style={{ flex: 1 }}> */}
-          <Alertscomp onIdChange={updateId} onAlertChange={updateAlerts} propId={Id}/>
+          <Alertscomp
+            onIdChange={updateId}
+            onAlertChange={updateAlerts}
+            propId={Id}
+          />
           {/* </ScrollView> */}
         </View>
         {/* <Specificall prop_id={Id}/> */}
-        { Id&&isSmallDevice||<View style={Id ? styles.mapWithSpecific : styles.mapContainer}>
-          <MapComponent alerts={Alerts} /></View>}
-        {Id && <View style={(isSmallDevice) ? styles.SpecificAndr : styles.SpecificAlert}>
-
-          <Specificall propId={Id} onIdchange={updateId} propStatus={Status} /></View>}
-
+        <View
+          style={
+            Id
+              ? isSmallDevice
+                ? styles.mapAndrSpecific
+                : styles.mapWithSpecific
+              : styles.mapContainer
+          }
+        >
+          <MapComponent alerts={Alerts} />
+        </View>
+        {Id && (
+          <View
+            style={isSmallDevice ? styles.SpecificAndr : styles.SpecificAlert}
+          >
+            <Specificall
+              propId={Id}
+              onIdchange={updateId}
+              propStatus={Status}
+            />
+          </View>
+        )}
       </View>
-      
+
       <StatusBar style="auto" />
     </View>
   );
