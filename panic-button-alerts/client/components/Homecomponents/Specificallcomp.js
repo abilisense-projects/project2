@@ -8,6 +8,7 @@ import TimerModal from './Time'
 import UploadFiles from "./UploadFiles";
 import SOSAlertForm from './SummarizeAlert';
 import AlertCard from '../AlertCard';
+import Loader from '../cors/Loader';
 import { decodeToken } from "../../services/JwtService";
 // run animation... (`runAfterInteractions` tasks are queued)
 // later, on animation completion:
@@ -20,6 +21,7 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
 
     { propStatus == "for treatment" ? setAlertDataTIme({ ...alertDataTime, flag: true }) : setAlertDataTIme({ ...alertDataTime, flag: false }) }
   }, [propId]);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setdata] = useState(null)
   const [PreviousAlert, setPreviousAlert] = useState({ falseAlert: [], trueAlert: [] })
   const [PreviousAlertShow, setPreviousAlertShow] = useState({ falseAlert: false, trueAlert: false })
@@ -46,10 +48,15 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
 
   async function getInfoAlerts() {
     try {
+      setIsLoading(true)
       const response = await axios.get(`/alerts/details/${propId}`);
       const result = response.data
       console.log(result)
-      setdata(result)
+      if (result) {
+        setIsLoading(false)
+        setdata(result)
+      }
+      
     } catch (error) {
       console.log(error)
     }
@@ -102,13 +109,12 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
 
       {data ? 
       <View>
-        {propStatus == "not treated" && < View style={{ top: "5%", height: "20px", width: '200px', right: "250px", zIndex: 5 }}>
-          <Text style={styles.headerButtonText}> you care:</Text>
+       {propStatus == "for treatment" && < View style={{ top: "5%", height: "20px", width: '200px', right: "250px", zIndex: 5 }}>
           <TimerModal isVisible={alertDataTime.flag} onTime={handleSetTime} />
         </View >}
         <View style={styles.header}>
           <Text style={styles.headerText}>{data.alert.level}</Text>
-          {propStatus == "not treated" ? <Text style={styles.headerButtonText}>Open</Text> :
+          {propStatus == "for treatment" ? <Text style={styles.headerButtonText}>Open</Text> :
             <Text style={styles.headerButtonText}>Close</Text>}
         </View>
         <TouchableOpacity style={styles.helpButton}>
@@ -122,43 +128,45 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
           <Ionicons name="play" size={24} color="white" />
           <Text style={styles.audioText}>Part :{data.alert.audio ? data.alert.audio : "Does not exist"}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { setmoreDetails(!moreDetails) }}>
-          <Text style={styles.audioText}>More Details</Text>
+        
+        <TouchableOpacity onPress={() => { setmoreDetails(!moreDetails) }} style={styles.audioButton}>
+        <Text style={styles.more}> {moreDetails ? "Less Details" : "More Details"}</Text>
+
         </TouchableOpacity>
         <View style={styles.menu}>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}>
               <MaterialCommunityIcons name="map-marker-radius-outline" size={"200%"} color="white" />
-              <Text style={{ color: "white",fontSize:" 150%", }}>Map</Text>
+              <Text style={{ color: "white",fontSize:" 120%", }}>Map</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.column}
               onPress={() => setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Sensor" })}>
               <MaterialIcons name="sensors" size={"200%"} color="white" />
-              <Text style={{ color: "white",fontSize:" 150%", }}>Sensor</Text>
+              <Text style={{ color: "white",fontSize:" 120%", }}>Sensor</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}
               onPress={() => { propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Evidence" }) }}>
               <FontAwesome5 name="magnifying-glass-chart" size={"200%"} color="white" />
-              <Text style={{ color: "white" ,fontSize:" 150%",}}>Evidence</Text>
+              <Text style={{ color: "white" ,fontSize:" 120%",}}>Evidence</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.column}
               onPress={() => setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Trigger" })}>
               <MaterialCommunityIcons name="alarm-light-outline" size={"200%"} color="white" />
-              <Text style={{ color: "white",fontSize:" 150%", }}>Trigger</Text>
+              <Text style={{ color: "white",fontSize:" 120%", }}>Trigger</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity style={styles.column}
               onPress={() => { setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Instructions" }) }}>
               <MaterialIcons name="linear-scale" size={"200%"} color="white" />
-              <Text style={{ color: "white",fontSize:" 150%", }}>Instructions</Text>
+              <Text style={{ color: "white",fontSize:" 120%", }}>Instructions</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.column}
               onPress={() => { propStatus != "for treatment" || setdataSpecificAlert({ ...dataSpecificAlert, flag: !dataSpecificAlert.flag, data: "Ticketing" }) }}>
               <FontAwesome5 name="clipboard-list" size={"200%"}color="white" />
-              <Text style={{ color: "white" ,fontSize:" 150%",}}>Ticketing</Text>
+              <Text style={{ color: "white" ,fontSize:" 120%",}}>Ticketing</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -167,19 +175,19 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
             onPress={() =>{alertData ? (updateAlert(data.alert._id, "treated"), onIdchange(''), setAlertDataTIme({ ...alertDataTime, flag: false }), setAlertData({})) : alert("you need to make summry")}}
               >
             <Ionicons name="checkmark" size={"200%"} color="white" />
-            <Text style={{ color: "white" ,fontSize:"150%",}}>Applay</Text>
+            <Text style={{ color: "white" ,fontSize:"120%",}}>Applay</Text>
           </TouchableOpacity>}
           <TouchableOpacity style={styles.footerButton}
             onPress={() => { showModal(), setdataSpecificAlert({ ...dataSpecificAlert, flag: false, data: "" }) }}>
             <Ionicons name="close" size={"200%"} color="white" />
-            <Text style={{ color: "white" ,fontSize:"150%",}}>Close</Text>
+            <Text style={{ color: "white" ,fontSize:"120%",}}>Close</Text>
           </TouchableOpacity>
         </View>
-      </View> : <Text style={styles.helpButtonText}>the server crashed</Text>}
+      </View> : null}
       {dataSpecificAlert.flag &&
         <View style={dataSpecificAlert.data != "Ticketing" ? styles.dataSpecificAlert : {
           right: "165%",
-          bottom: "20%",
+          bottom: "50%",
           zIndex: 5,
           width: "140%",
           height: "400px",
@@ -208,29 +216,43 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
                   dataSpecificAlert.data == "Ticketing" ?(
                       <SOSAlertForm onDataAlert={{handleSetAlertData}} toClose={{handleSetdataSpecificAlert}}/> ): null}
         </View>}
-      {moreDetails && <View style={styles.more}>
-        <Text style={styles.dataSpecificAlertText}>   Diseases:{'\n'}</Text>
-
-        {data.medicalConditions.map((item, key) =>{ return ( <View key={item._id}>
-          <Text style={{ color: 'white', fontSize: "150%", }} >{item}{'\n'}</Text></View>)}
-
-        )}
-        <Text style={styles.dataSpecificAlertText}> {'\n'}{'\n'}  Previous alerts:{'\n'}</Text>
-        <TouchableOpacity onPress={() => setPreviousAlertShow({ ...PreviousAlertShow, falseAlert: false, trueAlert: true })}>
-          <Text style={{ color: 'white', fontSize: "150%", }}>Previous alerts: {PreviousAlert.trueAlert.length}</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => setPreviousAlertShow({ ...PreviousAlertShow, falseAlert: true, trueAlert: false })}>
-          <Text style={{ color: 'white', fontSize: "150%", }}>Previous false alerts: {PreviousAlert.falseAlert.length}</Text></TouchableOpacity>
-        {PreviousAlertShow.trueAlert && <FlatList
+      {moreDetails &&  <View style={styles.containermore}>
+    <Text style={styles.title}>Diseases:</Text>
+    {data.medicalConditions.map((item) => (
+      <Text key={item._id} style={styles.listItem}>
+        {item}
+      </Text>
+    ))}
+    <TouchableOpacity
+      style={styles.alertButton}
+      onPress={() => setPreviousAlertShow({ falseAlert: false, trueAlert: true })}
+    >
+      <Text style={styles.alertButtonText}>Previous alerts: {PreviousAlert.trueAlert.length}</Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.alertButton}
+      onPress={() => setPreviousAlertShow({ falseAlert: true, trueAlert: false })}
+    >
+      <Text style={styles.alertButtonText}>Previous false alerts: {PreviousAlert.falseAlert.length}</Text>
+    </TouchableOpacity>
+    {PreviousAlertShow.trueAlert && (
+      <FlatList
+        style={styles.flatList}
         data={PreviousAlert.trueAlert}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => <AlertCard alert={item} />}
-      />}
-        {PreviousAlertShow.falseAlert && <FlatList
+      />
+    )}
+    {PreviousAlertShow.falseAlert && (
+      <FlatList
+        style={styles.flatList}
         data={PreviousAlert.falseAlert}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => <AlertCard alert={item} />}
-      />}
-      </View>}
+      />
+    )}
+  </View>}
+
       <MyModal
         text={"Are you sure you want to leave?"}
         visible={modalVisible}
@@ -243,45 +265,56 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         }}
         onCancel={hideModal}
         action={"Sure"}
-      />
+      />  
+          <Loader loading={isLoading} />
+
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#121212', // A standard dark background
-    padding: '5%',
+  moreContainer: {
+    backgroundColor: 'rgba(28, 28, 30, 0.6)', // שימוש ברקע עם שקיפות
     borderRadius: 20,
+    padding: 20, // ריווח פנימי גדול יותר
+    marginHorizontal: 10, // שוליים אופקיים
+    marginVertical: 5, // שוליים אנכיים
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
+
+    backgroundColor: '#1F1F1F', // A slightly lighter shade for cards
+    borderRadius: 10,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   headerText: {
-    color: '#FFF',
-    fontSize: "150%",
+    color: 'white',
+    fontSize: "120%",
     fontWeight: 'bold',
   },
   helpButton: {
     backgroundColor: '#E91E63', // A vibrant color for important buttons
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     borderRadius: 20,
     elevation: 4,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   helpButtonText: {
     color: '#FFFFFF',
-    fontSize:" 150%",
+    fontSize:" 120%",
   },
   dateTime: {
     backgroundColor: '#1F1F1F', // A slightly lighter shade for cards
     borderRadius: 10,
-    padding: 16,
-    marginBottom: 10,
+    padding: 8,
+    marginBottom: 5,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -289,33 +322,34 @@ const styles = StyleSheet.create({
   },
   headerButtonText: {
     color: 'white',
-    fontSize:" 150%"
+    fontSize:" 120%",
+    fontWeight: "bold"
   },
   dateText: {
     color: '#BBB',
-    fontSize:" 150%",
+    fontSize:" 120%",
   },
   timeText: {
     color: '#BBB',
-    fontSize:" 150%",
+    fontSize:" 120%",
   },
   audioButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 8,
     backgroundColor: '#1F1F1F',
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   audioText: {
     color: '#FFF',
-    fontSize:" 150%",
+    fontSize:" 120%",
     marginLeft: 10,
   },
   menu: {
     backgroundColor: '#1F1F1F',
-    borderRadius: 10,
-    padding: 16,
+    borderRadius: 5,
+    padding: 8,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -324,7 +358,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   column: {
     alignItems: 'center',
@@ -332,7 +366,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginTop: 10,
+    marginTop: 5,
   },
   footerButton: {
     backgroundColor: '#333',
@@ -344,16 +378,91 @@ const styles = StyleSheet.create({
   dataSpecificAlert: {
     backgroundColor: '#1F1F1F',
     borderRadius: 10,
-    padding: 16,
-    marginBottom: 10,
+    padding: 8,
+    marginBottom: 5,
   },
   dataSpecificAlertText: {
     color: '#FFF',
-    fontSize:" 150%",
+    fontSize: '180%', // גודל טקסט קטן יותר
+    marginBottom: 10, // ריווח בין טקסטים
+    fontWeight: "bold"
+  },
+  containermore: {
+    flex: 1,
+    right: "165%",
+    bottom: "50%",
+    zIndex: 5,
+    width: "140%",
+    height: "400px",
+    borderRadius: 30,
+    padding: "5%",
+    backgroundColor: '#333', // Assuming a dark theme
+  },
+  title: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  listItem: {
+    color: 'white',
+    fontSize: 18,
+    paddingVertical: 5,
+    paddingLeft: 10,
+  },
+  alertButton: {
+    padding: 10,
+    marginVertical: 5,
+  },
+  alertButtonText: {
+    color: 'white',
+    fontSize: 18,
+  },
+  flatList: {
+    marginHorizontal: 10,
+  },
+  more1:{
+    right: "165%",
+    bottom: "20%",
+    zIndex: 5,
+    width: "140%",
+    height: "400px",
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: "5%"
   },
   more: {
-    backgroundColor: '#1F1F1F',
-    borderRadius: 10,
+    flex: 1,
+    backgroundColor: "#f5f5f5", // Notebook-like off-white background
     padding: 16,
   },
+  moreText:{
+    fontSize: 24,
+    fontWeight: "600", // Semi-bold for better readability
+    color: "#333333", // Dark color for the title for contrast
+    marginBottom: 20,
+    borderBottomWidth: 2, // Underline title like a notebook heading
+    borderBottomColor: "#E33458", // Use the theme color for consistency
+    paddingBottom: 5,
+  },
+  alertHard: {
+    backgroundColor: '#E91E63', // ורוד
+    borderRadius: 10,
+    padding: 7,
+  },
+  alertMedium: {
+    backgroundColor: '#FF9800', // כתום
+    borderRadius: 10,
+    padding: 7,
+  },
+  alertEasy: {
+    backgroundColor: '#4CAF50', // ירוק
+    borderRadius: 10,
+    padding: 7,
+  },
+  defaultAlert: {
+    backgroundColor: '#4CAF50', // ירוק
+    padding: 7,
+  },
+
 });

@@ -69,7 +69,7 @@ const MapComponent = ({ alerts }) => {
 
   return (
     <MapContainer
-      style={{ height: "200px", width: "100%" }}
+      style={{ height: "100%", width: "100%" }}
       center={mapCenter}
       zoom={8} // Adjust the initial zoom level as needed
     >
