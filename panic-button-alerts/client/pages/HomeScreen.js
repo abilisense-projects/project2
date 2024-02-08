@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, ScrollView, View, Text, Dimensions } from "react-native";
 import Alertscomp from "../components/Homecomponents/AlertsComponent";
 import Specificall from "../components/Homecomponents/Specificallcomp";
-import MapComponent from "../components/Homecomponents/map";
+import MapComponent from "../components/Homecomponents/MapComponent";
 import { GridLayer } from "leaflet";
 import { Switch } from "react-native-elements";
 import { useTranslation } from "react-i18next";

@@ -1,6 +1,6 @@
 {
   "Alert Details": "Alert Details",
-  "All": "All", 
+  "All": "All",
   "An error occurred while resetting the password,check password again...": "An error occurred while resetting the password,check password again...",
   "An error occurred while sending the reset email.": "An error occurred while sending the reset email.",
   "An error occurred while sending the reset email. Please try again.": "An error occurred while sending the reset email. Please try again.",
@@ -69,7 +69,6 @@
   "Something went wrong. Please try again later.": "Something went wrong. Please try again later.",
   "Status:": "Status:",
   "Sure": "Sure",
- 
   "already register ? login!": "already register ? login!",
   "confirmd password not matching": "confirmd password not matching",
   "go to login": "go to login",

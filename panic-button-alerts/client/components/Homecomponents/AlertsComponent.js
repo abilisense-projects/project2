@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
-<<<<<<<<< Temporary merge branch 1
-  TouchableOpacity,
   Text,
   View,
   Pressable,
@@ -157,7 +155,7 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
   };
 
   const renderAlert = (alert) => (
-    <TouchableOpacity
+    <Pressable
       key={alert._id}
       style={[
         styles.alert,
@@ -184,7 +182,7 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
           alert.date.split("T")[1].split(".")[0]
         }`}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   const getBackgroundColor = (level) => {
