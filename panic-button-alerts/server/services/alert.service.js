@@ -21,16 +21,15 @@ const getAlerts = async () => {
 };
 
 const getAlertDetails = async (alertId) => {
+  const alert = await Alert.findById(alertId);
 
-  const alert = await Alert.findById(alertId)
- 
   console.log(alert);
-  const patient = await findByID(Patient,{_id:alert.patient._id})
-  const patientMedicalConditions = await MedicalConditions.find( {
+  const patient = await findByID(Patient, { _id: alert.patient._id });
+  const patientMedicalConditions = await MedicalConditions.find({
     patient: alert.patient._id,
-  })
+  });
   // .populate("patient");
-  
+
   if (!alert) {
     throw new Error("Alert not found");
   }
@@ -38,7 +37,7 @@ const getAlertDetails = async (alertId) => {
     throw new Error("Medical conditions not found for the patient");
   }
   return {
-    patient:patient,
+    patient: patient,
     medicalConditions: patientMedicalConditions[0].medicalConditions,
     alert: alert,
   };

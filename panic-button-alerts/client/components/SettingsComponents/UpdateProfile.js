@@ -4,7 +4,7 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   Modal,
   Animated,
 } from "react-native";
@@ -13,7 +13,7 @@ import axiosInstance from "../../services/axiosInstance";
 import { decodeToken } from "../../services/JwtService";
 import { remove, save } from "../../services/Storage";
 
-const UpdateProfile = ({ isVisible, onRequestClose, details = {} }) => {
+const UpdateProfile = ({ isVisible, onRequestClose, details = {},onProfileUpdate  }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -60,20 +60,40 @@ const UpdateProfile = ({ isVisible, onRequestClose, details = {} }) => {
   const focusOnInput = (inputRef) => {
     inputRef.current && inputRef.current.focus();
   };
-
   const handleConfirm = async () => {
     try {
-      id = details._id;
-      const response = await axiosInstance.post("/user/", {
-        userId,
-        name,
-        email,
-      });
-      if (response.data.token !== "not updated") {
+      // Check if both name and email are unchanged
+      if (name === details.name && email === details.email) {
+        console.error("No changes made to the profile.");
+        return; // Exit the function as there's nothing to update
+      }
+
+      // Prepare the payload with either new changes or original details
+      const payload = {
+        userId: details._id,
+        name: name || details.name, // Use the updated name or fallback to the original
+        email: email || details.email, // Use the updated email or fallback to the original
+      };
+
+      const response = await axiosInstance.post("/user", payload);
+      console.log(response);
+      
+      if (response.data.token !== "null") {
         await remove("accessToken");
         await save("accessToken", response.data.token);
+
+        // Call the passed function with the updated details
+        onProfileUpdate({
+          ...details, // Spread existing details
+          name: name || details.name, // Updated name or fallback to the existing one
+          email: email || details.email, // Updated email or fallback to the existing one
+        });
+
+        onRequestClose(); // Close the modal
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -85,18 +105,18 @@ const UpdateProfile = ({ isVisible, onRequestClose, details = {} }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <TouchableOpacity style={styles.closeButton} onPress={onRequestClose}>
+          <Pressable style={styles.closeButton} onPress={onRequestClose}>
             <FeatherIcon name="x" size={24} color="#000" />
-          </TouchableOpacity>
+          </Pressable>
 
           <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={() => focusOnInput(nameInputRef)}>
+            <Pressable onPress={() => focusOnInput(nameInputRef)}>
               <Animated.Text
                 style={[styles.label, getLabelPosition(nameLabelAnimation)]}
               >
                 Name
               </Animated.Text>
-            </TouchableOpacity>
+            </Pressable>
             <TextInput
               ref={nameInputRef}
               style={styles.input}
@@ -109,30 +129,30 @@ const UpdateProfile = ({ isVisible, onRequestClose, details = {} }) => {
           </View>
 
           <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={() => focusOnInput(emailInputRef)}>
+            <Pressable onPress={() => focusOnInput(emailInputRef)}>
               <Animated.Text
                 style={[styles.label, getLabelPosition(emailLabelAnimation)]}
               >
                 Email
               </Animated.Text>
-            </TouchableOpacity>
+            </Pressable>
             <TextInput
               ref={emailInputRef}
               style={styles.input}
               onChangeText={setEmail}
               value={email}
-              placeholder={details.name}
+              placeholder={details.email}
               onFocus={() => animateLabel(email, emailLabelAnimation)}
               onBlur={() => animateLabel(email, emailLabelAnimation)}
             />
           </View>
 
-          <TouchableOpacity
+          <Pressable
             style={styles.confirmButton}
-            onPress={handleConfirm}
+            onPress={() => handleConfirm()}
           >
             <Text style={styles.confirmButtonText}>Confirm</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </Modal>

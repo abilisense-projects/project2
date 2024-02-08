@@ -69,10 +69,19 @@ const App = () => {
     };
   });
   const [lastInteraction, setLastInteraction] = useState(Date.now());
-
+  const isAuthenticated = async () => {
+    try {
+      const accessToken = await get('accessToken');
+      return !!accessToken; // Convert accessToken to a boolean
+    } catch (error) {
+      console.error('Error checking authentication status:', error);
+      return false; // In case of an error, assume not authenticated
+    }
+  };
   useEffect(() => {
     const interval = setInterval(async() => {
-      if (Date.now() - lastInteraction >= 1000 * 60 * 30) {
+      const isLoggedIn = await isAuthenticated();
+      if (isLoggedIn &&Date.now() - lastInteraction >= 1000 * 60 * 30) {
 
         alert("User is inactive for 30 minutes. Logging out...");
         // Reset the last interaction time to prevent multiple logouts

@@ -46,7 +46,7 @@ router.get(
   HistoryController.getHistoryforPatientController
 );
 router.post("/upload", upload.single('file'),fileController.uploadFile);
-router.post("/user/",UserController.updateUserController)
+router.post("/user",UserController.updateUserController)
 
 
 
