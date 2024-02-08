@@ -47,7 +47,7 @@ export default function Homepage() {
         }
       >
         <View
-          style={isSmallDevice ? (Id ? styles.AlertAndr : null) : styles.Alert}
+          style={isSmallDevice ? (Id ? styles.AlertAndr : {width:"30%",height:'100%'}) : styles.Alert}
         >
           {/* <ScrollView horizontal={false} style={{ flex: 1 }}> */}
           <Alertscomp
@@ -98,17 +98,19 @@ const styles = StyleSheet.create({
   Alert: {
     flex: 1,
     width: "15%",
+    height:'90%'
     // alignItems: 'flex-start'
   },
   SpecificAlert: {
     paddingLeft: "2%",
     width: "25%",
+    height:'70%'
   },
 
   mapContainer: {
     // flex: 1,
     width: "50%",
-    height: "75%",
+    height: "90%",
     borderWidth: 1, // Add border
     borderColor: "black", // Border color
     borderRadius: 10, // Border radius

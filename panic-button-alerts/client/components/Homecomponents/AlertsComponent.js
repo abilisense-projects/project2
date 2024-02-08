@@ -2,27 +2,35 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
+<<<<<<<<< Temporary merge branch 1
   TouchableOpacity,
   Text,
   View,
+  Pressable,
   Dimensions,
 } from "react-native";
+import { useTheme } from '@react-navigation/native';
 import axios from "../../services/axiosInstance";
 import { AntDesign } from "@expo/vector-icons";
-import CustomButton from "../../components/cors/CustomButton";
 import { useTranslation } from "react-i18next";
+import Loader from "../cors/Loader";
+
 
 export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
   const { t } = useTranslation();
+  const {colors} = useTheme();
+    const [isLoading, setIsLoading] = useState(false);
   const [alerts, setAlerts] = useState({ Hard: [], Medium: [], Easy: [] });
   const [lastIdAlert, setLastIdAlert] = useState(null);
   const [occupied, setOccupied] = useState({ flag: false, Id: null });
   const [currentAlerts, setCurrentAlerts] = useState([]);
+
   const isSmallDevice = Dimensions.get("window").width < 768;
 
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
+        setIsLoading(true)
         const response = await axios.get("/alerts");
         const fetchedAlerts = response.data;
         if (fetchedAlerts && fetchedAlerts.length > 0) {
@@ -39,6 +47,7 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
           });
 
           setAlerts(sortedAlerts);
+          setIsLoading(false)
           setCurrentAlerts([
             ...sortedAlerts.Hard,
             ...sortedAlerts.Medium,
@@ -58,6 +67,7 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
     const fetchNewAlerts = async () => {
       if (lastIdAlert) {
         try {
+          
           const response = await axios.get(`/alerts/${lastIdAlert}`);
           const newAlerts = response.data;
           if (newAlerts.isNew && newAlerts.newAlerts.length > 0) {
@@ -73,11 +83,13 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
             });
 
             setAlerts(addAlerts);
+          
             setCurrentAlerts([
               ...addAlerts.Hard,
               ...addAlerts.Medium,
               ...addAlerts.Easy,
             ]);
+
             setLastIdAlert(
               newAlerts.newAlerts[newAlerts.newAlerts.length - 1]._id
             );
@@ -212,28 +224,40 @@ export default function AlertsComp({ onIdChange, onAlertChange, propId }) {
   return (
     <View style={styles.container}>
       {(!isSmallDevice || !occupied.flag) && (
-        <View style={styles.buttons}>
-          <CustomButton
-            label={t(`Hard${alerts.Hard.length}`)}
-            onPress={() => changeState("Hard")}
-          />
-          <CustomButton label="Medium" onPress={() => changeState("Medium")} />
-          <CustomButton label="Easy" onPress={() => changeState("Easy")} />
-          <CustomButton
-            label={t(`All${currentAlerts.length}`)}
-            onPress={() => changeState("All")}
-          />
+        <View style={styles.buttons}>  
+          <Pressable  onPress={() => changeState("Hard")} style={[styles.button,{ borderColor: getBackgroundColor('Hard')}]}>
+            <Text style={styles.buttonsText}>{t(`Hard ${'\n'}${alerts.Hard.length}`)}</Text></Pressable>
+          <Pressable onPress={() => changeState("Medium")} style={[styles.button,{ borderColor: getBackgroundColor('Medium')}]}>
+            <Text style={styles.buttonsText}>{t(`Med ${'\n'}${alerts.Medium.length}`)}</Text></Pressable>
+          <Pressable onPress={() => changeState("Easy")}style={[styles.button,{ borderColor: getBackgroundColor('Easy')}]} >
+            <Text style={styles.buttonsText}>{t(`Easy ${'\n'}${alerts.Easy.length}`)}</Text></Pressable>
+          <Pressable onPress={() => changeState("All")} style={[styles.button,{ borderColor: "black"}]}>
+            <Text style={styles.buttonsText}>{t(`All ${'\n'}${currentAlerts.length}`)}</Text></Pressable>
         </View>
       )}
       <View style={styles.containerCalls}>
-        {currentAlerts.length > 0 ? (
-          <ScrollView vertical={true} style={styles.scrollView}>
+        {currentAlerts.length > 0 ?
+        //[setIsLoading(false),
+              ( isSmallDevice && occupied.flag?
+                  currentAlerts.map((alert) =>{
+                  return(
+                   <AntDesign
+                  name={getNameIcon(alert.level)}
+                  size={50}
+                  color={getBackgroundColor(alert.level)}
+                style={{padding:"2%"}}  
+                />
+                )
+              }
+                )
+          :( currentAlerts.length>4?
+          <ScrollView vertical={true} style={styles.scrollview}>
             {currentAlerts.map((alert) => renderAlert(alert))}
-          </ScrollView>
-        ) : (
-          <Text style={styles.noAlertsText}>No distress alerts</Text>
-        )}
+          </ScrollView>:currentAlerts.map((alert) => renderAlert(alert)))
+        ): null}
       </View>
+      <Loader loading={isLoading} />
+
     </View>
   );
 }
@@ -242,6 +266,7 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
+    alignItems: 'center'
   },
   containerCalls: {
     display: "flex",
@@ -255,6 +280,7 @@ const styles = StyleSheet.create({
     width: 200,
     padding: 20,
     borderRadius: 5,
+    backgroundColor:'white'
   },
   inTreatment: {
     opacity: 0.4,
@@ -264,19 +290,47 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttons: {
+    marginRight:'40%',
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
-    paddingHorizontal: 10,
+  //  paddingHorizontal: 10,
   },
+  button:{ 
+    width:"50%",
+    height:50,
+    padding: 8,
+    marginTop:20,
+    marginBottom: 30,
+    borderWidth: 2,
+    shadowColor: '#000',
+    padding:'2%',
+    marginLeft: '10%',
+
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  }},
+  buttonsText:{
+    textAlign: 'center',
+    fontWeight: '700',
+    fontSize: 16,
+    color:"black", // Text color changes on hover or if not web
+},
   noAlertsText: {
     fontSize: 18,
     color: "black",
     textAlign: "center",
     marginTop: 20,
   },
-  scrollView: {
-    width: "100%",
-    height:'80%'
+  scrollview: {
+    flex: 1,
+    maxHeight: "70%",
+    // alignItems: "center"
+
   },
 });
