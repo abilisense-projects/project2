@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, ScrollView, View, Text, Dimensions } from "react-native";
 import Alertscomp from "../components/Homecomponents/AlertsComponent";
 import Specificall from "../components/Homecomponents/Specificallcomp";
-import MapComponent from "../components/Homecomponents/MapComponent";
+import MapComponent from "../components/Homecomponents/map";
 import { GridLayer } from "leaflet";
 import { Switch } from "react-native-elements";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ export default function Homepage() {
   useEffect(() => {
     setisSmallDevice(Dimensions.get("window").width < 768);
   }, []);
+  const [Mes, setMes] = useState("");
   const [Id, setId] = useState("");
   const [Status, setStatus] = useState("");
   const [Alerts, setAlerts] = useState([]);
@@ -50,9 +51,9 @@ export default function Homepage() {
         >
           {/* <ScrollView horizontal={false} style={{ flex: 1 }}> */}
           <Alertscomp
-            onIdchange={updateId}
-            onAlertchange={updateAlerts}
-            prop_id={Id}
+            onIdChange={updateId}
+            onAlertChange={updateAlerts}
+            propId={Id}
           />
           {/* </ScrollView> */}
         </View>

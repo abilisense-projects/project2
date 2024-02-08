@@ -5,7 +5,7 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   Switch,
   Linking,
 } from "react-native";
@@ -99,7 +99,7 @@ export default function Setting() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.profile}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Pressable onPress={() => setModalVisible(true)}>
             <View style={styles.profileAvatarWrapper}>
               <Image
                 style={styles.profileAvatar}
@@ -109,7 +109,7 @@ export default function Setting() {
                 <FeatherIcon color="#fff" name="edit-3" size={15} />
               </View>
             </View>
-          </TouchableOpacity>
+          </Pressable>
           <Text style={styles.profileName}>{editProfileDetails.name}</Text>
           <Text style={styles.profileMailAddress}>
             {editProfileDetails.email}
@@ -130,12 +130,12 @@ export default function Setting() {
                     index === 0 && { borderTopWidth: 0 },
                   ]}
                 >
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => {
                       if (type === "toggle" && id === "darkMode") {
                         () => toggleTheme();
                       } else if (type === "select" && id === "language") {
-                        toggleLanguage();
+                       ()=> toggleLanguage();
                       } else if (action) {
                         action(); // Execute the associated action
                       }
@@ -161,7 +161,7 @@ export default function Setting() {
                         />
                       )}
                     </View>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               ))}
             </View>
@@ -173,7 +173,12 @@ export default function Setting() {
         isVisible={isModalVisible}
         onRequestClose={() => setModalVisible(false)}
         details={editProfileDetails}
+        onProfileUpdate={(updatedDetails) => {
+          setEditProfileDetails(updatedDetails); // Update the state with new details
+          setModalVisible(false); // Close the modal
+        }}
       />
+
       <BugReport
         isVisible={isBugReportModalVisible}
         onClose={() => setBugReportModalVisible(false)}

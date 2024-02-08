@@ -2,31 +2,36 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import axios from "axios";
+import mapboxSdk from "@mapbox/mapbox-sdk";
+import geocoding from "@mapbox/mapbox-sdk/services/geocoding";
 import {
-  MAPBOX_API_KEY, // Make sure you've imported the Mapbox API key
+  MAPBOX_API_KEY, // Ensure the Mapbox API key is imported
   ISRAEL_CENTER_LAN,
   ISRAEL_CENTER_LON,
 } from "@env";
 
 const MapComponent = ({ alerts }) => {
-  console.log(alerts);
-
   const [markers, setMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState([ISRAEL_CENTER_LAN, ISRAEL_CENTER_LON]); // Default center (Center of Israel)
+
+  const mapboxClient = mapboxSdk({ accessToken: MAPBOX_API_KEY });
+  const geocoder = geocoding(mapboxClient);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
       const newMarkers = [];
 
       for (const { location, level, distressDescription } of alerts) {
-        const search_text = `${location["city"]}, ${location["street"]}`;
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(search_text)}.json?access_token=${MAPBOX_API_KEY}`;
+        const search_text = `${location.city}, ${location.street}`;
 
         try {
-          const response = await axios.get(url);
-          if (response.data.features.length > 0) {
-            const { center } = response.data.features[0]; // Mapbox API returns the coordinates in [longitude, latitude] format
+          const response = await geocoder.forwardGeocode({
+            query: search_text,
+            limit: 1
+          }).send();
+
+          if (response && response.body && response.body.features && response.body.features.length > 0) {
+            const { center } = response.body.features[0]; // Mapbox returns coordinates in [longitude, latitude] format
             const [lon, lat] = center;
 
             newMarkers.push({ lat, lon, title: distressDescription, level });

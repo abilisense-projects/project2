@@ -2,7 +2,12 @@ const JWT = require("jsonwebtoken");
 const { User, validate } = require("../models/users.model");
 const { Token } = require("../models/tokens.model");
 const sendEmail = require("../utils/sendEmail");
-const { findOne, findOneAndDelete, findByID,findOneAndUpdate } = require("../dal/dal");
+const {
+  findOne,
+  findOneAndDelete,
+  findByID,
+  findOneAndUpdate,
+} = require("../dal/dal");
 
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
@@ -125,8 +130,6 @@ const Login = async (useremail, password) => {
   }
 
   const token = user.generateAuthToken();
-
-
 
   return token;
 };
