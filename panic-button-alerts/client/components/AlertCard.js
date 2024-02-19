@@ -7,8 +7,8 @@ const AlertCard = ({ alert }) => {
   const { t, i18n } = useTranslation();
   const {colors} =useTheme()
   const {
-    alertId: {
-      date ,
+   
+      date,
       distressDescription,
       status,
       location: {
@@ -19,7 +19,7 @@ const AlertCard = ({ alert }) => {
         floor,
         apartmentNumber,
       },
-    },
+    
     duration,
   } = alert;
 

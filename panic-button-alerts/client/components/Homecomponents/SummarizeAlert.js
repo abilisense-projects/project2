@@ -19,12 +19,10 @@ export default function SOSAlertForm({ onDataAlert, toClose }) {
   }
   function submitAlert() {
     console.log("alertData", alertData);
-    if (onDataAlert && onDataAlert.onDataAlert) {
-      onDataAlert.onDataAlert.handleSetAlertData(alertData);
-    }
-    if (toClose && toClose.handleSetdataSpecificAlert) {
-      toClose.handleSetdataSpecificAlert();
-    }
+   
+      onDataAlert(alertData);
+      toClose();
+    
     // Handle the submission of the SOS alert data here
   }
   return (
