@@ -56,7 +56,7 @@ const SendEmail = ({ route }) => {
 
   return (
     <Container>
-      <CustomHeader />
+      <CustomHeader/>
       <TextInput
         style={[styles.input, isHebrew && styles.rtlInput]}
         placeholder={t("Enter Email")}

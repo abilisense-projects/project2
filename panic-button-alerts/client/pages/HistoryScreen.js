@@ -36,13 +36,23 @@ export default function Historypage() {
   }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
 
   if (loading) {
-    return (
-      <Loader loading={loading}/>
-      );
+    return <Loader loading={loading} />;
   }
   if (alerts.length !== 0) {
     return (
       <Container>
+        <Text
+          style={{
+            
+              fontSize: 30,
+              fontWeight: 600,
+              marginBottom: 10,
+              color:colors.primary
+            
+          }}
+        >
+          {t("History")}
+        </Text>
         <FlatList
           data={alerts}
           keyExtractor={(item) => item._id}

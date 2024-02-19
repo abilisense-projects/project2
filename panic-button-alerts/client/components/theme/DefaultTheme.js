@@ -2,7 +2,7 @@ const DefaultTheme = {
   dark: false,
   colors: {
       primary: '#000',
-      background: '#f9f9f9',
+      background: 'white',
       card: '#ffffff',
       text: '#E33458',
       border: '#D8D8D8',

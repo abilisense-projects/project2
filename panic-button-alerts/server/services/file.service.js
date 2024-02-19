@@ -1,7 +1,7 @@
-const File = require('../models/file.model');
+const File = require("../models/file.model");
 
 const saveFile = async (file) => {
-  console.log(file)
+  console.log(file);
   const newFile = new File({
     name: file.name,
     contentType: file.mimeType,
