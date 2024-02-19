@@ -1,12 +1,14 @@
+import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { View, Text, StyleSheet } from "react-native";
 
 const AlertCard = ({ alert }) => {
   const { t, i18n } = useTranslation();
+  const {colors} =useTheme()
   const {
-    alertId: {
-      date ,
+   
+      date,
       distressDescription,
       status,
       location: {
@@ -17,25 +19,25 @@ const AlertCard = ({ alert }) => {
         floor,
         apartmentNumber,
       },
-    },
+    
     duration,
   } = alert;
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{t("Alert Details")}</Text>
-      <Text style={styles.subtitle}>
+      <Text style={[styles.title,{color:colors.primary}]}>{t("Alert Details")}</Text>
+      <Text style={[styles.subtitle,{color:colors.primary}]}>
        { t("Date: ")}{date&&new Date(date).toLocaleString()}
       </Text>
-      <Text style={styles.subtitle}>
+      <Text style={[styles.subtitle,{color:colors.primary}]}>
         {t("Distress Description:" )}{distressDescription}
       </Text>
-      <Text style={styles.subtitle}>{t("Status:" )}{status}</Text>
-      <Text style={styles.subtitle}>
-        t(Location: )
+      <Text style={[styles.subtitle,{color:colors.primary}]}>{t("Status:" )}{status}</Text>
+      <Text style={[styles.subtitle,{color:colors.primary}]}>
+        {t("Location: ")}
         {`${buildingNumber}, ${street}, Floor ${floor}, Apt ${apartmentNumber}, ${city}, ${country}`}
       </Text>
-      <Text style={styles.subtitle}>{t("Duration:" )}{duration}</Text>
+      <Text style={[styles.subtitle,{color:colors.primary}]}>{t("Duration:" )}{duration}</Text>
     </View>
   );
 };

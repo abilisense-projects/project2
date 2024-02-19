@@ -97,7 +97,7 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
   async function updateAlert(IdAlert, msgState) {
     try {
       const token = await decodeToken();
-      const response = await axios.post(`alerts/treated/`, { id: IdAlert, status: msgState, userId: token.id, duration: alertDataTime.time, summary: alertData });
+      const response = await axios.post(`alerts/treated/`, { id: IdAlert, status: msgState, userId: token._id, duration: alertDataTime.time, summary: alertData });
       const result = response.data
 
     } catch (error) {
@@ -173,7 +173,7 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
         <View style={styles.footer}>
           {propStatus == "for treatment" && <TouchableOpacity style={styles.footerButton}
             onPress={() =>{alertData ? (updateAlert(data.alert._id, "treated"), onIdchange(''), setAlertDataTIme({ ...alertDataTime, flag: false }), setAlertData({})) : alert("you need to make summry")}}
-              >
+            >
             <Ionicons name="checkmark" size={"200%"} color="white" />
             <Text style={{ color: "white" ,fontSize:"120%",}}>Applay</Text>
           </TouchableOpacity>}
@@ -214,7 +214,7 @@ export default function Specificall({ propId, onIdchange, propStatus }) {
               dataSpecificAlert.data == "Trigger" ? <Text style={styles.dataSpecificAlertText}>Type: Message</Text> :
                 dataSpecificAlert.data == "Instructions" ? <Text style={styles.dataSpecificAlertText}>no further instruction</Text> :
                   dataSpecificAlert.data == "Ticketing" ?(
-                      <SOSAlertForm onDataAlert={{handleSetAlertData}} toClose={{handleSetdataSpecificAlert}}/> ): null}
+                      <SOSAlertForm onDataAlert={handleSetAlertData} toClose={handleSetdataSpecificAlert}/> ): null}
         </View>}
       {moreDetails &&  <View style={styles.containermore}>
     <Text style={styles.title}>Diseases:</Text>
